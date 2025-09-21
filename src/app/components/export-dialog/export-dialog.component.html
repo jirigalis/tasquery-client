@@ -1,0 +1,46 @@
+<dialog id="export_modal" class="modal">
+    <div class="modal-box max-w-3xl">
+        <h3 class="font-bold text-lg">Export preview ({{ format() }})</h3>
+        <div class="bg-base-200 p-4 mt-2 overflow-x-auto max-h-96 text-sm">
+            <pre class='whitespace-pre-wrap'>{{ this.content() }}</pre>
+        </div>
+        <div class="modal-action">
+            <button class="btn btn-primary btn-sm" (click)="copyToClipboard()">
+                <lucide-icon [img]="copyIcon" size="16"></lucide-icon>
+                Copy to clipboard
+            </button>
+            <button class="btn btn-outline btn-sm" (click)="download()">
+                <lucide-icon [img]="downloadIcon" size="16"></lucide-icon>
+                Download as file
+            </button>
+            <form method="dialog">
+                <button class="btn btn-sm">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        class="toast toast-top toast-center transition-opacity duration-300"
+        [class.opacity-0]="toastHidden"
+        [class.pointer-events-none]="toastHidden"
+        id="clipboard_toast">
+        <div class="alert alert-success">
+            <span>Copied to clipboard ✅</span>
+        </div>
+    </div>
+</dialog>
+
+<!--
+<dialog id="export_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="text-lg font-bold">Hello!</h3>
+        <p class="py-4">Press ESC key or click the button below to close</p>
+        <div class="modal-action">
+            <form method="dialog">
+                &lt;!&ndash; if there is a button in form, it will close the modal &ndash;&gt;
+                <button class="btn">Close</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+-->
