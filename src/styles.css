@@ -1,9 +1,10 @@
-@import 'tailwindcss';
 @import 'animate.css';
+@import 'tailwindcss';
 
 @plugin "daisyui" {
     exclude: rootscrollgutter;
 }
+
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui/theme" {
