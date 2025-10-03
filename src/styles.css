@@ -1,9 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'animate.css';
+
 @plugin "daisyui" {
     exclude: rootscrollgutter;
 }
+@plugin "@tailwindcss/typography";
+
 @plugin "daisyui/theme" {
-    name: "light";
+    name: 'tasquerytheme';
     default: true;
     --color-primary: #533A71;
     --color-primary-content: #fff;

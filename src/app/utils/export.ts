@@ -1,4 +1,4 @@
-import { Task } from '../core/parse.service';
+import { Task } from './task.model';
 
 /**
  * Generate a JSON string for a task.

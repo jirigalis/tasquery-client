@@ -1,0 +1,36 @@
+<div class="card bg-base-100 shadow-md rounded-2xl animate__animated animate__bounceIn">
+    <div class="card-body">
+        <h2 class="card-title flex justify-between items-center">
+            {{ task().title }}
+            <span class="text-sm opacity-70">{{ taskPriority() }}</span>
+        </h2>
+
+        <div class="flex flex-row gap-2 mb-3">
+            @for (badge of task().labels; track badge) {
+                <app-badge [label]="badge"></app-badge>
+            }
+        </div>
+
+        <p class="mb-3">{{ task().body }}</p>
+        <div class="card-actions justify-end items-center">
+            <span>Export task as:</span>
+
+            <button class="btn btn-outline btn-sm tooltip rounded-xl" (click)="openExportDialog(task(), 'markdown')"
+                    data-tip="Export task to Markdown">
+                <lucide-icon [img]="codeXmlIcon" size="16"></lucide-icon>
+                Markdown
+            </button>
+
+            <button class="btn btn-outline btn-sm tooltip rounded-xl" (click)="openExportDialog(task(), 'json')" data-tip="Export task to JSON">
+                <lucide-icon [img]="fileJsonIcon" size="16"></lucide-icon>
+                JSON
+            </button>
+
+            <app-export-dialog
+                [format]="exportFormat()"
+                [content]="convertedTask()"
+                (onDownload)="exportToFormat(task())"
+            ></app-export-dialog>
+        </div>
+    </div>
+</div>

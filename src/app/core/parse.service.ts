@@ -2,21 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { Task, TaskPriority } from '../utils/task.model';
 
 export type ExportType = 'json' | 'csv' | 'markdown';
-
-export enum TaskPriority {
-    LOW = 'low',
-    MEDIUM = 'medium',
-    HIGH = 'high'
-}
-
-export interface Task {
-    title: string;
-    body: string;
-    labels?: string[];
-    priority?: TaskPriority | string;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +13,7 @@ export class ParseService {
     private readonly http: HttpClient = inject(HttpClient);
     private apiUrl: string = environment.apiUrl;
 
-    private _testOutput: Task[] =
-        [
+    private readonly testOutput: Task[] = [
             {
                 "title": "Fix login error causing failure on login attempt",
                 "body": "Investigate and resolve the 'Unexpected error, please try again later' issue that occurs after clicking the login button, which prevents users from logging in.",
@@ -47,43 +34,17 @@ export class ParseService {
                 ],
                 "priority": TaskPriority.MEDIUM
             }
-        ]
-    ;
-
-    private readonly testOutput2: Task[] = [
-            {
-                "title": "Rename registration form fields",
-                "body": "Change the field labels from 'username' to 'Enter your username' and 'password' to 'Enter your password' for better clarity.",
-                "labels": [
-                    "ui",
-                    "enhancement"
-                ],
-                "priority": "medium"
-            },
-            {
-                "title": "Add password validation",
-                "body": "Implement password validation to ensure that users create secure passwords during registration.",
-                "labels": [
-                    "bug",
-                    "feature",
-                    "security"
-                ],
-                "priority": "high"
-            }
-        ]
-
-    constructor() {
-    }
+        ];
 
     parseText(inputText: string): Observable<Task[]> {
         return this.http.post<Task[]>(this.apiUrl + '/parse', { inputText });
 
         // For testing purposes, return the testOutput directly as an observable with a delay
-        /*return new Observable<Task[]>(observer => {
+       /* return new Observable<Task[]>(observer => {
             setTimeout(() => {
                 observer.next(this.testOutput);
                 observer.complete();
-            }, 100);
+            }, 1000);
         });*/
     }
 
