@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { CodeXmlIcon, FileJsonIcon, LucideAngularModule, SendHorizontalIcon } from 'lucide-angular';
+import { CircleAlert, LucideAngularModule, SendHorizontalIcon } from 'lucide-angular';
 import { NgOptimizedImage } from '@angular/common';
 import { ParseService } from './core/parse.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,8 +22,7 @@ import { Task } from './utils/task.model';
 })
 export class AppComponent {
     protected readonly sendHorizontalIcon = SendHorizontalIcon;
-    protected readonly fileJsonIcon = FileJsonIcon;
-    protected readonly codeXmlIcon = CodeXmlIcon;
+    protected readonly circleAlert = CircleAlert
     private readonly parseService = inject(ParseService);
     destroyRef = inject(DestroyRef);
 
@@ -31,15 +30,44 @@ export class AppComponent {
     tasks = signal<Task[]>([]);
     loading = signal<boolean>(false);
     year = signal(new Date().getFullYear());
+    error = signal<string | null>(null);
+
+    isInputValid = signal<boolean>(true);
+
+    onInputChange() {
+        if (this.inputText() === null || this.inputText().trim().length === 0) {
+            this.isInputValid.set(false);
+        } else {
+            this.isInputValid.set(true);
+        }
+    }
 
     generateTasks() {
+        if (this.loading()) {
+            return;
+        }
+
+        if (this.inputText() === null || this.inputText().trim().length === 0) {
+            this.isInputValid.set(false);
+            return;
+        }
+
         this.loading.set(true);
         this.parseService.parseText(this.inputText()).pipe(
             takeUntilDestroyed(this.destroyRef),
-        ).subscribe((response) => {
+        ).subscribe({
+        next: (response) => {
             console.log(response);
+            this.error.set(null);
             this.tasks.set(response);
             this.loading.set(false);
-        });
+            this.isInputValid.set(true);
+        },
+        error: (error) => {
+            console.error('Error parsing text:', error, error.error);
+            this.error.set(error.error.message || 'Unexpected error, please try again later.');
+            this.loading.set(false);
+        }
+    });
     }
 }
