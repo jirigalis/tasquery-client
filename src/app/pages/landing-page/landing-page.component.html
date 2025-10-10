@@ -1,0 +1,193 @@
+<app-navigation></app-navigation>
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-12">
+    <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+        Turn Notes and Chats into <br/>
+        <span class="text-primary">Actionable Tasks</span> with ease.
+    </h1>
+    <p class="mt-6 max-w-xl text-lg">
+        Tasquery helps you turn Slack threads, meeting notes or raw text into structured tasks for Jira, Asana, Trello, and more.
+    </p>
+    <div class="mt-8 flex gap-4">
+        <a href="/app" class="btn btn-primary btn-lg">
+            <lucide-icon [img]="tubeIcon" class="mr-1"></lucide-icon>
+            Try Tasquery Now
+        </a>
+        <a href="#waitlist" class="btn btn-outline btn-lg">Join Waitlist</a>
+    </div>
+    <div class="mt-20 w-full max-w-2xl">
+        <img
+            src="/tasquery-preview-screely.png"
+            alt="Tasquery Screenshot"
+            class="rounded-lg shadow-lg tasquery-screenshot"
+        />
+    </div>
+</section>
+
+<!-- Pain Points -->
+<section class="bg-base-200 py-20 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-8">The Unstructured Text Nightmare</h2>
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div>
+            <div class="text-5xl mb-4 flex justify-center">
+                <svg width="100px" height="100px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                        <path fill="none" opacity="0.5"
+                              d="M16.415 17.9741C16.2065 18.6126 15.8399 19.1902 15.347 19.6519C14.6157 20.3368 13.4881 20.6389 11.2331 21.2432C8.97798 21.8474 7.85044 22.1495 6.87466 21.922C6.10421 21.7424 5.40432 21.3383 4.86351 20.7609C4.17859 20.0296 3.87647 18.9021 3.27222 16.647L2.75458 14.7151C2.15033 12.46 1.84821 11.3325 2.07573 10.3567C2.25537 9.58627 2.65945 8.88638 3.23687 8.34557C3.96815 7.66065 5.09569 7.35853 7.35077 6.75428C7.77741 6.63996 8.16368 6.53646 8.51621 6.44531"
+                              stroke="#000" stroke-width="1.5"/>
+                        <path fill="none"
+                              d="M20.3116 12.6473L20.8293 10.7154C21.4335 8.46034 21.7356 7.3328 21.5081 6.35703C21.3285 5.58657 20.9244 4.88668 20.347 4.34587C19.6157 3.66095 18.4881 3.35883 16.2331 2.75458C13.978 2.15033 12.8504 1.84821 11.8747 2.07573C11.1042 2.25537 10.4043 2.65945 9.86351 3.23687C9.27709 3.86298 8.97128 4.77957 8.51621 6.44561C8.43979 6.7254 8.35915 7.02633 8.27227 7.35057L8.27222 7.35077L7.75458 9.28263C7.15033 11.5377 6.84821 12.6652 7.07573 13.641C7.25537 14.4115 7.65945 15.1114 8.23687 15.6522C8.96815 16.3371 10.0957 16.6392 12.3508 17.2435L12.3508 17.2435C14.3834 17.7881 15.4999 18.0873 16.415 17.9744C16.5152 17.9621 16.6129 17.9448 16.7092 17.9223C17.4796 17.7427 18.1795 17.3386 18.7203 16.7612C19.4052 16.0299 19.7074 14.9024 20.3116 12.6473Z"
+                              stroke="#61399c" stroke-width="1.5"/>
+                        <path d="M11.7769 10L16.6065 11.2941" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <path opacity="0.5" d="M11 12.8975L13.8978 13.6739" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                    </g>
+                </svg>
+
+            </div>
+            <h3 class="font-bold">Messy Inputs</h3>
+            <p class="mt-2 text-sm">Slack threads, long meetings and brainstorming dumps are hard to convert into tasks.</p>
+        </div>
+        <div>
+            <div class="text-5xl mb-4 flex justify-center">
+                <svg width="100px" height="100px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g id="SVGRepo_iconCarrier">
+                        <path opacity="0.5" d="M10 7L2 7" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <path opacity="0.5" d="M8 12H2" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <path opacity="0.5" d="M10 17H2" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle fill="none" cx="17" cy="12" r="5" stroke="#61399c" stroke-width="1.5"/>
+                        <path d="M17 10V11.8462L18 13" stroke="#61399c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="font-bold">Manual Work</h3>
+            <p class="mt-2 text-sm">Turning notes into structured tickets wastes time and energy.</p>
+        </div>
+        <div>
+            <div class="text-5xl mb-4 flex justify-center">
+                <svg width="100px" height="100px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.44">
+                        <path d="M12 8V13" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="12" cy="16" r="1" fill="#61399c"/>
+                    </g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path opacity="0.5" fill="none"
+                              d="M5.31171 10.7615C8.23007 5.58716 9.68925 3 12 3C14.3107 3 15.7699 5.58716 18.6883 10.7615L19.0519 11.4063C21.4771 15.7061 22.6897 17.856 21.5937 19.428C20.4978 21 17.7864 21 12.3637 21H11.6363C6.21356 21 3.50217 21 2.40626 19.428C1.31034 17.856 2.52291 15.7061 4.94805 11.4063L5.31171 10.7615Z"
+                              stroke="#000" stroke-width="1.5"/>
+                        <path d="M12 8V13" stroke="#61399c" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="12" cy="16" r="1" fill="#61399c"/>
+                    </g>
+                </svg>
+
+            </div>
+            <h3 class="font-bold">Team Frustration</h3>
+            <p class="mt-2 text-sm">No shared workflow for turning unstructured info into actionable items.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="py-24 px-6 text-center" id="features">
+    <h2 class="text-3xl font-bold mb-8">Finally, a better way to<br class="hidden md:block"/> structure your notes into tasks</h2>
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h3 class="card-title">AI-Powered Parsing</h3>
+                <p>Extract tasks, subtasks, deadlines and labels from raw text in seconds.</p>
+            </div>
+        </div>
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h3 class="card-title">Ready for Jira, Trello & more</h3>
+                <p>Export to structured formats for your project management tools.</p>
+            </div>
+        </div>
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h3 class="card-title">One Click Magic</h3>
+                <p>From notes to tasks in one click – no setup, no templates, no headache.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Waitlist CTA -->
+<section id="waitlist" class="bg-base-200 py-20 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">Be the First to Try Tasquery</h2>
+    <p class="mb-6">Enter your email to get early access, release updates and private beta invites.</p>
+    <div class="max-w-md mx-auto flex gap-2">
+        <div class="flex flex-col w-full">
+            <input
+                type="email"
+                placeholder="your-email@site.com"
+                class="input input-bordered w-full validator"
+                required
+                [(ngModel)]="email"
+            />
+            <div class="validator-hint text-left">Enter valid email address</div>
+        </div>
+        <button class="btn btn-primary" (click)="joinWaitlist()">Join</button>
+    </div>
+
+    @if (error()) {
+        <div class="flex justify-center animate__animated animate__fadeIn animate__faster mt-4">
+            <div role="alert" class="alert alert-error">
+                <lucide-icon [img]="circleAlert" class="mr-2"></lucide-icon>
+                <div>
+                    <p class="italic">Oops, something broke. We’re blaming the intern (even if we don’t have one).</p>
+                    <p><strong>Details:</strong>&nbsp;{{ error() }}</p>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+<!-- FAQ -->
+<section class="py-24 px-6 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2>
+    <div class="join join-vertical w-full">
+        <div class="collapse collapse-arrow join-item border border-base-300">
+            <input type="checkbox"/>
+            <div class="collapse-title text-lg font-medium">Is my data stored?</div>
+            <div class="collapse-content"><p>No. Tasquery processes your input in-memory only.</p></div>
+        </div>
+        <div class="collapse collapse-arrow join-item border border-base-300">
+            <input type="checkbox"/>
+            <div class="collapse-title text-lg font-medium">Is this free?</div>
+            <div class="collapse-content"><p>Yes – the MVP is completely free to use.</p></div>
+        </div>
+        <div class="collapse collapse-arrow join-item border border-base-300">
+            <input type="checkbox"/>
+            <div class="collapse-title text-lg font-medium">What formats are supported?</div>
+            <div class="collapse-content"><p>You can export tasks as JSON, Markdown or Jira-compatible text.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-neutral text-neutral-content py-10 px-6" id="footer">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8">
+        <div>
+            <h2 class="text-xl font-bold">Tasquery</h2>
+            <p class="text-sm">Built by developers, for developers. Open for feedback.</p>
+        </div>
+        <div class="flex flex-col gap-2 text-sm">
+            <app-terms-of-use [type]="'link'"></app-terms-of-use>
+            <app-privacy-policy></app-privacy-policy>
+            <app-contact-modal></app-contact-modal>
+        </div>
+    </div>
+    <div class="mt-8 text-center text-xs opacity-60"> Tasquery © {{ year() }}. All rights reserved.</div>
+</footer>
+
+@if (toastMessage()) {
+    <div class="toast toast-top toast-center animate__animated animate__fadeIn animate__faster">
+        <div class="alert alert-success">
+            <span>{{ toastMessage() }}</span>
+        </div>
+    </div>
+}

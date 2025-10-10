@@ -1,4 +1,8 @@
-<button class="btn btn-link" (click)="openTermsModal()">Terms of use</button>
+@if (type() == 'link') {
+    <a class="link link-hover" (click)="openTermsModal()">Terms of use</a>
+} @else {
+    <button class="btn btn-link" (click)="openTermsModal()">Terms of use</button>
+}
 <dialog id="terms_modal" class="modal">
     <article class="modal-box w-9/12 max-w-5xl max-h-4/5 text-left prose">
         <form method="dialog">
@@ -59,5 +63,13 @@
         <p>
             If you have questions or concerns, please contact us at: <a href="mailto:tasquery@gmail.com">tasquery&#64;gmail.com</a>
         </p>
+        <div class="modal-action mt-6">
+            <form method="dialog">
+                <button class="btn btn-outline">Close</button>
+            </form>
+        </div>
     </article>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
 </dialog>

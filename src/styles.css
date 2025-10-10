@@ -8,9 +8,10 @@
 @plugin "@tailwindcss/typography";
 
 @plugin "daisyui/theme" {
-    name: 'tasquerytheme';
+    name: 'light';
     default: true;
-    --color-primary: #533A71;
+    --color-primary: #61399c;
+    --color-primary-dark: #3c2361;
     --color-primary-content: #fff;
     --color-secondary: teal;
     --color-background: #fffcef;
@@ -18,46 +19,63 @@
 }
 
 :root {
-    background-color: var(--color-background);
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
 }
 
-html::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url(assets/blob_top.png) center top no-repeat;
-    background-size: 30%;
-    z-index: -1000;
+.modal {
+    color: initial !important;
 }
 
-body::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20%;
-    height: 100%;
-    background: url(assets/blob_left.png) left center no-repeat;
-    background-size: 80%;
-    z-index: -1000;
+.blob-wrapper {
+    left: calc(var(--spacing) * 0);
+    top: calc(var(--spacing) * 0);
+    z-index: -1;
 }
 
-body::after {
-    content: "";
-    display: block;
+.blob-left,
+.blob-right {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 28%;
-    height: 100%;
-    background: url(assets/blob_right.png) right center no-repeat;
-    background-size: 100%;
-    z-index: -1000;
+    border-radius: 9999px;
+    filter: blur(120px);
+}
+
+/* Left blob */
+.blob-left {
+    top: calc(var(--spacing, 1rem) * 32);
+    left: calc(var(--spacing, 1rem) * -20);
+    width: calc(var(--spacing, 1rem) * 96);
+    height: calc(var(--spacing, 1rem) * 96);
+    background-image: linear-gradient(
+        to bottom right,
+        color-mix(in oklab, var(--color-primary, #3b82f6) 40%, transparent),
+        color-mix(in oklab, var(--color-primary, #3b82f6) 15%, transparent)
+    );
+
+    /* fallback for old browsers */
+    background-image: linear-gradient(
+        to bottom right,
+        rgba(59, 130, 246, 0.2),
+        rgba(59, 130, 246, 0.05)
+    );
+}
+
+/* Right blob */
+.blob-right {
+    right: calc(var(--spacing, 1rem) * 10);
+    bottom: calc(var(--spacing, 1rem) * 20);
+    width: calc(var(--spacing, 1rem) * 72);
+    height: calc(var(--spacing, 1rem) * 72);
+    background-image: linear-gradient(
+        to bottom right,
+        color-mix(in oklab, var(--color-secondary, #ec4899) 40%, transparent),
+        color-mix(in oklab, var(--color-secondary, #ec4899) 15%, transparent)
+    );
+
+    /* fallback for old browsers */
+    background-image: linear-gradient(
+        to bottom right,
+        rgba(236, 72, 153, 0.2),
+        rgba(236, 72, 153, 0.05)
+    );
 }

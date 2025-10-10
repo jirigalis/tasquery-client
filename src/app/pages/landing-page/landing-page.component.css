@@ -1,0 +1,6 @@
+.tasquery-screenshot {
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    padding: 4px;
+    border: 1px solid #3c2361;
+}

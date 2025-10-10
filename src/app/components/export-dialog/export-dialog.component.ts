@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CopyIcon, DownloadIcon, LucideAngularModule } from 'lucide-angular';
+import { ClipboardCheckIcon, CopyIcon, DownloadIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
     selector: 'app-export-dialog',
@@ -15,6 +15,7 @@ export class ExportDialogComponent {
     onDownload = output();
     readonly copyIcon = CopyIcon;
     readonly downloadIcon = DownloadIcon;
+    readonly clipboardCheckIcon = ClipboardCheckIcon
     toastHidden = true;
 
     close() {

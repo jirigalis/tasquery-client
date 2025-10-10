@@ -1,0 +1,36 @@
+<div class="navbar">
+    <div class="max-w-6xl mx-auto w-full flex">
+        <div class="navbar-start">
+            <div tabindex="0" role="button" class="btn btn-ghost" (click)="navigateHome()">
+                <img src="/tasquery-logo.png" alt="Tasquery" class="h-8 w-8 mr-2">
+                <a class="text-xl">Tasquery</a>
+            </div>
+        </div>
+        <div class="navbar-center hidden md:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#waitlist">Join Waitlist</a></li>
+                <li>
+                    <app-contact-modal></app-contact-modal>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost md:hidden">
+                    <!--<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                    </svg>-->
+                    <lucide-icon [img]="menuIcon"></lucide-icon>
+                </div>
+                <ul
+                    tabindex="0"
+                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li><a href="#features" class="text-xl my-2">Features</a></li>
+                    <li><a href="#waitlist" class="text-xl my-2">Join Waitlist</a></li>
+                    <li><a href="#footer" class="text-xl my-2">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

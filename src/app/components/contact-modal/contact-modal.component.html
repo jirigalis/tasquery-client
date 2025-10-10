@@ -1,0 +1,16 @@
+<dialog id="contact_modal" class="modal" #dialog>
+    <div class="modal-box text-left">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" (click)="dialog.close()">✕</button>
+        </form>
+        <h2 class="text-lg font-bold">Contact</h2>
+        <p>If you have any questions or want to get in touch, please email us at <a class="link" href="mailto:tasquery@gmail.com">tasquery&#64;gmail.com</a>.</p>
+        <div class="modal-action">
+            <button class="btn btn-outline" (click)="dialog.close()">Close</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+<a href="#" (click)="dialog.showModal(); $event.preventDefault()">Contact</a>

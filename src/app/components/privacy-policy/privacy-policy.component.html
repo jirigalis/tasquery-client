@@ -1,0 +1,66 @@
+<a class="link link-hover" (click)="openPrivacyModal()">Privacy Policy</a>
+<dialog id="privacy_modal" class="modal">
+    <article class="modal-box w-9/12 max-w-5xl max-h-4/5 text-left prose">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+
+        <h2>Privacy Policy</h2>
+        <p><em>Last updated: October 2025</em></p>
+
+        <h3>1. Email Collection (Waitlist)</h3>
+        <p>
+            When you submit your email to join the waitlist, we store your email address for the purpose of:
+        </p>
+        <ul>
+            <li>Notifying you about updates or product availability</li>
+            <li>Inviting you to beta testing or early access</li>
+        </ul>
+        <p>
+            We will not share, sell, or use your email for any unrelated purpose. You can request deletion at any time by contacting us at:
+            <a href="mailto:tasquery@gmail.com">tasquery&#64;gmail.com</a>.
+        </p>
+
+        <h3>2. Text Inputs and AI Processing</h3>
+        <p>
+            When you use the Tasquery tool, your input text is sent to the OpenAI API for processing. We do <strong>not</strong> store any input or output on
+            our servers.
+        </p>
+        <p>
+            Please do <strong>not</strong> submit any sensitive, personal, or confidential information.
+        </p>
+
+        <h3>3. No Cookies or Analytics (Yet)</h3>
+        <p>
+            At this time, the service does <strong>not</strong> use cookies, tracking tools, or analytics services. This may change in the future, and we will
+            update this policy accordingly.
+        </p>
+
+        <h3>4. Data Security</h3>
+        <p>
+            Email addresses and any limited data we store are handled with care and basic security measures. However, no online service can guarantee absolute
+            security.
+        </p>
+
+        <h3>5. Changes</h3>
+        <p>
+            We may update this Privacy Policy as the service evolves (e.g., when we add login, analytics, etc.). Significant changes will be communicated on
+            this page.
+        </p>
+
+        <h3>6. Contact</h3>
+        <p>
+            If you have any questions or requests, please contact us at:
+            <a href="mailto:tasquery@gmail.com">tasquery&#64;gmail.com</a>.
+        </p>
+
+        <div class="modal-action mt-6">
+            <form method="dialog">
+                <button class="btn btn-outline">Close</button>
+            </form>
+        </div>
+    </article>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
