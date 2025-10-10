@@ -45,7 +45,6 @@ export class LandingPageComponent {
             next: () => {
                 this.isLoading.set(false);
                 this.toastMessage.set('Thank you for joining the waitlist!');
-                this.email.set(undefined);
 
                 setTimeout(() => this.toastMessage.set(''), 5000);
             },
