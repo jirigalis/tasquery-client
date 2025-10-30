@@ -1,0 +1,10 @@
+@media (width < 480px) {
+    .modal-action {
+        display: flex;
+        flex-direction: column;
+
+        .btn {
+            width: 100%;
+        }
+    }
+}

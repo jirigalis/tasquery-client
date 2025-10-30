@@ -5,16 +5,16 @@
             <pre class='whitespace-pre-wrap'>{{ this.content() }}</pre>
         </div>
         <div class="modal-action">
-            <button class="btn btn-primary btn-sm" (click)="copyToClipboard()">
+            <button class="btn btn-primary btn-lg sm:btn-sm" (click)="copyToClipboard()">
                 <lucide-icon [img]="copyIcon" size="16"></lucide-icon>
                 Copy to clipboard
             </button>
-            <button class="btn btn-outline btn-sm" (click)="download()">
+            <button class="btn btn-outline btn-lg sm:btn-sm" (click)="download()">
                 <lucide-icon [img]="downloadIcon" size="16"></lucide-icon>
                 Download as file
             </button>
             <form method="dialog">
-                <button class="btn btn-sm">Close</button>
+                <button class="btn btn-lg sm:btn-sm">Close</button>
             </form>
         </div>
     </div>
@@ -30,18 +30,3 @@
         </div>
     </div>
 </dialog>
-
-<!--
-<dialog id="export_modal" class="modal">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold">Hello!</h3>
-        <p class="py-4">Press ESC key or click the button below to close</p>
-        <div class="modal-action">
-            <form method="dialog">
-                &lt;!&ndash; if there is a button in form, it will close the modal &ndash;&gt;
-                <button class="btn">Close</button>
-            </form>
-        </div>
-    </div>
-</dialog>
--->

@@ -1,5 +1,10 @@
 @import 'animate.css';
 @import 'tailwindcss';
+@import './assets/_variables.css';
+
+@theme {
+    --breakpoint-xs: 30rem; /* 480px */
+}
 
 @plugin "daisyui" {
     exclude: rootscrollgutter;
@@ -18,6 +23,7 @@
     --color-background-secondary: #fdf8e2;
 }
 
+
 :root {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
@@ -26,6 +32,11 @@
 .modal {
     color: initial !important;
 }
+
+.btn {
+    border-radius: 0.75rem;
+}
+
 
 .blob-wrapper {
     left: calc(var(--spacing) * 0);
