@@ -1,0 +1,101 @@
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+
+    .task-title, .input-title {
+        width: 80%;
+
+        @media (max-width: var(--sm)) {
+            width: 75%;
+        }
+    }
+
+    .task-priority {
+        font-size: 0.875rem; /* 14px */
+        line-height: 1.25rem; /* 20px */
+        opacity: 0.7;
+        width: 25%;
+        display: flex;
+        justify-content: flex-end;
+
+        @media (min-width: 640px) {
+            width: 20%;
+        }
+    }
+
+    .select-priority {
+        width: 25%;
+
+        @media (min-width: 640px) {
+            width: 20%;
+        }
+    }
+}
+
+.labels-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.task-body {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    .textarea {
+        width: 100%;
+        margin-bottom: 0.125rem;
+    }
+}
+
+.card-actions {
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    .edit-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    @media (width < 640px) {
+        .btn-label {
+            display: none;
+        }
+    }
+}
+
+.export-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .export-container {
+        .export-label, .btn:not(:last-child) {
+            margin-right: 0.5rem;
+        }
+    }
+    .export-container {
+        display: none;
+
+        @media (min-width: 640px) {
+            display: block;
+        }
+    }
+
+    .export-container-mobile {
+        display: block;
+
+        .fab {
+            bottom: 1.5rem;
+            right: 1.5rem;
+        }
+
+        @media (width >= 640px) {
+            display: none;
+        }
+    }
+}

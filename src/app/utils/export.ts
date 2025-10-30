@@ -28,7 +28,6 @@ ${task.body}
 export function generateCSV(task: Task): string {
     const headers: any = Array<keyof Task>;
     // const headers = ['Title', 'Description', 'Labels', 'Priority'];
-    console.log('headers', headers);
     const values = [
         `"${task.title}"`,
         `"${task.body}"`,

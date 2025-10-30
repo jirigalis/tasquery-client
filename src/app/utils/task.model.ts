@@ -1,4 +1,5 @@
 export type Task = {
+    id: string | number;
     title: string;
     body: string;
     labels?: string[];
