@@ -4,9 +4,39 @@
     width: 100%;
     position: absolute;
     z-index: -10;
-    top: 21rem;
+    top: 24rem;
 
     @media (width < 640px) {
         display: none;
     }
+}
+
+.sample-container {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.5rem;
+
+    .sample-label {
+        display: flex;
+    }
+
+    .sample-buttons {
+        display: flex;
+        column-gap: 0.5rem;
+
+        @media (width < 30rem) {
+            flex-direction: column;
+            row-gap: 0.5rem;
+        }
+    }
+
+    @media (width < 640px) {
+        flex-direction: column;
+    }
+}
+
+.main-btn {
+    width: 100%;
+    max-width: calc(0.25rem * 64);
 }

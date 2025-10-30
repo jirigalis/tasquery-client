@@ -9,6 +9,7 @@ import { TaskCardComponent } from '../../components/task-card/task-card.componen
 import { TermsOfUseComponent } from '../../components/terms-of-use/terms-of-use.component';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
 import { GENERAL_CONFIG } from '../../config/general';
+import { SAMPLE_INPUT_LABELS, SAMPLE_INPUTS, SampleInputType } from '../../shared/sample-inputs';
 
 @Component({
   selector: 'app-tasquery',
@@ -36,6 +37,7 @@ export class TasqueryComponent implements OnInit {
     error = signal<string | null>(null);
 
     protected readonly maxBodyLength = GENERAL_CONFIG.MAX_BODY_LENGTH;
+    public sampleInputLabels = SAMPLE_INPUT_LABELS;
 
     isInputValid = signal<boolean>(true);
 
@@ -94,5 +96,9 @@ export class TasqueryComponent implements OnInit {
     onDeleteTask(task: Task) {
         const deletedTasks = this.tasks().filter(t => t.id !== task.id);
         this.tasks.set(deletedTasks);
+    }
+
+    loadSample(type: SampleInputType) {
+        this.inputText.set(SAMPLE_INPUTS[type]);
     }
 }
