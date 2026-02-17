@@ -1,0 +1,133 @@
+<app-task-collection-drawer (load)="loadCollection($event)">
+    <app-navigation [showMenu]="false"></app-navigation>
+    <div class="max-w-4xl mx-auto p-6 space-y-8 min-h-120">
+        <h1 class="text-2xl font-bold text-center">Tasquery - AI Task Generator</h1>
+
+        <div>
+            <div class="sample-container">
+                <div class="sample-label">Try these sample inputs:</div>
+                <div class="sample-buttons">
+                    @for (s of sampleInputLabels; track s.key) {
+                        <button class="btn btn-xs btn-outline tooltip" (click)="loadSample(s.key)" [attr.data-tip]="s.tooltip">
+                            {{ s.label }}
+                        </button>
+                    }
+                </div>
+            </div>
+            <textarea
+                class="textarea textarea-bordered w-full h-40 rounded-2xl mb-0.5"
+                maxlength="{{ maxBodyLength }}"
+                placeholder="Paste your meeting notes or chat..."
+                [(ngModel)]="inputText"
+                (input)="onInputChange()"
+                required
+                [class.textarea-error]="!isInputValid()"
+            ></textarea>
+            <div class="flex flex-row justify-between">
+                @if (!isInputValid()) {
+                    <div class="text-error">Input cannot be empty</div>
+                }
+                <div class="label ml-auto">
+                    {{ inputText().length }}/{{ maxBodyLength }}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center">
+            <button class="btn btn-primary btn-xl main-btn" (click)="generateTasks()">
+                @if (loading()) {
+                    <span class="loading loading-infinity loading-lg animate__animated animate__fadeIn animate__faster"></span>
+                } @else {
+                    <span class="inline-flex justify-center items-center animate__animated animate__fadeIn animate__faster w-full">
+                    <lucide-icon [img]="sendHorizontalIcon" class="mr-1"></lucide-icon>
+                    Generate Tasks
+                </span>
+                }
+            </button>
+        </div>
+
+        @if (error()) {
+            <div class="flex justify-center animate__animated animate__fadeIn animate__faster">
+                <div role="alert" class="alert alert-error">
+                    <lucide-icon [img]="circleAlert" class="mr-2"></lucide-icon>
+                    <div>
+                        <p class="italic">Oops, something broke. We’re blaming the intern (even if we don’t have one).</p>
+                        <p><strong>Details:</strong>&nbsp;{{ error() }}</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (tasks() && tasks().length > 0) {
+            <div class="divider mb-8">Output</div>
+
+            @if (loadingCollection()) {
+                <div class="skeleton task-card-skeleton"></div>
+                <div class="skeleton task-card-skeleton"></div>
+            } @else {
+
+                <div class="output-header">
+                    <div class="collection-title">
+                        @if (activeCollection()) {
+                            <p>{{ activeCollection()!.title }}</p>
+                            <button class="btn btn-sm btn-circle edit-btn animate__animated animate__fadeIn animate__faster" (click)="renameCollection()">
+                                <lucide-icon [img]="editIcon" size="14"></lucide-icon>
+                            </button>
+                        } @else {
+                            <p>New Task Collection</p>
+                        }
+                    </div>
+                    <div class="action-buttons">
+                        @if (activeCollection()) {
+                            <button class="btn btn-primary" (click)="openSaveCollectionModal(true)">
+                                <lucide-icon [img]="saveIcon" class="mr-1"></lucide-icon>
+                                Save as New Collection
+                            </button>
+                        } @else {
+                            <button class="btn btn-primary" (click)="openSaveCollectionModal()">
+                                <lucide-icon [img]="saveIcon" class="mr-1"></lucide-icon>
+                                Save Collection
+                            </button>
+                        }
+                    </div>
+                </div>
+                @for (task of tasks(); track task.title) {
+                    <div class="mb-4">
+                        <app-task-card
+                            [task]="task"
+                            (saveTask)="onSaveTask($event)"
+                            (deleteTask)="onDeleteTask($event)"
+                        ></app-task-card>
+                    </div>
+                }
+            }
+        }
+    </div>
+    @if (activeCollection()) {
+        <app-rename-collection-dialog [collection]="activeCollection()!" (onSave)="onRenameCollection($event)"></app-rename-collection-dialog>
+    }
+    <app-save-task-collection-dialog [tasks]="tasks()" (onSave)="saveCollection($event)"></app-save-task-collection-dialog>
+    <footer class="footer sm:footer-horizontal footer-center text-base-content p-4">
+        <aside>
+            <p>Taskquery © {{ year() }}, All rights reserved.</p>
+            <app-terms-of-use></app-terms-of-use>
+        </aside>
+    </footer>
+    <div class="svg-container">
+        <!-- SVG on the left -->
+        <img [ngSrc]="'/taking-notes-2.svg'"
+             priority
+             width="400"
+             height="600"
+             alt="AI Image"
+             class="h-auto relative w-[20%]"/>
+
+        <!-- SVG on the right -->
+        <img [ngSrc]="'/content-structure-2.svg'"
+             priority
+             width="360"
+             height="600"
+             alt="AI Image"
+             class="h-auto relative w-[16%]"/>
+    </div>
+</app-task-collection-drawer>

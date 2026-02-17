@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { TermsOfUseComponent } from "../../components/terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from '../../components/privacy-policy/privacy-policy.component';
-import { ContactModalComponent } from '../../components/contact-modal/contact-modal.component';
+import { ContactModalComponent } from '../../shared/ui/contact-modal/contact-modal.component';
 import { FormsModule } from '@angular/forms';
-import { WaitlistService } from '../../core/waitlist.service';
+import { WaitlistService } from '../../core/services/waitlist.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CircleAlert, LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
 import { NavigationComponent } from '../../components/navigation/navigation.component';

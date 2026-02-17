@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { Task, TaskPriority } from '../utils/task.model';
-import { GENERAL_CONFIG } from '../config/general';
+import { Task, TaskPriority } from '../../shared/models/task.model';
+import { GENERAL_CONFIG } from '../../config/general';
 
 export type ExportType = 'json' | 'csv' | 'markdown';
 
