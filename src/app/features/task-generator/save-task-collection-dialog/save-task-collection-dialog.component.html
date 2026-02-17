@@ -1,0 +1,24 @@
+<dialog id="save_collection_modal" class="modal">
+    <div class="modal-box">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="modal-heading">Save collection</h3>
+        <input
+            type="text"
+            placeholder="Collection Name"
+            class="input input-bordered w-full"
+            [(ngModel)]="title"
+        />
+
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn btn-lg sm:btn-sm">Close</button>
+            </form>
+            <button class="btn btn-primary sm:btn-sm" [disabled]="!isTitleValid()" (click)="save()">
+                <lucide-icon [img]="saveIcon"></lucide-icon>
+                Save
+            </button>
+        </div>
+    </div>
+</dialog>
