@@ -1,12 +1,12 @@
 import { Component, computed, input, OnInit, output, signal } from '@angular/core';
 import { BadgeComponent } from '../badge/badge.component';
 import { CheckIcon, CodeXmlIcon, FileJsonIcon, FileUpIcon, LucideAngularModule, PencilIcon, PencilOffIcon, Trash2Icon } from 'lucide-angular';
-import { Task } from '../../utils/task.model';
-import { ExportType } from '../../core/parse.service';
+import { Task } from '../../models/task.model';
+import { ExportType } from '../../../core/services/parse.service';
 import { generateJSON, generateMarkdown } from '../../utils/export';
 import { FormsModule } from '@angular/forms';
 import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
-import { GENERAL_CONFIG } from '../../config/general';
+import { GENERAL_CONFIG } from '../../../config/general';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({

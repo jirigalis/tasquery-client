@@ -7,7 +7,7 @@
 }
 
 @plugin "daisyui" {
-    exclude: rootscrollgutter;
+   /* exclude: rootscrollgutter;*/
 }
 
 @plugin "@tailwindcss/typography";
@@ -27,6 +27,11 @@
 :root {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
+    background-color: #f5f5fa;
+
+    @media (prefers-color-scheme: dark) {
+        background-color: #1a1a24;
+    }
 }
 
 .modal {

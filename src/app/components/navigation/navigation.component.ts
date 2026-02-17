@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { LucideAngularModule, MenuIcon } from 'lucide-angular';
-import { ContactModalComponent } from '../contact-modal/contact-modal.component';
+import { ContactModalComponent } from '../../shared/ui/contact-modal/contact-modal.component';
 import { Router } from '@angular/router';
 
 @Component({

@@ -1,4 +1,4 @@
-import { TaskPriority } from '../utils/task.model';
+import { TaskPriority } from '../shared/models/task.model';
 
 export const GENERAL_CONFIG = {
     APP_NAME: 'Tasquery',

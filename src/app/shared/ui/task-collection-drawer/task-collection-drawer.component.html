@@ -1,0 +1,71 @@
+<div class="drawer xl:drawer-open">
+    <input id="drawer-toggle" type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content">
+        <label for="drawer-toggle" class="btn btn-lg btn-primary btn-circle drawer-btn">
+            <lucide-icon [img]="listIcon" size="18"></lucide-icon>
+        </label>
+        <ng-content></ng-content>
+    </div>
+
+    <div class="drawer-side z-40">
+        <label for="drawer-toggle" class="drawer-overlay"></label>
+
+        <div class="menu shadow-xl p-0 bg-base-100 text-base-content h-full flex flex-col flex-nowrap overflow-hidden">
+
+            <div class="p-6 pb-2 shrink-0">
+                <h2 class="text-xl font-bold">Saved Collections:</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto min-h-0 p-4 pt-0 space-y-2 custom-scroll">
+                @if (collections().length === 0) {
+                    <div class="flex flex-col items-center justify-center h-48 text-base-content/50 animate__animated animate__fadeIn">
+                        <div class="bg-base-200 p-4 rounded-full mb-3">
+                            <lucide-icon [img]="listIcon" size="24" class="opacity-50"></lucide-icon>
+                        </div>
+                        <p class="font-medium text-sm">No collections found</p>
+                        <p class="text-xs opacity-70">Generate some tasks to save them here.</p>
+                    </div>
+                } @else {
+                    @for (collection of collections(); track collection.id) {
+                        <div class="collection-item group hover:bg-base-200/50 animate__animated animate__fadeInUp animate__faster"
+                             (click)="loadCollection(collection)"
+                             [class.active]="activeCollectionId() === collection.id">
+
+                            <div class="active-indicator"></div>
+
+                            <div class="collection-item-text py-1">
+                                <div class="collection-item-title truncate text-sm font-semibold mb-0.5">
+                                    {{ collection.title }}
+                                </div>
+                                <div class="flex items-center gap-1 text-[10px] uppercase tracking-wider opacity-50 font-medium">
+                                    {{ collection.createdAt | date:'medium' }}
+                                </div>
+                            </div>
+
+                            <button class="btn btn-circle btn-ghost hover:bg-red-100 hover:text-red-600 btn-sm action-btn opacity-0 group-hover:opacity-100 transition-all duration-200"
+                                    (click)="openDeleteModal(collection, $event)">
+                                <lucide-icon [img]="trashIcon" size="16"></lucide-icon>
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<dialog id="delete_collection_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Delete Collection</h3>
+        <p class="py-4">Are you sure you want to delete <span class="font-semibold">"{{ collectionToDelete()?.title }}"</span>? This action cannot be undone.</p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn btn-ghost mr-2">Cancel</button>
+                <button class="btn btn-error" (click)="confirmDelete()">Delete</button>
+            </form>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
