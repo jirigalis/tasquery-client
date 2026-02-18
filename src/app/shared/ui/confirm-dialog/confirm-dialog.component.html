@@ -1,13 +1,13 @@
-@if (visible()) {
-    <div class="modal modal-open">
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">{{ title() }}</h3>
-            <p class="py-4">{{ message() }}</p>
+<dialog class="modal" #dialogRef>
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">{{ title() }}</h3>
+        <p class="py-4">{{ message() }}</p>
 
-            <div class="modal-action">
-                <button class="btn btn-outline" (click)="onCancel()">Cancel</button>
-                <button class="btn {{ confirmButtonClass() }}" (click)="onConfirm()">Confirm</button>
-            </div>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn btn-outline">Cancel</button>
+            </form>
+            <button class="btn {{ confirmButtonClass() }}" (click)="onConfirm()">Confirm</button>
         </div>
     </div>
-}
+</dialog>

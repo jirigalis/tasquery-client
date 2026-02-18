@@ -1,24 +1,49 @@
-<dialog id="save_collection_modal" class="modal">
+<dialog #dialogRef class="modal">
     <div class="modal-box">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="modal-heading">Save collection</h3>
-        <input
-            type="text"
-            placeholder="Collection Name"
-            class="input input-bordered w-full"
-            [(ngModel)]="title"
-        />
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                (click)="close()">
+            <lucide-icon [img]="icons.close" size="16"></lucide-icon>
+        </button>
 
-        <div class="modal-action">
-            <form method="dialog">
-                <button class="btn btn-lg sm:btn-sm">Close</button>
-            </form>
-            <button class="btn btn-primary sm:btn-sm" [disabled]="!isTitleValid()" (click)="save()">
-                <lucide-icon [img]="saveIcon"></lucide-icon>
-                Save
-            </button>
-        </div>
+        <h3 class="font-bold text-lg mb-4 flex items-center gap-2">
+            @if (isDuplicate()) {
+                <lucide-icon [img]="icons.copy" size="20" class="text-primary"></lucide-icon>
+                Duplicate Collection
+            } @else {
+                <lucide-icon [img]="icons.save" size="20" class="text-primary"></lucide-icon>
+                Save Collection
+            }
+        </h3>
+
+        <form (submit)="submit()">
+            <div class="form-control w-full">
+                <input
+                    type="text"
+                    [placeholder]="isDuplicate() ? 'Name of the copy (e.g. Project V2)' : 'Collection Name'"
+                    class="input input-bordered w-full"
+                    [class.input-error]="!isValid() && title().length > 0"
+                    [(ngModel)]="title"
+                    name="collectionName"
+                    autofocus
+                />
+            </div>
+
+            <div class="modal-action mt-6">
+                <button type="button" class="btn" (click)="close()">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        [disabled]="!isValid()">
+                    <lucide-icon [img]="isDuplicate() ? icons.copy : icons.save" size="16"></lucide-icon>
+                    {{ isDuplicate() ? 'Duplicate' : 'Save' }}
+                </button>
+            </div>
+        </form>
     </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
 </dialog>

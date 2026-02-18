@@ -1,9 +1,9 @@
 export type Task = {
     id: string | number;
     title: string;
-    body: string;
+    content: string;
     labels?: string[];
-    priority: TaskPriority | string;
+    priority: TaskPriority;
 }
 
 export enum TaskPriority {

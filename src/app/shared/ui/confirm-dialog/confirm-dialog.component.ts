@@ -1,4 +1,4 @@
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, ElementRef, input, output, ViewChild } from '@angular/core';
 
 export type ConfirmDialogType = 'confirm' | 'error' | 'success';
 
@@ -9,7 +9,6 @@ export type ConfirmDialogType = 'confirm' | 'error' | 'success';
   styleUrl: './confirm-dialog.component.css'
 })
 export class ConfirmDialogComponent {
-    visible = input<boolean>(false);
     message = input<string>('');
     title = input<string>('Confirm');
     type = input<ConfirmDialogType>('confirm');
@@ -23,13 +22,15 @@ export class ConfirmDialogComponent {
                 return 'btn-success';
             default:
                 return 'btn-primary';
-        }})
+        }
+    });
 
-    cancel = output<void>();
+    @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
+
     confirm = output<void>();
 
-    onCancel() {
-        this.cancel.emit();
+    show() {
+        this.dialogRef.nativeElement.showModal();
     }
 
     onConfirm() {

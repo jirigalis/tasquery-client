@@ -1,148 +1,160 @@
-<div class="card shadow-xl rounded-2xl animate__animated animate__bounceIn"
-     [class.bg-base-100]="!editMode()"
-     [class.bg-base-200]="editMode()"
->
-    <div class="card-body">
+<article class="card bg-base-100 border-base-300 hover:border-primary shadow-sm rounded-xl overflow-hidden">
 
-        <!-- Header row -->
-        <div class="card-title">
-            @if (!editMode()) {
-                <div class="task-title">
+    <header class="flex justify-between items-start p-5 pb-3 border-b border-base-300">
+        @if (!editMode()) {
+            <div class="flex-1 pr-4">
+                <h3 class="font-bold text-lg text-base-content leading-tight">
                     {{ task().title }}
-                </div>
-                <div class="task-priority">{{ taskPriority() }}</div>
-            } @else {
-                <input type="text"
-                       maxlength="{{ maxTitleLength }}"
-                       class="input input-sm input-title"
-                       [(ngModel)]="editableTask()!.title"
-                       placeholder="Enter title..."/>
-                <select class="select select-sm select-priority" [(ngModel)]="editableTask()!.priority">
-                    @for (level of priorityLevels; track level) {
-                        <option [value]="level" [selected]="level === editableTask()!.priority">
-                            {{ level }}
-                        </option>
-                    }
-                </select>
-            }
-        </div>
-
-        <!-- Labels -->
-        <div class="labels-wrapper">
-            @if (!editMode()) {
-                @for (badge of task().labels; track badge) {
-                    <app-badge [label]="badge"></app-badge>
-                }
-            } @else {
-                <input type="text"
-                       maxlength="{{ maxLabelsLength }}"
-                       class="input input-sm w-full"
-                       [(ngModel)]="editableLabels"
-                       placeholder="Comma-separated labels"/>
-            }
-        </div>
-
-        <!-- Body -->
-        <div class="task-body">
-            @if (!editMode()) {
-                <p>{{ task().body }}</p>
-            } @else {
-                <textarea class="textarea textarea-bordered"
-                          maxlength="{{ maxBodyLength }}"
-                          [(ngModel)]="editableTask()!.body"
-                          placeholder="Enter task description..."></textarea>
-                <div class="label ml-auto">
-                    {{ editableTask()!.body.length }}/{{ maxBodyLength }}
-                </div>
-            }
-        </div>
-
-        <!-- Actions -->
-        <div class="card-actions">
-
-            <!-- Edit / Save toggle -->
-            <div class="edit-actions">
-                <button class="btn btn-lg sm:btn-sm btn-outline tooltip"
-                        (click)="toggleEdit()"
-                        [attr.data-tip]="editMode() ? 'Save changes' : 'Edit this task'"
-                >
-                    <lucide-icon [img]="editMode() ? checkIcon : pencilIcon" size="16"></lucide-icon>
-                    <span class="btn-label">{{ editMode() ? 'Save' : 'Edit' }}</span>
-                </button>
-                @if (editMode()) {
-                    <button class="btn btn-lg sm:btn-sm btn-outline btn-error tooltip"
-                            (click)="cancelEdit()"
-                            data-tip="Cancel editing">
-                        <lucide-icon [img]="pencilOffIcon" size="16"></lucide-icon>
-                        <span class="btn-label">Cancel</span>
-                    </button>
-                } @else {
-                    <button class="btn btn-lg sm:btn-sm btn-outline btn-error tooltip"
-                            (click)="handleDelete()"
-                            data-tip="Delete this task">
-                        <lucide-icon [img]="trashIcon" size="16"></lucide-icon>
-                        <span class="btn-label">Delete</span>
-                    </button>
-                }
+                </h3>
             </div>
+            <div class="badge badge-lg gap-2 font-semibold shrink-0 shadow-sm" [ngClass]="priorityConfig().colorClass">
+                <lucide-icon [img]="priorityConfig().icon" size="16"></lucide-icon>
+                {{ priorityConfig().label }}
+            </div>
+        } @else {
+            <div class="flex flex-col sm:flex-row gap-3 w-full">
+                <input type="text"
+                       class="input input-bordered input-sm w-full font-bold"
+                       [attr.maxlength]="limits.title"
+                       [(ngModel)]="editableTask()!.title"
+                       placeholder="Task Title">
 
-            <!-- Export buttons -->
-            @if (!editMode()) {
-                <div class="export-wrapper">
-                    <div class="export-container">
-                        <span class="export-label">Export task as:</span>
-
-                        <button class="btn btn-outline btn-sm tooltip"
-                                (click)="openExportDialog(task(), 'markdown')"
-                                [disabled]="editMode()"
-                                data-tip="Export task to Markdown">
-                            <lucide-icon [img]="codeXmlIcon" size="16"></lucide-icon>
-                            Markdown
-                        </button>
-
-                        <button class="btn btn-outline btn-sm tooltip"
-                                (click)="openExportDialog(task(), 'json')"
-                                [disabled]="editMode()"
-                                data-tip="Export task to JSON">
-                            <lucide-icon [img]="fileJsonIcon" size="16"></lucide-icon>
-                            JSON
-                        </button>
+                <div class="dropdown dropdown-end sm:w-auto w-full">
+                    <div tabindex="0" role="button"
+                         class="btn btn-sm btn-outline w-full sm:w-32 justify-between"
+                         [ngClass]="editablePriorityConfig().colorClass">
+                        <div class="flex items-center gap-2">
+                            <lucide-icon [img]="editablePriorityConfig().icon" size="16"></lucide-icon>
+                            {{ editablePriorityConfig().label }}
+                        </div>
+                        <svg width="10px" height="6px" viewBox="0 0 10 6" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </div>
 
-                    <span class="export-container-mobile">
-                        <div class="fab">
-                            <div tabindex="0" role="button" class="btn btn-lg btn-circle btn-outline">
-                                <lucide-icon [img]="fileUpIcon" size="24"></lucide-icon>
-                            </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 border border-base-300 mt-1">
+                        @for (p of availablePriorities; track p) {
+                            @let meta = getPriorityMeta(p);
+                            <li>
+                                <a (click)="setPriority(p)"
+                                   [class.active]="editableTask()!.priority === p"
+                                   class="flex items-center gap-2">
+                                    <lucide-icon [img]="meta.icon" size="16" [class]="meta.colorClass"></lucide-icon>
+                                    <span [class]="meta.colorClass">{{ p }}</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    </header>
 
-                            <button class="btn btn-lg btn-primary"
-                                    (click)="openExportDialog(task(), 'json')">
-                                <lucide-icon [img]="fileJsonIcon" size="16"></lucide-icon>
-                                Export to JSON
-                            </button>
-                            <button class="btn btn-lg btn-primary"
-                                    (click)="openExportDialog(task(), 'markdown')">
-                                <lucide-icon [img]="codeXmlIcon" size="16"></lucide-icon>
-                                Export to Markdown
-                            </button>
-                        </div>
+    <div class="card-body p-5 pt-3">
+
+        <section class="min-h-[2rem] flex items-center mb-2">
+            @if (!editMode()) {
+                @if (task().labels && task().labels!.length > 0) {
+                    <div class="flex flex-wrap gap-2">
+                        @for (label of task().labels; track label) {
+                            <span class="badge badge-outline gap-1 opacity-80 font-normal">
+                                #{{ label }}
+                            </span>
+                        }
+                    </div>
+                } @else {
+                    <span class="text-xs text-base-content opacity-40 italic flex items-center gap-1">
+                        <lucide-icon [img]="icons.tags" size="12"></lucide-icon> No tags
                     </span>
+                }
+            } @else {
+                <input type="text"
+                       class="input input-bordered input-xs w-full"
+                       [(ngModel)]="editableLabels"
+                       [attr.maxlength]="limits.labels"
+                       placeholder="Tags (comma separated)">
+            }
+        </section>
+
+        <section class="flex-grow">
+            @if (!editMode()) {
+                <div class="task-content p-4 border border-base-300 bg-base-200 bg-opacity-30 text-sm text-base-content">
+                    <span>{{ task().content }}</span>
+                </div>
+            } @else {
+                <div class="relative">
+                    <textarea class="textarea textarea-bordered w-full h-40 font-mono text-sm leading-relaxed pb-6"
+                              [(ngModel)]="editableTask()!.content"
+                              [attr.maxlength]="limits.body"
+                              placeholder="Task description..."></textarea>
+
+                    <div class="absolute bottom-2 right-2 text-xs text-base-content/40 font-mono pointer-events-none">
+                        {{ editableTask()!.content.length }} / {{ limits.body }}
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
+
+    <footer class="p-4 bg-base-100 border-t border-base-300 flex justify-between items-center gap-2">
+
+        <div class="flex gap-2">
+            @if (!editMode()) {
+                <button class="btn btn-ghost btn-sm tooltip tooltip-right"
+                        data-tip="Copy to clipboard"
+                        (click)="copyToClipboard()">
+                    <lucide-icon [img]="icons.copy" size="16"></lucide-icon>
+                    <span class="hidden sm:inline text-xs">Copy</span>
+                </button>
+
+                <div class="dropdown dropdown-top dropdown-hover">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-2">
+                        <lucide-icon [img]="icons.export" size="16"></lucide-icon>
+                        <span class="hidden sm:inline text-xs">Export</span>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-40 border border-base-300">
+                        <li><a (click)="openExportDialog('json')"><lucide-icon [img]="icons.json" size="14"></lucide-icon> JSON</a></li>
+                        <li><a (click)="openExportDialog('markdown')"><lucide-icon [img]="icons.markdown" size="14"></lucide-icon> Markdown</a></li>
+                    </ul>
                 </div>
             }
         </div>
-    </div>
-    <app-export-dialog
-        [format]="exportFormat()"
-        [content]="convertedTask()"
-        (onDownload)="exportToFormat(task())"
-    ></app-export-dialog>
-</div>
+
+        <div class="flex gap-2">
+            @if (editMode()) {
+                <button class="btn btn-ghost btn-sm text-error" (click)="cancelEdit()">
+                    Cancel
+                </button>
+                <button class="btn btn-primary btn-sm shadow-md" (click)="saveChanges()">
+                    <lucide-icon [img]="icons.check" size="16"></lucide-icon>
+                    Save Changes
+                </button>
+            } @else {
+                <button class="btn btn-ghost btn-sm btn-square text-error tooltip tooltip-left"
+                        data-tip="Delete Task"
+                        (click)="handleDelete()">
+                    <lucide-icon [img]="icons.trash" size="18"></lucide-icon>
+                </button>
+                <button class="btn btn-outline btn-sm gap-2 hover:bg-base-200" (click)="toggleEdit()">
+                    <lucide-icon [img]="icons.edit" size="14"></lucide-icon>
+                    Edit
+                </button>
+            }
+        </div>
+    </footer>
+</article>
+
+<app-export-dialog
+    #exportModal
+    [format]="exportFormat()"
+    [content]="convertedTask()"
+    (onDownload)="exportToFormat()"
+></app-export-dialog>
 
 <app-confirm-dialog
-    [visible]="confirmVisible()"
+    #deleteModal
     [title]="'Delete Task'"
     [type]="'error'"
-    [message]="'This action cannot be undone. Do you want to continue?'"
+    [message]="'Are you sure? This task will be lost forever like a tear in rain.'"
     (confirm)="onDeleteConfirmed()"
-    (cancel)="onDeleteCancelled()"
 />

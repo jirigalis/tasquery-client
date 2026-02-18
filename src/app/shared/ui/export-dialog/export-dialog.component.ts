@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, ElementRef, input, output, ViewChild } from '@angular/core';
 import { ClipboardCheckIcon, CopyIcon, DownloadIcon, LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -18,13 +18,14 @@ export class ExportDialogComponent {
     readonly clipboardCheckIcon = ClipboardCheckIcon
     toastHidden = true;
 
-    close() {
-        (document.getElementById('export_modal') as HTMLInputElement).checked = false;
+    @ViewChild('dialogRef') dialogRef!: ElementRef<HTMLDialogElement>;
+
+    show() {
+        this.dialogRef.nativeElement.showModal();
     }
 
     download() {
-        this.onDownload.emit()
-        this.close();
+        this.onDownload.emit();
     }
 
     copyToClipboard() {

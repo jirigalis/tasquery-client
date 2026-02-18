@@ -12,6 +12,6 @@ export const appConfig: ApplicationConfig = {
       provideHttpClient(),
       provideAppInitializer(() => {
           vercelInject({ mode: isDevMode() ? 'development' : 'production' });
-      })
+      }),
   ]
 };
