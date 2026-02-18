@@ -1,0 +1,30 @@
+<div class="toast toast-bottom toast-end z-[9999] flex flex-col gap-2 p-4">
+    @for (toast of toastService.toasts(); track toast.id) {
+        <div
+            animate.enter="toast-enter"
+            animate.leave="toast-exit"
+            class="alert shadow-lg min-w-[300px] flex justify-between"
+            [ngClass]="{
+               'type-success': toast.type === 'success',
+               'type-error': toast.type === 'error',
+               'type-info': toast.type === 'info',
+               'type-warning': toast.type === 'warning'
+             }">
+
+            <div class="flex items-center gap-3">
+                @switch (toast.type) {
+                    @case ('success') { <lucide-icon [img]="icons.success"></lucide-icon> }
+                    @case ('error') { <lucide-icon [img]="icons.error"></lucide-icon> }
+                    @case ('warning') { <lucide-icon [img]="icons.warning"></lucide-icon> }
+                    @default { <lucide-icon [img]="icons.info"></lucide-icon> }
+                }
+                <span class="font-medium text-sm">{{ toast.message }}</span>
+            </div>
+
+            <button class="btn btn-xs btn-circle btn-ghost opacity-70 hover:opacity-100 text-current"
+                    (click)="toastService.remove(toast.id)">
+                <lucide-icon [img]="icons.close" size="14"></lucide-icon>
+            </button>
+        </div>
+    }
+</div>

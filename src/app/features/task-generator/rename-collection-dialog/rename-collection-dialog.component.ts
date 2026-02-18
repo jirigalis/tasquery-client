@@ -1,7 +1,7 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
 import { TaskCollection } from '../../../shared/models/task-collection.model';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, PencilIcon } from 'lucide-angular';
+import { LucideAngularModule, PencilIcon, XIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-rename-collection-dialog',
@@ -14,30 +14,32 @@ import { LucideAngularModule, PencilIcon } from 'lucide-angular';
 })
 export class RenameCollectionDialogComponent {
     collection = input.required<TaskCollection>();
-    onSave = output<string>();
-
+    saved = output<string>();
     title = signal('');
+    isValid = computed(() => this.title().trim().length > 0);
 
-    protected readonly editIcon = PencilIcon;
+    dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialogRef');
 
-    constructor() {
-        effect(() => {
-            const currentTitle = this.collection().title;
-            this.title.set(currentTitle);
-        });
+    protected readonly icons = {
+        edit: PencilIcon,
+        close: XIcon,
+    };
+
+    show() {
+        this.title.set(this.collection().title);
+        this.dialog().nativeElement.showModal();
     }
 
-    save() {
-        this.onSave.emit(this.title().trim());
-        this.closeModal();
+    close() {
+        this.dialog().nativeElement.close();
     }
 
-    closeModal() {
-        const modal = (document.getElementById('rename_collection_modal') as HTMLDialogElement);
-        if (modal) modal.close();
-    }
+    submit() {
+        if (!this.isValid()) {
+            return;
+        }
 
-    isTitleValid() {
-        return this.title().trim().length > 0;
+        this.saved.emit(this.title().trim());
+        this.close();
     }
 }

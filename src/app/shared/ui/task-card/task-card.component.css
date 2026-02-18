@@ -1,101 +1,29 @@
-.card-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-
-    .task-title, .input-title {
-        width: 80%;
-
-        @media (max-width: var(--sm)) {
-            width: 75%;
-        }
-    }
-
-    .task-priority {
-        font-size: 0.875rem; /* 14px */
-        line-height: 1.25rem; /* 20px */
-        opacity: 0.7;
-        width: 25%;
-        display: flex;
-        justify-content: flex-end;
-
-        @media (min-width: 640px) {
-            width: 20%;
-        }
-    }
-
-    .select-priority {
-        width: 25%;
-
-        @media (min-width: 640px) {
-            width: 20%;
-        }
-    }
+:host {
+    display: block;
+    margin-bottom: 1.5rem; /* Mezera mezi kartami */
 }
 
-.labels-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+article.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    border-width: 1px;
+    border-style: solid;
 }
 
-.task-body {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-
-    .textarea {
-        width: 100%;
-        margin-bottom: 0.125rem;
-    }
+article.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.card-actions {
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
+.task-content {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
 
-    .edit-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    @media (width < 640px) {
-        .btn-label {
-            display: none;
-        }
-    }
+    border-radius: 0.5rem;
 }
 
-.export-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .export-container {
-        .export-label, .btn:not(:last-child) {
-            margin-right: 0.5rem;
-        }
-    }
-    .export-container {
-        display: none;
-
-        @media (min-width: 640px) {
-            display: block;
-        }
-    }
-
-    .export-container-mobile {
-        display: block;
-
-        .fab {
-            bottom: 1.5rem;
-            right: 1.5rem;
-        }
-
-        @media (width >= 640px) {
-            display: none;
-        }
-    }
+textarea {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }

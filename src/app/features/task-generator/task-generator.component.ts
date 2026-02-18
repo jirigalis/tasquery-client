@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { CircleAlert, LucideAngularModule, PencilIcon, SaveIcon, SendHorizontalIcon } from 'lucide-angular';
-import { ParseService } from '../../core/services/parse.service';
+import { Component, computed, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { Bug, CircleAlert, CloudCheckIcon, CopyIcon, FileJson, ListTodo, LucideAngularModule, PencilIcon, SaveIcon, SendHorizontalIcon } from 'lucide-angular';
+import { GenerationConfig, GenerationMode, ParseService } from '../../core/services/parse.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Task } from "../../shared/models/task.model";
 import { FormsModule } from '@angular/forms';
@@ -16,6 +16,7 @@ import { TaskCollectionDrawerComponent } from '../../shared/ui/task-collection-d
 import { SaveTaskCollectionDialogComponent } from './save-task-collection-dialog/save-task-collection-dialog.component';
 import { TaskCollection } from '../../shared/models/task-collection.model';
 import { RenameCollectionDialogComponent } from './rename-collection-dialog/rename-collection-dialog.component';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-task-generator',
@@ -34,18 +35,39 @@ import { RenameCollectionDialogComponent } from './rename-collection-dialog/rena
   styleUrl: './task-generator.component.css'
 })
 export class TaskGeneratorComponent implements OnInit {
-    protected readonly sendHorizontalIcon = SendHorizontalIcon;
-    protected readonly circleAlert = CircleAlert
+    // Icons
+    protected readonly icons = {
+        send: SendHorizontalIcon,
+        alert: CircleAlert,
+        save: SaveIcon,
+        edit: PencilIcon,
+        bug: Bug,
+        list: ListTodo,
+        standard: FileJson,
+        cloudCheck: CloudCheckIcon,
+        copy: CopyIcon,
+    }
+
     private readonly parseService = inject(ParseService);
     destroyRef = inject(DestroyRef);
     taskCollectionService = inject(TaskCollectionsService);
+    private toastService = inject(ToastService);
+
+    @ViewChild('saveCollectionModal') saveCollectionModal!: SaveTaskCollectionDialogComponent;
+    @ViewChild('renameCollectionModal') renameCollectionModal!: RenameCollectionDialogComponent;
 
     inputText = signal<string>('');
     tasks = signal<Task[]>([]);
     loading = signal<boolean>(false);
     year = signal(new Date().getFullYear());
     error = signal<string | null>(null);
-    isInputValid = signal<boolean>(true);
+
+    config = signal<GenerationConfig>({
+        mode: GenerationMode.STANDARD,
+        includeAcceptanceCriteria: false,
+    });
+
+    isInputValid = computed(() => this.inputText() !== null && this.inputText().trim().length > 0);
     loadingCollection = signal<boolean>(false);
     activeCollection = this.taskCollectionService.activeCollection;
     saveAsNew = signal<boolean>(false);
@@ -53,8 +75,7 @@ export class TaskGeneratorComponent implements OnInit {
     protected readonly maxBodyLength = GENERAL_CONFIG.MAX_BODY_LENGTH;
     public sampleInputLabels = SAMPLE_INPUT_LABELS;
 
-    protected readonly saveIcon = SaveIcon;
-    protected readonly editIcon = PencilIcon;
+    protected readonly GenerationMode = GenerationMode;
 
     testInput = signal('Implement Employee Switch in Mobile Timesheet Form, please it is urgent. Mobile users are not able to create bugs. Can you please fix it until the next wednesday?');
 
@@ -65,33 +86,28 @@ export class TaskGeneratorComponent implements OnInit {
         }
     }
 
-    onInputChange() {
-        if (this.inputText() === null || this.inputText().trim().length === 0) {
-            this.isInputValid.set(false);
-        } else {
-            this.isInputValid.set(true);
-        }
+    toggleMode(mode: GenerationMode) {
+        this.config.update((c) => ({ ...c, mode }));
+    }
+
+    toggleAcceptanceCriteria(): void {
+        this.config.update(c => ({ ...c, includeAcceptanceCriteria: !c.includeAcceptanceCriteria }));
     }
 
     generateTasks() {
-        if (this.loading()) {
-            return;
-        }
-
-        if (this.inputText() === null || this.inputText().trim().length === 0) {
-            this.isInputValid.set(false);
+        if (this.loading() || !this.isInputValid()) {
             return;
         }
 
         this.loading.set(true);
-        this.parseService.parseText(this.inputText()).pipe(
+
+        this.parseService.parseText(this.inputText(), this.config()).pipe(
             takeUntilDestroyed(this.destroyRef),
         ).subscribe({
             next: (response) => {
                 this.error.set(null);
                 this.tasks.set(response);
                 this.loading.set(false);
-                this.isInputValid.set(true);
                 this.taskCollectionService.clearActive();
             },
             error: (error) => {
@@ -112,8 +128,14 @@ export class TaskGeneratorComponent implements OnInit {
     }
 
     onDeleteTask(task: Task) {
-        const deletedTasks = this.tasks().filter(t => t.id !== task.id);
-        this.tasks.set(deletedTasks);
+        const updatedTasks = this.tasks().filter(t => t.id !== task.id);
+        this.tasks.set(updatedTasks);
+
+        if (this.activeCollection()) {
+            this.taskCollectionService.updateCollection(this.activeCollection()!.id, this.tasks());
+        }
+
+        this.toastService.success('Task deleted successfully.');
     }
 
     loadSample(type: SampleInputType) {
@@ -121,48 +143,37 @@ export class TaskGeneratorComponent implements OnInit {
     }
 
     openSaveCollectionModal(saveAsNew = false): void {
-        const modal = document.getElementById('save_collection_modal') as HTMLDialogElement;
         this.saveAsNew.set(saveAsNew);
-        if (modal) modal.showModal();
+        this.saveCollectionModal!.show(saveAsNew);
     }
 
     saveCollection(title: string) {
-        if (this.activeCollection() && !this.saveAsNew()) {
-            this.taskCollectionService.updateCollection(this.activeCollection()!.id, this.tasks());
-        } else {
-            const collection = {
-                id: nanoid(),
-                title,
-                createdAt: new Date().toISOString(),
-                tasks: this.tasks(),
-            }
-
-            this.taskCollectionService.add(collection);
-            this.taskCollectionService.setActive(collection);
-            this.saveAsNew.set(false);
+        const collection = {
+            id: nanoid(),
+            title,
+            createdAt: new Date().toISOString(),
+            tasks: this.tasks(),
         }
+
+        this.taskCollectionService.add(collection);
+        this.taskCollectionService.setActive(collection);
+        this.saveAsNew.set(false);
+        this.toastService.success('Collection saved successfully.');
     }
 
     loadCollection(collection: TaskCollection): void {
-        this.tasks.set(collection.tasks);
-
         // simulate loading collection delay - will be replaced with real loading logic once connected to backend
         this.loadingCollection.set(true);
+        this.tasks.set(collection.tasks);
 
         setTimeout(() => {
             this.loadingCollection.set(false);
             this.taskCollectionService.setActive(collection);
-        }, 500);
-
-        const drawerToggle = (document.getElementById('drawer_toggle') as HTMLInputElement);
-        if (drawerToggle) {
-            drawerToggle.checked = false;
-        }
+        }, 300);
     }
 
     renameCollection() {
-        const modal = document.getElementById('rename_collection_modal') as HTMLDialogElement;
-        if (modal) modal.showModal();
+        this.renameCollectionModal?.show();
     }
 
     onRenameCollection(collectionName: string): void {
@@ -171,5 +182,6 @@ export class TaskGeneratorComponent implements OnInit {
         }
 
         this.taskCollectionService.updateCollectionTitle(this.activeCollection()!.id, collectionName);
+        this.toastService.success('Rename Collection Name was successfully.');
     }
 }

@@ -1,83 +1,74 @@
-.svg-container {
-    display: flex;
-    justify-content: space-between;
-    width: calc(100% - 336px); /* width of the sidebar */
-    position: absolute;
-    z-index: -10;
-    bottom: 1rem;
-
-    @media (width < 640px) {
-        display: none;
-    }
-
-    @media (width < 1280px) {
-        width: 100%;
-    }
-}
-
-.sample-container {
-    margin-bottom: 0.75rem;
-    display: flex;
-    justify-content: flex-start;
-    gap: 0.5rem;
-
-    .sample-label {
-        display: flex;
-        align-items: center;
-    }
-
-    .sample-buttons {
-        display: flex;
-        column-gap: 0.5rem;
-
-        @media (width < 30rem) {
-            flex-direction: column;
-            row-gap: 0.5rem;
-        }
-    }
-
-    @media (width < 640px) {
-        flex-direction: column;
-    }
-}
-
-.main-btn {
+.textarea {
     width: 100%;
-    max-width: calc(0.25rem * 64);
+    resize: none;
+    outline: none;
+
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
-.output-header {
+:host-context([data-theme="dark"]) .textarea,
+:host-context(.dark) .textarea {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.textarea::-webkit-scrollbar {
+    width: 6px;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+}
+
+:host-context([data-theme="dark"]) .textarea::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.settings-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.toggle-label:hover {
+    opacity: 0.8;
+}
+
+.mode-switcher {
+    display: inline-flex;
+    align-items: center;
+}
+
+.input-area {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 1rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: transparent;
+    height: 12rem;
+
+    scrollbar-width: thin;
+    color: inherit;
+}
+
+.action-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
-
-    .collection-title {
-        display: flex;
-        column-gap: 0.5rem;
-        align-items: center;
-
-        .edit-btn {
-            display: none;
-        }
-
-        p {
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-    }
-
-    .collection-title:hover .edit-btn {
-        display: inline-flex;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: flex-end;
-    }
-}
-
-.task-card-skeleton {
-    width: 100%;
-    height: 6rem;
+    padding: 0.75rem;
 }

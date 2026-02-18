@@ -12,13 +12,13 @@ export function generateJSON(task: Task): string {
 /**
  * Generate a Markdown string for a task.
  *
- * @param task The task object containing the title, body, labels, and priority.
+ * @param task The task object containing the title, content, labels, and priority.
  */
 export function generateMarkdown(task: Task): string {
     return `### ${task.title}
 
 **Description:**
-${task.body}
+${task.content}
 
 **Labels:** ${task.labels?.join(', ') || 'none'}
 **Priority:** ${task.priority || 'unspecified'}
@@ -30,7 +30,7 @@ export function generateCSV(task: Task): string {
     // const headers = ['Title', 'Description', 'Labels', 'Priority'];
     const values = [
         `"${task.title}"`,
-        `"${task.body}"`,
+        `"${task.content}"`,
         `"${(task.labels || []).join(',')}"`,
         `"${task.priority || ''}"`
     ];

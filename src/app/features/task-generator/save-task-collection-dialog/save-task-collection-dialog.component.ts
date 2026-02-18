@@ -1,7 +1,6 @@
-import { Component, input, output, signal } from '@angular/core';
-import { Task } from '../../../shared/models/task.model';
+import { Component, computed, ElementRef, output, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, SaveIcon } from 'lucide-angular';
+import { CopyIcon, LucideAngularModule, SaveIcon, XIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-save-task-collection-dialog',
@@ -13,25 +12,35 @@ import { LucideAngularModule, SaveIcon } from 'lucide-angular';
   styleUrl: './save-task-collection-dialog.component.css'
 })
 export class SaveTaskCollectionDialogComponent {
-    tasks = input<Task[]>();
-    onSave = output<string>();
-
+    saved = output<string>();
     title = signal('');
+    isDuplicate = signal(false);
+    isValid = computed(() => this.title().trim().length > 0);
 
-    protected readonly saveIcon = SaveIcon;
+    dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialogRef');
 
-    save() {
-        this.onSave.emit(this.title());
-        this.closeModal();
-    }
+    protected readonly icons = {
+        save: SaveIcon,
+        close: XIcon,
+        copy: CopyIcon,
+    };
 
-    closeModal() {
-        const modal = (document.getElementById('save_collection_modal') as HTMLDialogElement);
+    show(isDuplicate: boolean = false) {
+        this.isDuplicate.set(isDuplicate);
         this.title.set('');
-        if (modal) modal.close();
+        this.dialog().nativeElement.showModal();
     }
 
-    isTitleValid() {
-        return this.title().trim().length > 0;
+    submit() {
+        if (!this.isValid()) {
+            return;
+        }
+
+        this.saved.emit(this.title());
+        this.close();
+    }
+
+    close() {
+        this.dialog().nativeElement.close();
     }
 }

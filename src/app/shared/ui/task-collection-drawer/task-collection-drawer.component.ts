@@ -3,6 +3,7 @@ import { ListIcon, LucideAngularModule, TrashIcon } from 'lucide-angular';
 import { DatePipe } from '@angular/common';
 import { TaskCollectionsService } from '../../../core/services/task-collections.service';
 import { TaskCollection } from '../../models/task-collection.model';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-task-collection-drawer',
@@ -15,6 +16,7 @@ import { TaskCollection } from '../../models/task-collection.model';
 })
 export class TaskCollectionDrawerComponent  {
     private taskCollectionService = inject(TaskCollectionsService);
+    private toastService = inject(ToastService);
 
     load = output<TaskCollection>();
 
@@ -48,26 +50,8 @@ export class TaskCollectionDrawerComponent  {
             if (this.activeCollectionId() === collection.id) {
                 this.taskCollectionService.clearActive();
             }
+            this.toastService.success('Collection deleted successfully.');
         }
         this.collectionToDelete.set(null); // Reset
     }
-
-
-    /*deleteCollection(collection: TaskCollection, event: Event) {
-        event.stopPropagation();
-        this.taskCollectionService.delete(collection.id);
-        this.closeDropdown(event as MouseEvent);
-    }
-
-    closeDropdown(event: MouseEvent) {
-        event.stopPropagation();
-        const target = event.target as HTMLElement;
-        const collectionItem = target.closest('.collection-item') as HTMLElement;
-
-        if (collectionItem) {
-            collectionItem.blur();
-        }
-
-        (document.activeElement as HTMLElement)?.blur();
-    }*/
 }

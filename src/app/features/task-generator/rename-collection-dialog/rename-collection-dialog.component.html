@@ -1,24 +1,46 @@
-<dialog id="rename_collection_modal" class="modal">
+<dialog #dialogRef class="modal">
     <div class="modal-box">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <h3 class="modal-heading">Rename collection</h3>
-        <input
-            type="text"
-            placeholder="Collection Name"
-            class="input input-bordered w-full"
-            [(ngModel)]="title"
-        />
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                (click)="close()">
+            <lucide-icon [img]="icons.close" size="16"></lucide-icon>
+        </button>
 
-        <div class="modal-action">
-            <form method="dialog">
-                <button class="btn btn-lg sm:btn-sm">Close</button>
-            </form>
-            <button class="btn btn-primary sm:btn-sm" [disabled]="!isTitleValid()" (click)="save()">
-                <lucide-icon [img]="editIcon"></lucide-icon>
-                Rename
-            </button>
-        </div>
+        <h3 class="font-bold text-lg mb-4">Rename collection</h3>
+
+        <form (submit)="submit()">
+            <div class="form-control w-full">
+                <input
+                    type="text"
+                    placeholder="Collection Name"
+                    class="input input-bordered w-full"
+                    [class.input-error]="!isValid() && title().length > 0"
+                    [(ngModel)]="title"
+                    name="collectionTitle"
+                    autofocus
+                />
+                @if (!isValid() && title().length > 0) {
+                    <div class="label">
+                        <span class="label-text-alt text-error">Name cannot be empty</span>
+                    </div>
+                }
+            </div>
+
+            <div class="modal-action mt-6">
+                <button type="button" class="btn" (click)="close()">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        [disabled]="!isValid()">
+                    <lucide-icon [img]="icons.edit" size="16"></lucide-icon>
+                    Rename
+                </button>
+            </div>
+        </form>
     </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
 </dialog>
