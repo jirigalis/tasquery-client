@@ -16,7 +16,6 @@ export class ToastService {
         this.toasts.update(current => [...current, newToast]);
 
         setTimeout(() => {
-            console.log('Remove toast', id);
             this.remove(id);
         }, duration || this.DEFAULT_DURATION);
     }
