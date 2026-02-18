@@ -6,9 +6,8 @@
     position: relative;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     border: 1px solid transparent;
-
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
 }
 
 .type-success {
@@ -31,29 +30,28 @@
     background-color: var(--color-warning);
     color: var(--color-warning-content, #000);
 }
-
-.toast-enter {
-    animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 .toast-exit {
-    animation: slideOutDown 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: slideOutDown 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes slideInUp {
-    from {
+    0% {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
 @keyframes slideOutDown {
-    from {
+    0% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
-    to {
+    100% {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(20px) scale(0.95);
     }
 }
