@@ -1,29 +1,217 @@
 :host {
     display: block;
-    margin-bottom: 1.5rem; /* Mezera mezi kartami */
+    margin-bottom: 1.5rem;
 }
 
-article.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    border-width: 1px;
-    border-style: solid;
+.tc-card {
+    background-color: var(--color-base-100);
+    border: 1px solid var(--color-base-300);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease-in-out;
 }
 
-article.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.tc-card:hover {
+    border-color: var(--color-primary);
 }
 
-.task-content {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    line-height: 1.6;
+.tc-card.is-editing {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 6px -1px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.tc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--color-base-300);
+}
+
+.tc-title-wrapper {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.tc-title {
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.25;
+}
+
+.tc-priority {
+    font-weight: 600;
+    flex-shrink: 0;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Hlavička - Edit mód */
+.tc-edit-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .tc-edit-header {
+        flex-direction: row;
+    }
+}
+
+.tc-input-title {
+    width: 100%;
+    font-weight: 700;
+}
+
+.tc-priority-dropdown {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .tc-priority-dropdown {
+        width: auto;
+    }
+}
+
+.tc-priority-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+    .tc-priority-btn {
+        width: 8rem;
+    }
+}
+
+.tc-body {
+    padding: 0.75rem 1.25rem 1.25rem;
+}
+
+.tc-tags-section {
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.tc-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tc-tag {
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+.tc-no-tags {
+    font-size: 0.75rem;
+    opacity: 0.4;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.tc-content-section {
+    flex-grow: 1;
+}
+
+.tc-content-box {
+    padding: 1rem;
+    border: 1px solid var(--color-base-300);
+    border-radius: 0.25rem;
+    background-color: color-mix(in srgb, var(--color-base-200) 30%, transparent);
+    font-size: 0.875rem;
     white-space: pre-wrap;
-    word-break: break-word;
-
-    border-radius: 0.5rem;
 }
 
-textarea {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+.tc-textarea-wrapper {
+    position: relative;
+}
+
+.tc-textarea {
+    width: 100%;
+    min-height: 10rem;
+    field-sizing: content;
+    font-family: monospace;
+    font-size: 0.875rem;
+    line-height: 1.625;
+    padding-bottom: 2rem;
+    resize: vertical;
+}
+
+.tc-char-counter {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    opacity: 0.4;
+    font-family: monospace;
+    pointer-events: none;
+}
+
+.tc-footer {
+    padding: 1rem;
+    background-color: var(--color-base-100);
+    border-top: 1px solid var(--color-base-300);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tc-footer-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tc-icon-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tc-btn-gap {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tc-dropdown-menu {
+    width: 10rem;
+    border: 1px solid var(--color-base-300);
+    margin-top: 0.25rem;
+}
+
+.tc-btn-label {
+    display: none;
+    font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .tc-btn-label {
+        display: inline;
+    }
+}
+
+.tc-btn-magic {
+    background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+    border: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.tc-btn-magic:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(217, 70, 239, 0.3);
+}
+
+.tc-btn-magic:active {
+    transform: scale(0.95);
 }

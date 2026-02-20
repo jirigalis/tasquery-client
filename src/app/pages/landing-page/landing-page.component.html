@@ -15,9 +15,9 @@
         </a>
         <a href="#waitlist" class="btn btn-outline btn-lg">Join Waitlist</a>
     </div>
-    <div class="mt-20 w-full max-w-2xl">
+    <div class="mt-20 w-full max-w-3xl">
         <img
-            src="/tasquery-preview-screely.png"
+            src="/tasquery-preview-2.png"
             alt="Tasquery Screenshot"
             class="rounded-lg shadow-lg tasquery-screenshot"
         />
@@ -118,32 +118,16 @@
 <!-- Waitlist CTA -->
 <section id="waitlist" class="bg-base-200 py-20 px-6 text-center">
     <h2 class="text-3xl font-bold mb-4">Be the First to Try Tasquery</h2>
-    <p class="mb-6">Enter your email to get early access, release updates and private beta invites.</p>
-    <div class="max-w-md mx-auto flex gap-2">
-        <div class="flex flex-col w-full">
-            <input
-                type="email"
-                placeholder="your-email@site.com"
-                class="input input-bordered w-full validator"
-                required
-                [(ngModel)]="email"
-            />
-            <div class="validator-hint text-left">Enter valid email address</div>
-        </div>
-        <button class="btn btn-primary" (click)="joinWaitlist()">Join</button>
+    <p class="mb-6 max-w-xl mx-auto">Get early access to direct Jira integrations, unlimited context, cloud sync, and custom templates.</p>
+
+    <div class="flex justify-center">
+        <button class="btn btn-primary px-8 text-lg hover:scale-105 transition-transform shadow-lg"
+                (click)="showWaitlistModal()">
+            Join the Waitlist
+        </button>
     </div>
 
-    @if (error()) {
-        <div class="flex justify-center animate__animated animate__fadeIn animate__faster mt-4">
-            <div role="alert" class="alert alert-error">
-                <lucide-icon [img]="circleAlert" class="mr-2"></lucide-icon>
-                <div>
-                    <p class="italic">Oops, something broke. We’re blaming the intern (even if we don’t have one).</p>
-                    <p><strong>Details:</strong>&nbsp;{{ error() }}</p>
-                </div>
-            </div>
-        </div>
-    }
+    <app-waitlist-modal #waitlistModal></app-waitlist-modal>
 </section>
 
 <!-- FAQ -->
@@ -183,11 +167,3 @@
     </div>
     <div class="mt-8 text-center text-xs opacity-60"> Tasquery © {{ year() }}. All rights reserved.</div>
 </footer>
-
-@if (toastMessage()) {
-    <div class="toast toast-top toast-center animate__animated animate__fadeIn animate__faster">
-        <div class="alert alert-success">
-            <span>{{ toastMessage() }}</span>
-        </div>
-    </div>
-}

@@ -1,9 +1,17 @@
 <app-task-collection-drawer (load)="loadCollection($event)">
     <app-navigation [showMenu]="false"></app-navigation>
 
-    <div class="max-w-4xl mx-auto p-6 space-y-8 min-h-[calc(100vh-200px)] relative z-10">
+    <div class="max-w-5xl mx-auto p-6 space-y-8 min-h-[calc(100vh-200px)] relative z-10">
 
-        <div class="text-center space-y-2">
+        <div class="text-center space-y-2 relative">
+            <div class="flex justify-center mt-2 sm:mt-0 sm:absolute sm:top-0 sm:right-0">
+                <button class="btn btn-sm tc-btn-magic shadow-lg rounded-full px-4 hover:scale-105 transition-transform"
+                        (click)="openProModal()">
+                    <lucide-icon [img]="icons.crown" size="16"></lucide-icon>
+                    Tasquery Pro <span class="badge badge-xs opacity-90 border-none bg-white/30 text-white ml-1">Coming soon</span>
+                </button>
+            </div>
+
             <h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 Tasquery
             </h1>
@@ -12,27 +20,48 @@
 
         <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
 
-            <div class="settings-toolbar bg-base-200/50 border-b border-base-200">
+            <div class="settings-toolbar bg-base-200/50">
 
-                <div class="join mode-switcher gap-2">
-                    <button class="btn btn-sm join-item"
-                            [class.btn-neutral]="config().mode === GenerationMode.STANDARD"
+                <div class="mode-switcher">
+                    <button class="btn btn-sm btn-ghost mode-btn"
+                            [class.bg-base-100]="config().mode === GenerationMode.STANDARD"
+                            [class.shadow-sm]="config().mode === GenerationMode.STANDARD"
                             (click)="toggleMode(GenerationMode.STANDARD)">
                         <lucide-icon [img]="icons.standard" size="16"></lucide-icon>
-                        Standard
+                        <span class="mode-btn-label sm-visible">Standard</span>
                     </button>
-                    <button class="btn btn-sm join-item"
-                            [class.btn-error]="config().mode === GenerationMode.JIRA_BUG"
+
+                    <button class="btn btn-sm btn-ghost mode-btn"
+                            [class.bg-error]="config().mode === GenerationMode.JIRA_BUG"
                             [class.text-white]="config().mode === GenerationMode.JIRA_BUG"
+                            [class.shadow-sm]="config().mode === GenerationMode.JIRA_BUG"
                             (click)="toggleMode(GenerationMode.JIRA_BUG)">
                         <lucide-icon [img]="icons.bug" size="16"></lucide-icon>
-                        Jira Bug
+                        <span class="mode-btn-label sm-visible">Bug</span>
+                    </button>
+
+                    <button class="btn btn-sm btn-ghost mode-btn"
+                            [class.bg-info]="config().mode === GenerationMode.ACTION_ITEMS"
+                            [class.text-white]="config().mode === GenerationMode.ACTION_ITEMS"
+                            [class.shadow-sm]="config().mode === GenerationMode.ACTION_ITEMS"
+                            (click)="toggleMode(GenerationMode.ACTION_ITEMS)">
+                        <lucide-icon [img]="icons.actionItems" size="16"></lucide-icon>
+                        <span class="mode-btn-label xl-visible">Action Items</span>
+                    </button>
+
+                    <button class="btn btn-sm btn-ghost mode-btn"
+                            [class.bg-secondary]="config().mode === GenerationMode.USER_STORY"
+                            [class.text-white]="config().mode === GenerationMode.USER_STORY"
+                            [class.shadow-sm]="config().mode === GenerationMode.USER_STORY"
+                            (click)="toggleMode(GenerationMode.USER_STORY)">
+                        <lucide-icon [img]="icons.userStory" size="16"></lucide-icon>
+                        <span class="mode-btn-label xl-visible">User Story</span>
                     </button>
                 </div>
 
                 <div class="divider divider-horizontal mx-0"></div>
 
-                <label class="toggle-label">
+                <label class="ac-toggle-container">
                     <span class="label-text text-xs font-semibold uppercase tracking-wide">Acceptance Criteria</span>
                     <input type="checkbox" class="toggle toggle-sm toggle-success"
                            [checked]="config().includeAcceptanceCriteria"
@@ -74,7 +103,7 @@
                         Thinking...
                     } @else {
                         <lucide-icon [img]="icons.send" size="18"></lucide-icon>
-                        Generate {{ config().mode === GenerationMode.JIRA_BUG ? 'Bug Report' : 'Tasks' }}
+                        Generate {{ generateButtonText }}
                     }
                 </button>
             </div>
@@ -141,6 +170,32 @@
                     ></app-task-card>
                 }
             </div>
+        } @else {
+            <div class="tg-empty-state animate__animated animate__fadeIn">
+                <div class="tg-empty-content">
+                    <div class="tg-empty-icon">
+                        <lucide-icon [img]="icons.magic" size="64"></lucide-icon>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mt-4">It's a bit empty here!</h3>
+                    <p class="text-base-content/60 mt-2 max-w-md text-center">
+                        Paste your meeting notes, slack threads, or ideas above and let AI structure them. Or try it out with a pre-made example to see the magic.
+                    </p>
+
+                    <div class="tg-pulse-wrapper">
+                        <svg class="tg-curved-arrow hidden sm:block text-base-content/30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M14 9l-6 -6l-6 6" />
+                            <path d="M8 3v7a6 6 0 0 0 6 6h6" />
+                        </svg>
+
+                        <button class="btn btn-primary rounded-full px-8 tg-btn-pulse"
+                                (click)="loadSample(sampleInputLabels[0].key)">
+                            <lucide-icon [img]="icons.magic" size="18"></lucide-icon>
+                            Try with a sample note
+                        </button>
+                    </div>
+                </div>
+            </div>
         }
     </div>
 
@@ -157,9 +212,19 @@
         (saved)="saveCollection($event)">
     </app-save-task-collection-dialog>
 
+    <app-pro-dialog #proModal (openWaitlist)="openWaitlistModal()"></app-pro-dialog>
+    <app-waitlist-modal #waitlistModal></app-waitlist-modal>
+
     <footer class="footer footer-center p-10 text-base-content/50">
-        <aside>
-            <p>Taskquery © {{ year() }}</p>
+        <aside class="flex flex-col gap-3 items-center">
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <p class="font-semibold">Tasquery © {{ year() }}</p>
+                <span class="hidden sm:inline opacity-30">|</span>
+                <a href="mailto:tasquery@gmail.com" class="link link-hover flex items-center gap-1.5 text-base-content/70 hover:text-primary transition-colors">
+                    <lucide-icon [img]="icons.feedback" size="14"></lucide-icon>
+                    Report a Bug / Feedback
+                </a>
+            </div>
             <app-terms-of-use></app-terms-of-use>
         </aside>
     </footer>
@@ -168,6 +233,6 @@
         <img [ngSrc]="'/taking-notes-2.svg'" width="400" height="600" alt="bg" class="w-full h-auto"/>
     </div>
     <div class="fixed bottom-0 right-0 -z-10 w-64 opacity-50 hidden xl:block">
-        <img [ngSrc]="'/content-structure-2.svg'" width="360" height="600" alt="bg" class="w-full h-auto"/>
+        <img [ngSrc]="'/content-structure-2.svg'" width="360" height="600" alt="bg" class="w-full h-auto" priority/>
     </div>
 </app-task-collection-drawer>

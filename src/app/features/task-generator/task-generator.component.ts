@@ -1,5 +1,22 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { Bug, CircleAlert, CloudCheckIcon, CopyIcon, FileJson, ListTodo, LucideAngularModule, PencilIcon, SaveIcon, SendHorizontalIcon } from 'lucide-angular';
+import { Component, computed, DestroyRef, inject, OnInit, signal, viewChild, ViewChild } from '@angular/core';
+import {
+    BugIcon,
+    CircleAlertIcon,
+    CircleCheckIcon,
+    CircleUserIcon,
+    CloudCheckIcon,
+    CopyIcon,
+    CrownIcon,
+    FileBracesIcon,
+    ListTodoIcon,
+    LucideAngularModule,
+    MessageSquareIcon,
+    PencilIcon,
+    SaveIcon,
+    SendHorizontalIcon,
+    SparklesIcon,
+    SquareCheckIcon
+} from 'lucide-angular';
 import { GenerationConfig, GenerationMode, ParseService } from '../../core/services/parse.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Task } from "../../shared/models/task.model";
@@ -17,6 +34,8 @@ import { SaveTaskCollectionDialogComponent } from './save-task-collection-dialog
 import { TaskCollection } from '../../shared/models/task-collection.model';
 import { RenameCollectionDialogComponent } from './rename-collection-dialog/rename-collection-dialog.component';
 import { ToastService } from '../../core/services/toast.service';
+import { ProDialogComponent } from '../../shared/ui/pro-dialog/pro-dialog.component';
+import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-modal.component';
 
 @Component({
   selector: 'app-task-generator',
@@ -29,7 +48,9 @@ import { ToastService } from '../../core/services/toast.service';
         NavigationComponent,
         TaskCollectionDrawerComponent,
         SaveTaskCollectionDialogComponent,
-        RenameCollectionDialogComponent
+        RenameCollectionDialogComponent,
+        ProDialogComponent,
+        WaitlistModalComponent,
     ],
   templateUrl: './task-generator.component.html',
   styleUrl: './task-generator.component.css'
@@ -38,14 +59,20 @@ export class TaskGeneratorComponent implements OnInit {
     // Icons
     protected readonly icons = {
         send: SendHorizontalIcon,
-        alert: CircleAlert,
+        alert: CircleAlertIcon,
         save: SaveIcon,
         edit: PencilIcon,
-        bug: Bug,
-        list: ListTodo,
-        standard: FileJson,
+        bug: BugIcon,
+        list: ListTodoIcon,
+        standard: FileBracesIcon,
         cloudCheck: CloudCheckIcon,
         copy: CopyIcon,
+        actionItems: SquareCheckIcon,
+        userStory: CircleUserIcon,
+        magic: SparklesIcon,
+        feedback: MessageSquareIcon,
+        crown: CrownIcon,
+        checkCircle: CircleCheckIcon,
     }
 
     private readonly parseService = inject(ParseService);
@@ -55,6 +82,8 @@ export class TaskGeneratorComponent implements OnInit {
 
     @ViewChild('saveCollectionModal') saveCollectionModal!: SaveTaskCollectionDialogComponent;
     @ViewChild('renameCollectionModal') renameCollectionModal!: RenameCollectionDialogComponent;
+    @ViewChild('proModal') proModal!: ProDialogComponent;
+    waitlistModal = viewChild.required<WaitlistModalComponent>('waitlistModal');
 
     inputText = signal<string>('');
     tasks = signal<Task[]>([]);
@@ -72,7 +101,7 @@ export class TaskGeneratorComponent implements OnInit {
     activeCollection = this.taskCollectionService.activeCollection;
     saveAsNew = signal<boolean>(false);
 
-    protected readonly maxBodyLength = GENERAL_CONFIG.MAX_BODY_LENGTH;
+    protected readonly maxBodyLength = GENERAL_CONFIG.MAX_REQUEST_BODY_LENGTH;
     public sampleInputLabels = SAMPLE_INPUT_LABELS;
 
     protected readonly GenerationMode = GenerationMode;
@@ -92,6 +121,15 @@ export class TaskGeneratorComponent implements OnInit {
 
     toggleAcceptanceCriteria(): void {
         this.config.update(c => ({ ...c, includeAcceptanceCriteria: !c.includeAcceptanceCriteria }));
+    }
+
+    get generateButtonText(): string {
+        switch (this.config().mode) {
+            case GenerationMode.JIRA_BUG: return 'Bug Report';
+            case GenerationMode.ACTION_ITEMS: return 'Action Items';
+            case GenerationMode.USER_STORY: return 'User Story';
+            default: return 'Tasks';
+        }
     }
 
     generateTasks() {
@@ -183,5 +221,16 @@ export class TaskGeneratorComponent implements OnInit {
 
         this.taskCollectionService.updateCollectionTitle(this.activeCollection()!.id, collectionName);
         this.toastService.success('Rename Collection Name was successfully.');
+    }
+
+    openProModal() {
+        this.proModal.show();
+    }
+
+    openWaitlistModal() {
+        this.proModal.close();
+        setTimeout(() => {
+            this.waitlistModal().show();
+        }, 50);
     }
 }
