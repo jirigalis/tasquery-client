@@ -1,0 +1,49 @@
+<dialog #proModal class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box border border-base-300 shadow-2xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+
+        <h3 class="font-bold text-2xl flex items-center gap-2">
+            <div class="p-2 bg-warning/20 rounded-lg text-warning">
+                <lucide-icon [img]="icons.crown" size="24"></lucide-icon>
+            </div>
+            Tasquery Pro
+        </h3>
+
+        <p class="py-4 text-base-content/80 leading-relaxed">
+            The free version is great for quick notes, but we are building the ultimate powerhouse for Product Managers and Tech Leads.
+            <br>Join the waitlist and get a <strong>50% early-bird discount</strong> on your first year!
+        </p>
+
+        <ul class="space-y-3 my-4 bg-base-200/50 p-4 rounded-xl border border-base-300">
+            <li class="flex items-start gap-3">
+                <lucide-icon [img]="icons.checkCircle" size="18" class="text-success shrink-0 mt-0.5"></lucide-icon>
+                <span class="text-sm"><strong>Direct Integrations:</strong> Push tasks directly to Jira, Linear, or Trello via API.</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <lucide-icon [img]="icons.checkCircle" size="18" class="text-success shrink-0 mt-0.5"></lucide-icon>
+                <span class="text-sm"><strong>Unlimited Context:</strong> Bypass the 500-char limit. Paste whole meeting transcripts.</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <lucide-icon [img]="icons.checkCircle" size="18" class="text-success shrink-0 mt-0.5"></lucide-icon>
+                <span class="text-sm"><strong>Cloud Sync & History:</strong> Save, search, and manage all your collections across devices.</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <lucide-icon [img]="icons.checkCircle" size="18" class="text-success shrink-0 mt-0.5"></lucide-icon>
+                <span class="text-sm"><strong>Custom Templates:</strong> Define your own team tags, formats, and AI tone of voice.</span>
+            </li>
+        </ul>
+
+        <div class="modal-action mt-6">
+            <button class="btn btn-primary w-full tc-btn-magic text-white border-none text-lg shadow-lg hover:scale-[1.02] transition-transform"
+                    (click)="handleJoinClick()">
+                Join the Waitlist
+            </button>
+        </div>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

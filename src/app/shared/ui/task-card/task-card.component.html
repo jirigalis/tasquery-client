@@ -1,29 +1,27 @@
-<article class="card bg-base-100 border-base-300 hover:border-primary shadow-sm rounded-xl overflow-hidden">
+<article class="tc-card" [class.is-editing]="editMode()">
 
-    <header class="flex justify-between items-start p-5 pb-3 border-b border-base-300">
+    <header class="tc-header">
         @if (!editMode()) {
-            <div class="flex-1 pr-4">
-                <h3 class="font-bold text-lg text-base-content leading-tight">
-                    {{ task().title }}
-                </h3>
+            <div class="tc-title-wrapper">
+                <h3 class="tc-title">{{ task().title }}</h3>
             </div>
-            <div class="badge badge-lg gap-2 font-semibold shrink-0 shadow-sm" [ngClass]="priorityConfig().colorClass">
+            <div class="tc-priority badge badge-lg shadow-sm" [ngClass]="priorityConfig().colorClass">
                 <lucide-icon [img]="priorityConfig().icon" size="16"></lucide-icon>
                 {{ priorityConfig().label }}
             </div>
         } @else {
-            <div class="flex flex-col sm:flex-row gap-3 w-full">
+            <div class="tc-edit-header">
                 <input type="text"
-                       class="input input-bordered input-sm w-full font-bold"
+                       class="input input-bordered input-sm tc-input-title"
                        [attr.maxlength]="limits.title"
                        [(ngModel)]="editableTask()!.title"
                        placeholder="Task Title">
 
-                <div class="dropdown dropdown-end sm:w-auto w-full">
+                <div class="dropdown dropdown-end tc-priority-dropdown">
                     <div tabindex="0" role="button"
-                         class="btn btn-sm btn-outline w-full sm:w-32 justify-between"
+                         class="btn btn-sm btn-outline tc-priority-btn"
                          [ngClass]="editablePriorityConfig().colorClass">
-                        <div class="flex items-center gap-2">
+                        <div class="tc-icon-text">
                             <lucide-icon [img]="editablePriorityConfig().icon" size="16"></lucide-icon>
                             {{ editablePriorityConfig().label }}
                         </div>
@@ -32,13 +30,11 @@
                         </svg>
                     </div>
 
-                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 border border-base-300 mt-1">
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box tc-dropdown-menu">
                         @for (p of availablePriorities; track p) {
                             @let meta = getPriorityMeta(p);
                             <li>
-                                <a (click)="setPriority(p)"
-                                   [class.active]="editableTask()!.priority === p"
-                                   class="flex items-center gap-2">
+                                <a (click)="setPriority(p)" [class.active]="editableTask()!.priority === p" class="tc-icon-text">
                                     <lucide-icon [img]="meta.icon" size="16" [class]="meta.colorClass"></lucide-icon>
                                     <span [class]="meta.colorClass">{{ p }}</span>
                                 </a>
@@ -50,20 +46,17 @@
         }
     </header>
 
-    <div class="card-body p-5 pt-3">
-
-        <section class="min-h-[2rem] flex items-center mb-2">
+    <div class="tc-body">
+        <section class="tc-tags-section">
             @if (!editMode()) {
                 @if (task().labels && task().labels!.length > 0) {
-                    <div class="flex flex-wrap gap-2">
+                    <div class="tc-tags-list">
                         @for (label of task().labels; track label) {
-                            <span class="badge badge-outline gap-1 opacity-80 font-normal">
-                                #{{ label }}
-                            </span>
+                            <span class="badge badge-outline tc-tag">#{{ label }}</span>
                         }
                     </div>
                 } @else {
-                    <span class="text-xs text-base-content opacity-40 italic flex items-center gap-1">
+                    <span class="tc-no-tags">
                         <lucide-icon [img]="icons.tags" size="12"></lucide-icon> No tags
                     </span>
                 }
@@ -76,66 +69,93 @@
             }
         </section>
 
-        <section class="flex-grow">
+        <section class="tc-content-section">
             @if (!editMode()) {
-                <div class="task-content p-4 border border-base-300 bg-base-200 bg-opacity-30 text-sm text-base-content">
+                <div class="tc-content-box">
                     <span>{{ task().content }}</span>
                 </div>
             } @else {
-                <div class="relative">
-                    <textarea class="textarea textarea-bordered w-full h-40 font-mono text-sm leading-relaxed pb-6"
+                <div class="tc-textarea-wrapper">
+                    <textarea class="textarea textarea-bordered tc-textarea"
                               [(ngModel)]="editableTask()!.content"
-                              [attr.maxlength]="limits.body"
+                              [attr.maxlength]="limits.content"
+                              [rows]="textareaRows"
                               placeholder="Task description..."></textarea>
-
-                    <div class="absolute bottom-2 right-2 text-xs text-base-content/40 font-mono pointer-events-none">
-                        {{ editableTask()!.content.length }} / {{ limits.body }}
+                    <div class="tc-char-counter">
+                        {{ editableTask()!.content.length }} / {{ limits.content }}
                     </div>
                 </div>
             }
         </section>
     </div>
 
-    <footer class="p-4 bg-base-100 border-t border-base-300 flex justify-between items-center gap-2">
-
-        <div class="flex gap-2">
+    <footer class="tc-footer">
+        <div class="tc-footer-group">
             @if (!editMode()) {
-                <button class="btn btn-ghost btn-sm tooltip tooltip-right"
-                        data-tip="Copy to clipboard"
-                        (click)="copyToClipboard()">
-                    <lucide-icon [img]="icons.copy" size="16"></lucide-icon>
-                    <span class="hidden sm:inline text-xs">Copy</span>
-                </button>
+                <div class="dropdown dropdown-top dropdown-hover">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm tc-btn-gap">
+                        <lucide-icon [img]="icons.copy" size="16"></lucide-icon>
+                        <span class="tc-btn-label">Copy Format</span>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box tc-dropdown-menu">
+                        <li><a (click)="copyJiraFormat()">
+                            <lucide-icon [img]="icons.jira" size="14"></lucide-icon>
+                            For Jira</a></li>
+                        <li><a (click)="copySlackFormat()">
+                            <lucide-icon [img]="icons.slack" size="14"></lucide-icon>
+                            For Slack</a></li>
+                        <li><a (click)="copyPlainText()">
+                            <lucide-icon [img]="icons.plainText" size="14"></lucide-icon>
+                            Plain Text</a></li>
+                    </ul>
+                </div>
 
                 <div class="dropdown dropdown-top dropdown-hover">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-2">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm tc-btn-gap">
                         <lucide-icon [img]="icons.export" size="16"></lucide-icon>
-                        <span class="hidden sm:inline text-xs">Export</span>
+                        <span class="tc-btn-label">Export</span>
                     </div>
-                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-40 border border-base-300">
-                        <li><a (click)="openExportDialog('json')"><lucide-icon [img]="icons.json" size="14"></lucide-icon> JSON</a></li>
-                        <li><a (click)="openExportDialog('markdown')"><lucide-icon [img]="icons.markdown" size="14"></lucide-icon> Markdown</a></li>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box tc-dropdown-menu">
+                        <li><a (click)="openExportDialog('json')">
+                            <lucide-icon [img]="icons.json" size="14"></lucide-icon>
+                            JSON</a></li>
+                        <li><a (click)="openExportDialog('markdown')">
+                            <lucide-icon [img]="icons.markdown" size="14"></lucide-icon>
+                            Markdown</a></li>
                     </ul>
                 </div>
             }
         </div>
 
-        <div class="flex gap-2">
+        <div class="tc-footer-group">
             @if (editMode()) {
-                <button class="btn btn-ghost btn-sm text-error" (click)="cancelEdit()">
-                    Cancel
-                </button>
+                <button class="btn btn-ghost btn-sm text-error" (click)="cancelEdit()">Cancel</button>
                 <button class="btn btn-primary btn-sm shadow-md" (click)="saveChanges()">
                     <lucide-icon [img]="icons.check" size="16"></lucide-icon>
                     Save Changes
                 </button>
             } @else {
-                <button class="btn btn-ghost btn-sm btn-square text-error tooltip tooltip-left"
-                        data-tip="Delete Task"
-                        (click)="handleDelete()">
+                <button class="btn btn-ghost btn-sm btn-square text-error tooltip tooltip-left" data-tip="Delete Task" (click)="handleDelete()">
                     <lucide-icon [img]="icons.trash" size="18"></lucide-icon>
                 </button>
-                <button class="btn btn-outline btn-sm gap-2 hover:bg-base-200" (click)="toggleEdit()">
+
+                <div class="dropdown dropdown-top dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-sm tc-btn-magic btn-square shadow-sm tooltip tooltip-top" data-tip="AI Magic">
+                        @if (isRefining()) {
+                            <span class="loading loading-spinner loading-xs text-white"></span>
+                        } @else {
+                            <lucide-icon [img]="icons.magic" size="16" class="text-white"></lucide-icon>
+                        }
+                    </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300 mb-1">
+                        <li class="menu-title text-xs opacity-50 px-2 py-1">Refine with AI</li>
+                        <li><a (click)="applyAiAction(RefineAction.SHORTEN)">Make it shorter</a></li>
+                        <li><a (click)="applyAiAction(RefineAction.TECHNICAL)">Make it more technical</a></li>
+                        <li><a (click)="applyAiAction(RefineAction.ADD_AC)">Add Acceptance Criteria</a></li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-outline btn-sm tc-btn-gap hover:bg-base-200" (click)="toggleEdit()">
                     <lucide-icon [img]="icons.edit" size="14"></lucide-icon>
                     Edit
                 </button>
@@ -144,17 +164,6 @@
     </footer>
 </article>
 
-<app-export-dialog
-    #exportModal
-    [format]="exportFormat()"
-    [content]="convertedTask()"
-    (onDownload)="exportToFormat()"
-></app-export-dialog>
-
-<app-confirm-dialog
-    #deleteModal
-    [title]="'Delete Task'"
-    [type]="'error'"
-    [message]="'Are you sure? This task will be lost forever like a tear in rain.'"
-    (confirm)="onDeleteConfirmed()"
-/>
+<app-export-dialog #exportModal [format]="exportFormat()" [content]="convertedTask()" (onDownload)="exportToFormat()"></app-export-dialog>
+<app-confirm-dialog #deleteModal [title]="'Delete Task'" [type]="'error'" [message]="'Are you sure? This task will be lost forever like a tear in rain.'"
+                    (confirm)="onDeleteConfirmed()"></app-confirm-dialog>

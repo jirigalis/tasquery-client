@@ -11,6 +11,7 @@ export const appConfig: ApplicationConfig = {
       provideRouter(routes),
       provideHttpClient(),
       provideAppInitializer(() => {
+          console.log('Debug mode:', isDevMode());
           vercelInject({ mode: isDevMode() ? 'development' : 'production' });
       }),
   ]

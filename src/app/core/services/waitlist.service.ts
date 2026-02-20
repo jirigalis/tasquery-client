@@ -9,7 +9,7 @@ export class WaitlistService {
     private readonly http: HttpClient = inject(HttpClient);
     private apiUrl: string = environment.apiUrl;
 
-    join(email: string) {
-        return this.http.post(this.apiUrl + '/waitlist', { email });
+    join(email: string, feature: string) {
+        return this.http.post(this.apiUrl + '/waitlist', { email, feature });
     }
 }

@@ -1,21 +1,25 @@
-import { Component, computed, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
 import {
     CheckIcon,
     CircleAlertIcon,
     CodeXmlIcon,
     CopyIcon,
-    FileJsonIcon,
+    FileBraces,
+    FileTextIcon,
     InfoIcon,
+    KanbanIcon,
     LucideAngularModule,
+    MessageSquareIcon,
     PencilIcon,
     ShareIcon,
+    SparklesIcon,
     TagsIcon,
     Trash2Icon,
     TriangleAlertIcon,
     XIcon
 } from 'lucide-angular';
 import { Task, TaskPriority } from '../../models/task.model';
-import { ExportType } from '../../../core/services/parse.service';
+import { ExportType, ParseService, RefineAction } from '../../../core/services/parse.service';
 import { generateJSON, generateMarkdown } from '../../utils/export';
 import { FormsModule } from '@angular/forms';
 import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
@@ -23,6 +27,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { NgClass } from '@angular/common';
 import { GENERAL_CONFIG } from '../../../config/general';
 import { ToastService } from '../../../core/services/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-task-card',
@@ -38,9 +43,11 @@ import { ToastService } from '../../../core/services/toast.service';
 })
 export class TaskCardComponent implements OnInit {
     private toastService = inject(ToastService);
+    private parseService: ParseService = inject(ParseService);
     task = input.required<Task>();
     saveTask = output<Task>();
     deleteTask = output<Task>();
+    destroyRef = inject(DestroyRef);
 
     editMode = signal<boolean>(false);
     editableTask = signal<Task | undefined>(undefined);
@@ -48,15 +55,17 @@ export class TaskCardComponent implements OnInit {
 
     exportFormat = signal<ExportType>('json');
     convertedTask = signal<string>('');
+    isRefining = signal<boolean>(false);
 
     @ViewChild('exportModal') exportDialog!: ExportDialogComponent;
     @ViewChild('deleteModal') deleteDialog!: ConfirmDialogComponent;
 
     protected readonly limits = {
         title: GENERAL_CONFIG.MAX_TITLE_LENGTH,
-        body: GENERAL_CONFIG.MAX_BODY_LENGTH,
+        content: GENERAL_CONFIG.MAX_TASK_CONTENT_LENGTH,
         labels: GENERAL_CONFIG.MAX_LABELS_LENGTH,
     };
+    protected readonly RefineAction = RefineAction;
 
     priorityConfig = computed(() => this.getPriorityMeta(this.task().priority));
     availablePriorities = GENERAL_CONFIG.TASK_PRIORITIES;
@@ -64,13 +73,8 @@ export class TaskCardComponent implements OnInit {
         this.editableTask() ? this.getPriorityMeta(this.editableTask()!.priority) : this.getPriorityMeta(TaskPriority.LOW)
     );
 
-    /*priorityLevels = GENERAL_CONFIG.TASK_PRIORITIES;
-    maxTitleLength = GENERAL_CONFIG.MAX_TITLE_LENGTH;
-    maxBodyLength = GENERAL_CONFIG.MAX_BODY_LENGTH;
-    maxLabelsLength = GENERAL_CONFIG.MAX_LABELS_LENGTH;*/
-
     protected readonly icons = {
-        json: FileJsonIcon,
+        json: FileBraces,
         markdown: CodeXmlIcon,
         check: CheckIcon,
         edit: PencilIcon,
@@ -82,6 +86,10 @@ export class TaskCardComponent implements OnInit {
         high: CircleAlertIcon,
         medium: TriangleAlertIcon,
         low: InfoIcon,
+        plainText: FileTextIcon,
+        jira: KanbanIcon,
+        slack: MessageSquareIcon,
+        magic: SparklesIcon,
     };
 
     ngOnInit(): void {
@@ -140,16 +148,48 @@ export class TaskCardComponent implements OnInit {
         this.editMode.set(false);
     }
 
+    get textareaRows(): number {
+        if (!this.editableTask()?.content) {
+            return 6;
+        }
+
+        const text = this.editableTask()!.content;
+        const lineBreaks = text.split('\n').length;
+        const approxWraps = Math.ceil(text.length / 70);
+
+        const rows = Math.max(lineBreaks, approxWraps) + 1;
+        return Math.min(Math.max(rows, 6), 25);
+    }
+
     handleDelete() {
         this.deleteDialog.show();
     }
 
-    async copyToClipboard(): Promise<void> {
+    async copyPlainText() {
+        (document.activeElement as HTMLElement)?.blur();
+        const text = `Title: ${this.task().title}\nPriority: ${this.task().priority}\nLabels: ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
+        await this.executeCopy(text, 'Plain Text');
+    }
+
+    async copyJiraFormat() {
+        (document.activeElement as HTMLElement)?.blur();
+        const text = `h3. ${this.task().title}\n*Priority:* ${this.task().priority}\n*Labels:* ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
+        await this.executeCopy(text, 'Jira Format');
+    }
+
+    async copySlackFormat() {
+        (document.activeElement as HTMLElement)?.blur();
+        const text = `*${this.task().title}*\n*Priority:* ${this.task().priority} | *Labels:* ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
+        await this.executeCopy(text, 'Slack Format');
+    }
+
+    private async executeCopy(text: string, formatName: string): Promise<void> {
         try {
-            await navigator.clipboard.writeText(this.task().content || '');
-            this.toastService.success('Copied to clipboard!');
+            await navigator.clipboard.writeText(text);
+            this.toastService.success(`Copied to clipboard (${formatName})!`);
         } catch (error) {
             console.error('Failed to copy to clipboard', error);
+            this.toastService.error('Failed to copy to clipboard');
         }
     }
 
@@ -197,5 +237,28 @@ export class TaskCardComponent implements OnInit {
         a.click();
 
         window.URL.revokeObjectURL(url);
+    }
+
+    applyAiAction(action: RefineAction) {
+        (document.activeElement as HTMLElement)?.blur();
+
+        if (this.isRefining()) {
+            return;
+        }
+
+        this.isRefining.set(true);
+        this.parseService.refineTask(this.task(), action).pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (task: Task) => {
+                    this.saveTask.emit(task);
+                    this.isRefining.set(false);
+                    this.toastService.success('Task refined by AI ✨');
+                },
+                error: (err) => {
+                    console.error('Failed to refine', err);
+                    this.toastService.error('Failed to refine task.');
+                    this.isRefining.set(false);
+                }
+            });
     }
 }

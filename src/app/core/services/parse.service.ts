@@ -10,6 +10,14 @@ export type ExportType = 'json' | 'csv' | 'markdown';
 export enum GenerationMode {
     STANDARD = 'standard',
     JIRA_BUG = 'jira-bug',
+    ACTION_ITEMS = 'action-items',
+    USER_STORY = 'user-story',
+}
+
+export enum RefineAction {
+    SHORTEN = 'shorten',
+    TECHNICAL = 'technical',
+    ADD_AC = 'add-ac',
 }
 
 export interface GenerationConfig {
@@ -62,6 +70,23 @@ export class ParseService {
                     observer.next(this.testOutput);
                     observer.complete();
                 }, 500);
+            });
+        }
+    }
+
+    refineTask(task: Task, action: RefineAction): Observable<Task> {
+        if (!GENERAL_CONFIG.TEST_MODE) {
+            return this.http.post<Task>(this.apiUrl + '/parse/refine', { task, action });
+        } else {
+            return new Observable<Task>(observer => {
+                setTimeout(() => {
+                    const updated = {
+                        ...task,
+                        content: task.content + `\n\n*(AI Refined: ${action})*`
+                    };
+                    observer.next(updated);
+                    observer.complete();
+                }, 800);
             });
         }
     }
