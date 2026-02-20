@@ -4,6 +4,7 @@ import { inject as vercelInject } from '@vercel/analytics'
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,8 +12,11 @@ export const appConfig: ApplicationConfig = {
       provideRouter(routes),
       provideHttpClient(),
       provideAppInitializer(() => {
-          console.log('Debug mode:', isDevMode());
-          vercelInject({ mode: isDevMode() ? 'development' : 'production' });
+          vercelInject();
+
+          // 2. Pro tvůj osobní debug raději používej tvůj environment soubor
+          console.log('Production mode:', environment.production);
+          console.log('isDevMode()', isDevMode());
       }),
   ]
 };
