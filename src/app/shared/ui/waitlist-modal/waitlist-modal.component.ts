@@ -21,7 +21,7 @@ export class WaitlistModalComponent {
     toastService = inject(ToastService);
 
     email = signal('');
-    selectedFeature = signal('');
+    selectedFeatures = signal<string[]>([]);
     isSubmitting = signal(false);
 
     protected readonly icons = {
@@ -44,7 +44,24 @@ export class WaitlistModalComponent {
     close() {
         this.dialog().nativeElement.close();
         this.email.set('');
-        this.selectedFeature.set('');
+        this.selectedFeatures.set([]);
+    }
+
+    toggleFeature(featureLabel: string) {
+        const current = this.selectedFeatures();
+
+        if (current.includes(featureLabel)) {
+            this.selectedFeatures.set(current.filter(f => f !== featureLabel));
+        } else {
+            if (current.length < 2) {
+                this.selectedFeatures.set([...current, featureLabel]);
+            }
+        }
+    }
+
+    isFeatureDisabled(featureLabel: string): boolean {
+        const current = this.selectedFeatures();
+        return current.length >= 2 && !current.includes(featureLabel);
     }
 
     submit() {
@@ -52,8 +69,12 @@ export class WaitlistModalComponent {
             return;
         }
 
+        const joinedFeatures: string = this.selectedFeatures().length > 0
+            ? this.selectedFeatures().join(', ')
+            : 'None';
+
         this.isSubmitting.set(true);
-        this.waitlistService.join(this.email()!, this.selectedFeature()!).pipe(
+        this.waitlistService.join(this.email()!, joinedFeatures).pipe(
             takeUntilDestroyed(this.destroyRef),
         ).subscribe({
             next: () => {
