@@ -30,16 +30,19 @@
             </div>
 
             <div class="form-control w-full">
-                <label class="label"><span class="label-text font-semibold">What feature do you need the most? (Optional)</span></label>
+                <label class="label"><span class="label-text font-semibold mb-2 block whitespace-normal">What features do you need the most? (Select up to 2, optional)</span></label>
                 <div class="flex flex-col gap-2 p-3 bg-base-200/50 rounded-xl border border-base-300">
                     @for (feature of proFeatures; track feature.id) {
-                        <label class="label cursor-pointer justify-start gap-3 hover:bg-base-200 p-2 rounded-lg transition-colors">
-                            <input type="radio"
-                                   name="feature-radio"
-                                   class="radio radio-primary radio-sm"
-                                   [value]="feature.id"
-                                   [(ngModel)]="selectedFeature" />
-                            <span class="label-text">{{ feature.label }}</span>
+                        <label class="label cursor-pointer justify-start gap-3 hover:bg-base-200 p-2 rounded-lg transition-colors"
+                               [class.opacity-40]="isFeatureDisabled(feature.label)">
+
+                            <input type="checkbox"
+                                   class="checkbox checkbox-primary checkbox-sm rounded"
+                                   [checked]="selectedFeatures().includes(feature.label)"
+                                   [disabled]="isFeatureDisabled(feature.label)"
+                                   (change)="toggleFeature(feature.label)" />
+
+                            <span class="label-text text-base-content/90">{{ feature.label }}</span>
                         </label>
                     }
                 </div>
