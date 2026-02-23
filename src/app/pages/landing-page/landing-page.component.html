@@ -8,19 +8,30 @@
     <p class="mt-6 max-w-xl text-lg">
         Tasquery helps you turn Slack threads, meeting notes or raw text into structured tasks for Jira, Asana, Trello, and more.
     </p>
-    <div class="mt-8 flex gap-4">
-        <a href="/app" class="btn btn-primary btn-lg">
+    <div class="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <a href="/app" class="btn btn-primary btn-lg w-full sm:w-auto">
             <lucide-icon [img]="tubeIcon" class="mr-1"></lucide-icon>
             Try Tasquery Now
         </a>
-        <a href="#waitlist" class="btn btn-outline btn-lg">Join Waitlist</a>
+        <a href="#waitlist" class="btn btn-outline btn-lg w-full sm:w-auto">
+            Join Waitlist
+        </a>
     </div>
     <div class="mt-20 w-full max-w-3xl">
-        <img
+        <!--<img
             src="/tasquery-preview-2.png"
             alt="Tasquery Screenshot"
             class="rounded-lg shadow-lg tasquery-screenshot"
-        />
+        />-->
+        <video
+            src="/tasquery_showcase.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="/tasquery-preview-2.png"
+            class="rounded-2xl shadow-2xl tasquery-screenshot">
+        </video>
     </div>
 </section>
 
