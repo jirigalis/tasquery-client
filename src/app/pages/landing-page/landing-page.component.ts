@@ -29,6 +29,5 @@ export class LandingPageComponent {
 
     showWaitlistModal() {
         this.waitlistModal().show();
-        throw new Error('Sentry Test Error');
     }
 }
