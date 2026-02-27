@@ -15,6 +15,5 @@ import { environment } from '../environments/environment';
 export class AppComponent {
     constructor() {
         console.log('is production:', environment.production);
-        throw new Error('Sentry app.component error test');
     }
 }
