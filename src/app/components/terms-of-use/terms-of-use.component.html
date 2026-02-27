@@ -1,71 +1,64 @@
 @if (type() == 'link') {
-    <a class="link link-hover" (click)="openTermsModal()">Terms of use</a>
+    <a class="link link-hover" (click)="openTermsModal()">Terms of Use</a>
 } @else {
-    <button class="btn btn-link" (click)="openTermsModal()">Terms of use</button>
+    <button class="btn btn-link" (click)="openTermsModal()">Terms of Use</button>
 }
 <dialog id="terms_modal" class="modal">
     <article class="modal-box w-9/12 max-w-5xl max-h-4/5 text-left prose">
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
-        <h2>Terms of use</h2>
-        <p><em>Last updated: September 2025</em></p>
+        <h2 class="text-2xl font-bold">Terms of Use</h2>
+        <p class="text-sm opacity-70"><em>Last updated: February 2026</em></p>
 
-        <h3>1. Beta Software Disclaimer</h3>
+        <h3 class="text-xl font-semibold mt-4">1. Beta Service & "As-Is" Agreement</h3>
         <p>
-            This service is currently in <strong>public beta</strong>. It is provided <strong>"as is"</strong>, without any warranties or guarantees. Features may change or stop working at any time.
+            Tasquery is currently in <strong>public beta</strong>. We provide this service to help you structure your workflow, but it is provided on an <strong>"as-is"</strong> and <strong>"as-available"</strong> basis. We do not guarantee 100% uptime or that features will remain unchanged.
         </p>
 
-        <h3>2. AI-Generated Content</h3>
+        <h3 class="text-xl font-semibold mt-4">2. AI Content Responsibility (The "Human-in-the-loop")</h3>
         <p>
-            This tool uses the OpenAI API to generate content based on the text you provide. You understand and agree that:
-        </p>
-        <ul>
-            <li>The output may be inaccurate, outdated, or misleading.</li>
-            <li>You are solely responsible for verifying and using any generated content.</li>
-            <li>We are not responsible for any damages or losses caused by reliance on AI-generated output.</li>
-        </ul>
-
-        <h3>3. Data Privacy</h3>
-        <p>
-            We do <strong>not store</strong> or share any input or output data sent through this tool. However:
+            Our tool uses Large Language Models (LLMs) to generate drafts. By using Tasquery, you acknowledge that:
         </p>
         <ul>
-            <li>Your input is sent to OpenAI’s servers for processing.</li>
-            <li>You should <strong>not submit sensitive, private, or confidential information</strong>.</li>
+            <li><strong>AI Hallucinations:</strong> AI can occasionally produce inaccurate, incomplete, or biased information.</li>
+            <li><strong>Final Review:</strong> You are <strong>solely responsible</strong> for reviewing, editing, and verifying any generated output before moving it into your production environment (Jira, Linear, etc.).</li>
+            <li><strong>Not a Replacement:</strong> Tasquery is a drafting assistant, not a replacement for professional product judgment.</li>
         </ul>
 
-        <h3>4. Usage Limits and Abuse</h3>
+        <h3 class="text-xl font-semibold mt-4">3. Data Usage & Third Parties</h3>
         <p>
-            To prevent abuse and protect our API resources:
+            While we do not store your data, it is processed through OpenAI’s API. By using the service, you agree to comply with their usage policies. You should <strong>always follow your company's internal security guidelines</strong> regarding the handling of sensitive or proprietary information.
+        </p>
+
+        <h3 class="text-xl font-semibold mt-4">4. Acceptable Use & Fair Limits</h3>
+        <p>
+            To keep the service free and fast for everyone, you agree not to:
         </p>
         <ul>
-            <li>We may limit the number of requests per user or IP.</li>
-            <li>Automated usage, scraping, or DDoS-like behavior is strictly prohibited.</li>
+            <li>Use automated scripts, scrapers, or bots to access the service.</li>
+            <li>Attempt to reverse-engineer the AI prompting logic or bypass usage limits.</li>
+            <li>Use the service for any illegal or malicious documentation purposes.</li>
         </ul>
 
-        <h3>5. No Liability</h3>
+        <h3 class="text-xl font-semibold mt-4">5. Limitation of Liability</h3>
         <p>
-            We are not liable for any damages resulting from:
-        </p>
-        <ul>
-            <li>Service downtime or errors</li>
-            <li>AI-generated content</li>
-            <li>Improper or unlawful use of the service</li>
-        </ul>
-
-        <h3>6. Modifications</h3>
-        <p>
-            We reserve the right to change or discontinue the service at any time, with or without notice.
+            Tasquery and its creators shall not be liable for any indirect, incidental, or consequential damages (including loss of data, profits, or project delays) resulting from your use of the service or reliance on AI-generated drafts.
         </p>
 
-        <h3>💬 Contact</h3>
+        <h3 class="text-xl font-semibold mt-4">6. Termination & Changes</h3>
         <p>
-            If you have questions or concerns, please contact us at: <a href="mailto:tasquery@gmail.com">tasquery&#64;gmail.com</a>
+            We reserve the right to modify these terms or discontinue the service at any time to ensure the sustainability of the project.
         </p>
+
+        <div class="mt-8 p-4 bg-base-200 rounded-lg text-sm">
+            <h4 class="font-bold mb-1">💬 Questions?</h4>
+            <p>Reach out to us at: <a href="mailto:tasquery@gmail.com" class="link">tasquery&#64;gmail.com</a></p>
+        </div>
+
         <div class="modal-action mt-6">
             <form method="dialog">
-                <button class="btn btn-outline">Close</button>
+                <button class="btn btn-primary">I Agree</button>
             </form>
         </div>
     </article>
