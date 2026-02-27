@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --configuration production",
+    "build": "if [ \"$VERCEL_ENV\" = \"production\" ]; then ng build --configuration production; else ng build --configuration preview; fi",
     "build:preview": "ng build --configuration preview",
     "build:dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^21.1.4",
     "@angular/platform-browser-dynamic": "^21.1.4",
     "@angular/router": "^21.1.4",
+    "@sentry/angular": "^10.40.0",
     "@tailwindcss/postcss": "^4.2.0",
     "@vercel/analytics": "^1.6.1",
     "animate.css": "^4.1.1",
