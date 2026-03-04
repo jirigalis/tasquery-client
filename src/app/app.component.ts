@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastComponent } from './shared/ui/toast/toast.component';
-import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -13,7 +12,4 @@ import { environment } from '../environments/environment';
     styleUrl: './app.component.css'
 })
 export class AppComponent {
-    constructor() {
-        console.log('is production:', environment.production);
-    }
 }

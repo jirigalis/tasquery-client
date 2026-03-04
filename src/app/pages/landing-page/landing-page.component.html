@@ -3,10 +3,10 @@
 <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-12">
     <h1 class="text-4xl md:text-6xl font-bold leading-tight">
         Turn Notes and Chats into <br/>
-        <span class="text-primary">Actionable Tasks</span> with ease for any tool.
+        <span class="text-primary">Actionable Tasks</span> with ease in Seconds.
     </h1>
     <p class="mt-6 max-w-xl text-lg">
-        Tasquery transforms messy meeting notes and Slack threads into structured tickets for <strong>Jira, Linear, Trello, Monday</strong>, and more.
+        Stop wasting 20 minutes "translating" Slack threads and messy notes. Get a structured <strong>User Story draft</strong> instantly, refine it, and get back to building.
     </p>
     <div class="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
         <a href="/app" class="btn btn-primary btn-lg w-full sm:w-auto">
@@ -35,8 +35,65 @@
     </div>
 </section>
 
+<!-- Designed for speed -->
+<section class="py-16 px-6 bg-base-200 designed-for-speed-container">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Designed for Speed, Not Ceremony</h2>
+            <p class="text-lg opacity-80 max-w-2xl mx-auto">
+                Most AI tools make you feel like a "Prompt Engineer." Tasquery is built for the busy ones who just want to get the job done.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="p-8 rounded-2xl border-2 border-dashed opacity-60 other-tools">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <lucide-icon [img]="icons.circleX" class="text-error"></lucide-icon>
+                    The "Other" AI Tools
+                </h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">1</span> Sign-up and verify email
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">2</span> Tweak "Formality" & "Urgency" sliders
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">3</span> Write complex prompts to get it right
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">4</span> Wait for history to sync
+                    </li>
+                </ul>
+                <p class="mt-6 text-xs italic">Result: 5 minutes wasted on "tooling".</p>
+            </div>
+
+            <div class="p-8 rounded-2xl border-2 border-primary bg-base-100 shadow-xl scale-105">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-primary">
+                    <lucide-icon [img]="icons.circleCheck" class="text-primary"></lucide-icon>
+                    The Tasquery Way
+                </h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-center gap-3 font-semibold">
+                        <span class="badge badge-primary badge-sm">1</span> Paste your messy notes
+                    </li>
+                    <li class="flex items-center gap-3 font-semibold">
+                        <span class="badge badge-primary badge-sm">2</span> <strong>Get your Smart Draft</strong>
+                    </li>
+                </ul>
+                <p class="mt-6 text-sm">
+                    <span class="text-primary font-bold">Smart Context Detection:</span> Our AI automatically identifies if you're pasting a Bug, a User Story, or a Task. No sliders, no login, no BS.
+                </p>
+                <div class="mt-8">
+                    <a href="/app" class="btn btn-primary btn-block">Try Instant Drafting</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Pain Points -->
-<section class="bg-base-200 py-20 px-6 text-center">
+<section class="py-20 px-6 text-center">
     <h2 class="text-3xl font-bold mb-8">The Unstructured Text Nightmare</h2>
     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         <div>
@@ -57,8 +114,8 @@
                 </svg>
 
             </div>
-            <h3 class="font-bold">Messy Inputs</h3>
-            <p class="mt-2 text-sm">Slack threads, long meetings and brainstorming dumps are hard to convert into tasks.</p>
+            <h3 class="font-bold">The Documentation Tax</h3>
+            <p class="mt-2 text-sm">Slack threads, Zoom transcripts, and brain dumps are goldmines of info, but a nightmare to document.</p>
         </div>
         <div>
             <div class="text-5xl mb-4 flex justify-center">
@@ -74,8 +131,8 @@
                     </g>
                 </svg>
             </div>
-            <h3 class="font-bold">Manual Work</h3>
-            <p class="mt-2 text-sm">Turning notes into structured tickets wastes time and energy.</p>
+            <h3 class="font-bold">Stop being a Scribe</h3>
+            <p class="mt-2 text-sm">Your value is in decision-making, not in manual copy-pasting and formatting. Eliminate the "blank ticket" syndrome.</p>
         </div>
         <div>
             <div class="text-5xl mb-4 flex justify-center">
@@ -95,39 +152,39 @@
                 </svg>
 
             </div>
-            <h3 class="font-bold">Team Frustration</h3>
-            <p class="mt-2 text-sm">No shared workflow for turning unstructured info into actionable items.</p>
+            <h3 class="font-bold">Context Overload</h3>
+            <p class="mt-2 text-sm">Capture decisions buried in 50+ Slack messages before they disappear into the void.</p>
         </div>
     </div>
 </section>
 
 <!-- Features -->
-<section class="py-24 px-6 text-center" id="features">
+<section class="bg-base-200 py-24 px-6 text-center" id="features">
     <h2 class="text-3xl font-bold mb-8">Finally, a better way to<br class="hidden md:block"/> structure your notes into tasks</h2>
     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        <div class="card bg-base-100 shadow">
+        <div class="feature-card card bg-base-100 shadow">
             <div class="card-body">
-                <h3 class="card-title">AI-Powered Parsing</h3>
-                <p>Extract tasks, subtasks, deadlines and labels from raw text in seconds.</p>
+                <h3 class="card-title">Smart Drafting Engine</h3>
+                <p>Extracts tasks, subtasks, and Acceptance Criteria. It’s a starting point, not a final word - you stay in control.</p>
             </div>
         </div>
-        <div class="card bg-base-100 shadow">
+        <div class="feature-card card bg-base-100 shadow">
             <div class="card-body">
-                <h3 class="card-title">Ready for Jira, Trello & more</h3>
-                <p>Export to structured formats for your project management tools.</p>
+                <h3 class="card-title">Ready for Jira, Linear & more</h3>
+                <p>Perfectly formatted Markdown/JSON output. Just paste it in and you're done. No more manual indentation.</p>
             </div>
         </div>
-        <div class="card bg-base-100 shadow">
+        <div class="feature-card card bg-base-100 shadow">
             <div class="card-body">
-                <h3 class="card-title">One Click Magic</h3>
-                <p>From notes to tasks in one click – no setup, no templates, no headache.</p>
+                <h3 class="card-title">Work-Grade Privacy</h3>
+                <p>No login, no tracking. Your data is processed in-memory and <strong>never used for AI training</strong></p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Waitlist CTA -->
-<section id="waitlist" class="bg-base-200 py-20 px-6 text-center">
+<section id="waitlist" class="py-20 px-6 text-center">
     <h2 class="text-3xl font-bold mb-4">Be the First to Try Tasquery</h2>
     <p class="mb-6 max-w-xl mx-auto">Get early access to direct Jira integrations, unlimited context, cloud sync, and custom templates.</p>
 
@@ -148,7 +205,7 @@
         <div class="collapse collapse-arrow join-item border border-base-300">
             <input type="checkbox"/>
             <div class="collapse-title text-lg font-medium">Is my data stored?</div>
-            <div class="collapse-content"><p>No. Tasquery processes your input in-memory only.</p></div>
+            <div class="collapse-content"><p>No. Tasquery processes your input in-memory only. We have a strict <strong>no-retention policy</strong> and we do not train AI models on your inputs.</p></div>
         </div>
         <div class="collapse collapse-arrow join-item border border-base-300">
             <input type="checkbox"/>
@@ -158,7 +215,7 @@
         <div class="collapse collapse-arrow join-item border border-base-300">
             <input type="checkbox"/>
             <div class="collapse-title text-lg font-medium">What formats are supported?</div>
-            <div class="collapse-content"><p>You can export tasks as JSON, Markdown or Jira-compatible text.</p></div>
+            <div class="collapse-content"><p>Currently, we provide high-quality drafts for Jira, Linear, Trello, and standard Markdown. More integrations are coming to the waitlist members.</p></div>
         </div>
     </div>
 </section>
@@ -168,7 +225,7 @@
     <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8">
         <div>
             <h2 class="text-xl font-bold">Tasquery</h2>
-            <p class="text-sm">Built by developers, for developers. Open for feedback.</p>
+            <p class="text-sm">Built for those who hate the "Documentation Tax". Open for feedback.</p>
         </div>
         <div class="flex flex-col gap-2 text-sm">
             <app-terms-of-use [type]="'link'"></app-terms-of-use>
