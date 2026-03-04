@@ -3,7 +3,7 @@ import { TermsOfUseComponent } from "../../components/terms-of-use/terms-of-use.
 import { PrivacyPolicyComponent } from '../../components/privacy-policy/privacy-policy.component';
 import { ContactModalComponent } from '../../shared/ui/contact-modal/contact-modal.component';
 import { FormsModule } from '@angular/forms';
-import { LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
+import { CircleCheckIcon, CircleXIcon, LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
 import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-modal.component';
 
@@ -26,6 +26,11 @@ export class LandingPageComponent {
     waitlistModal = viewChild.required<WaitlistModalComponent>(WaitlistModalComponent);
 
     year = signal(new Date().getFullYear());
+
+    protected readonly icons = {
+        circleCheck: CircleCheckIcon,
+        circleX: CircleXIcon,
+    }
 
     showWaitlistModal() {
         this.waitlistModal().show();

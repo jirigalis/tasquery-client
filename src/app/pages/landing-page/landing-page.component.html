@@ -35,8 +35,65 @@
     </div>
 </section>
 
+<!-- Designed for speed -->
+<section class="py-16 px-6 bg-base-200 designed-for-speed-container">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Designed for Speed, Not Ceremony</h2>
+            <p class="text-lg opacity-80 max-w-2xl mx-auto">
+                Most AI tools make you feel like a "Prompt Engineer." Tasquery is built for the busy ones who just want to get the job done.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="p-8 rounded-2xl border-2 border-dashed opacity-60 other-tools">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <lucide-icon [img]="icons.circleX" class="text-error"></lucide-icon>
+                    The "Other" AI Tools
+                </h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">1</span> Sign-up and verify email
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">2</span> Tweak "Formality" & "Urgency" sliders
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">3</span> Write complex prompts to get it right
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="badge badge-ghost badge-sm">4</span> Wait for history to sync
+                    </li>
+                </ul>
+                <p class="mt-6 text-xs italic">Result: 5 minutes wasted on "tooling".</p>
+            </div>
+
+            <div class="p-8 rounded-2xl border-2 border-primary bg-base-100 shadow-xl scale-105">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-2 text-primary">
+                    <lucide-icon [img]="icons.circleCheck" class="text-primary"></lucide-icon>
+                    The Tasquery Way
+                </h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-center gap-3 font-semibold">
+                        <span class="badge badge-primary badge-sm">1</span> Paste your messy notes
+                    </li>
+                    <li class="flex items-center gap-3 font-semibold">
+                        <span class="badge badge-primary badge-sm">2</span> <strong>Get your Smart Draft</strong>
+                    </li>
+                </ul>
+                <p class="mt-6 text-sm">
+                    <span class="text-primary font-bold">Smart Context Detection:</span> Our AI automatically identifies if you're pasting a Bug, a User Story, or a Task. No sliders, no login, no BS.
+                </p>
+                <div class="mt-8">
+                    <a href="/app" class="btn btn-primary btn-block">Try Instant Drafting</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Pain Points -->
-<section class="bg-base-200 py-20 px-6 text-center">
+<section class="py-20 px-6 text-center">
     <h2 class="text-3xl font-bold mb-8">The Unstructured Text Nightmare</h2>
     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         <div>
@@ -102,7 +159,7 @@
 </section>
 
 <!-- Features -->
-<section class="py-24 px-6 text-center" id="features">
+<section class="bg-base-200 py-24 px-6 text-center" id="features">
     <h2 class="text-3xl font-bold mb-8">Finally, a better way to<br class="hidden md:block"/> structure your notes into tasks</h2>
     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
         <div class="feature-card card bg-base-100 shadow">
@@ -127,7 +184,7 @@
 </section>
 
 <!-- Waitlist CTA -->
-<section id="waitlist" class="bg-base-200 py-20 px-6 text-center">
+<section id="waitlist" class="py-20 px-6 text-center">
     <h2 class="text-3xl font-bold mb-4">Be the First to Try Tasquery</h2>
     <p class="mb-6 max-w-xl mx-auto">Get early access to direct Jira integrations, unlimited context, cloud sync, and custom templates.</p>
 
