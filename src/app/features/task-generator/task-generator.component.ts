@@ -1,23 +1,6 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal, viewChild, ViewChild } from '@angular/core';
-import {
-    BugIcon,
-    CircleAlertIcon,
-    CircleCheckIcon,
-    CircleUserIcon,
-    CloudCheckIcon,
-    CopyIcon,
-    CrownIcon,
-    FileBracesIcon,
-    ListTodoIcon,
-    LucideAngularModule,
-    MessageSquareIcon,
-    PencilIcon,
-    SaveIcon,
-    SendHorizontalIcon,
-    SparklesIcon,
-    SquareCheckIcon
-} from 'lucide-angular';
-import { GenerationConfig, GenerationMode, ParseService } from '../../core/services/parse.service';
+import { CircleAlertIcon, LucideAngularModule, MessageSquareIcon } from 'lucide-angular';
+import { ParseService } from '../../core/services/parse.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Task } from "../../shared/models/task.model";
 import { FormsModule } from '@angular/forms';
@@ -36,6 +19,11 @@ import { RenameCollectionDialogComponent } from './rename-collection-dialog/rena
 import { ToastService } from '../../core/services/toast.service';
 import { ProDialogComponent } from '../../shared/ui/pro-dialog/pro-dialog.component';
 import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-modal.component';
+import { ParseRequestPayload, PresetMode } from '../../shared/models/task-preset.model';
+import { GeneratorHeaderComponent } from './components/generator-header/generator-header.component';
+import { GeneratorInputCardComponent } from './components/generator-input-card/generator-input-card.component';
+import { GeneratorResultsToolbarComponent } from './components/generator-results-toolbar/generator-results-toolbar.component';
+import { GeneratorEmptyStateComponent } from './components/generator-empty-state/generator-empty-state.component';
 
 @Component({
   selector: 'app-task-generator',
@@ -51,6 +39,10 @@ import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-
         RenameCollectionDialogComponent,
         ProDialogComponent,
         WaitlistModalComponent,
+        GeneratorHeaderComponent,
+        GeneratorInputCardComponent,
+        GeneratorResultsToolbarComponent,
+        GeneratorEmptyStateComponent,
     ],
   templateUrl: './task-generator.component.html',
   styleUrl: './task-generator.component.css'
@@ -58,27 +50,14 @@ import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-
 export class TaskGeneratorComponent implements OnInit {
     // Icons
     protected readonly icons = {
-        send: SendHorizontalIcon,
         alert: CircleAlertIcon,
-        save: SaveIcon,
-        edit: PencilIcon,
-        bug: BugIcon,
-        list: ListTodoIcon,
-        standard: FileBracesIcon,
-        cloudCheck: CloudCheckIcon,
-        copy: CopyIcon,
-        actionItems: SquareCheckIcon,
-        userStory: CircleUserIcon,
-        magic: SparklesIcon,
         feedback: MessageSquareIcon,
-        crown: CrownIcon,
-        checkCircle: CircleCheckIcon,
     }
 
     private readonly parseService = inject(ParseService);
-    destroyRef = inject(DestroyRef);
-    taskCollectionService = inject(TaskCollectionsService);
+    private readonly destroyRef = inject(DestroyRef);
     private toastService = inject(ToastService);
+    protected taskCollectionService = inject(TaskCollectionsService);
 
     @ViewChild('saveCollectionModal') saveCollectionModal!: SaveTaskCollectionDialogComponent;
     @ViewChild('renameCollectionModal') renameCollectionModal!: RenameCollectionDialogComponent;
@@ -88,47 +67,26 @@ export class TaskGeneratorComponent implements OnInit {
     inputText = signal<string>('');
     tasks = signal<Task[]>([]);
     loading = signal<boolean>(false);
-    year = signal(new Date().getFullYear());
     error = signal<string | null>(null);
-
-    config = signal<GenerationConfig>({
-        mode: GenerationMode.STANDARD,
-        includeAcceptanceCriteria: false,
-    });
-
-    isInputValid = computed(() => this.inputText() !== null && this.inputText().trim().length > 0);
+    currentMode = signal<PresetMode>('standard');
     loadingCollection = signal<boolean>(false);
-    activeCollection = this.taskCollectionService.activeCollection;
     saveAsNew = signal<boolean>(false);
 
+    activeCollection = this.taskCollectionService.activeCollection;
+    isInputValid = computed(() => this.inputText() !== null && this.inputText().trim().length > 0);
+    requestPayload = computed<ParseRequestPayload>(() => ({
+        inputText: this.inputText(),
+        preset: this.currentMode()
+    }));
+
+    readonly year = new Date().getFullYear();
     protected readonly maxBodyLength = GENERAL_CONFIG.MAX_REQUEST_BODY_LENGTH;
     public sampleInputLabels = SAMPLE_INPUT_LABELS;
 
-    protected readonly GenerationMode = GenerationMode;
-
-    testInput = signal('Implement Employee Switch in Mobile Timesheet Form, please it is urgent. Mobile users are not able to create bugs. Can you please fix it until the next wednesday?');
-
     public ngOnInit() {
-        if (GENERAL_CONFIG.TEST_MODE) {
-            this.inputText.set(this.testInput());
-            this.generateTasks();
-        }
-    }
-
-    toggleMode(mode: GenerationMode) {
-        this.config.update((c) => ({ ...c, mode }));
-    }
-
-    toggleAcceptanceCriteria(): void {
-        this.config.update(c => ({ ...c, includeAcceptanceCriteria: !c.includeAcceptanceCriteria }));
-    }
-
-    get generateButtonText(): string {
-        switch (this.config().mode) {
-            case GenerationMode.JIRA_BUG: return 'Bug Report';
-            case GenerationMode.ACTION_ITEMS: return 'Action Items';
-            case GenerationMode.USER_STORY: return 'User Story';
-            default: return 'Tasks';
+        const saved = localStorage.getItem('tasquery_preset') as PresetMode;
+        if (saved) {
+            this.currentMode.set(saved);
         }
     }
 
@@ -139,7 +97,7 @@ export class TaskGeneratorComponent implements OnInit {
 
         this.loading.set(true);
 
-        this.parseService.parseText(this.inputText(), this.config()).pipe(
+        this.parseService.parseText(this.requestPayload()).pipe(
             takeUntilDestroyed(this.destroyRef),
         ).subscribe({
             next: (response) => {
@@ -159,25 +117,30 @@ export class TaskGeneratorComponent implements OnInit {
     onSaveTask(updatedTask: Task) {
         const updatedTasks = this.tasks().map(task => task.id === updatedTask.id ? updatedTask : task);
         this.tasks.set(updatedTasks);
-
-        if (this.activeCollection()) {
-            this.taskCollectionService.updateCollection(this.activeCollection()!.id, this.tasks());
-        }
+        this.syncWithCollection();
     }
 
     onDeleteTask(task: Task) {
         const updatedTasks = this.tasks().filter(t => t.id !== task.id);
         this.tasks.set(updatedTasks);
-
-        if (this.activeCollection()) {
-            this.taskCollectionService.updateCollection(this.activeCollection()!.id, this.tasks());
-        }
+        this.syncWithCollection();
 
         this.toastService.success('Task deleted successfully.');
     }
 
+    private syncWithCollection() {
+        const active = this.activeCollection();
+        if (active) {
+            this.taskCollectionService.updateCollection(active.id, this.tasks());
+        }
+    }
+
     loadSample(type: SampleInputType) {
         this.inputText.set(SAMPLE_INPUTS[type]);
+        const activeElement = document.activeElement as HTMLElement;
+        if (activeElement) {
+            activeElement.blur();
+        }
     }
 
     openSaveCollectionModal(saveAsNew = false): void {
@@ -200,7 +163,6 @@ export class TaskGeneratorComponent implements OnInit {
     }
 
     loadCollection(collection: TaskCollection): void {
-        // simulate loading collection delay - will be replaced with real loading logic once connected to backend
         this.loadingCollection.set(true);
         this.tasks.set(collection.tasks);
 
@@ -232,5 +194,14 @@ export class TaskGeneratorComponent implements OnInit {
         setTimeout(() => {
             this.waitlistModal().show();
         }, 50);
+    }
+
+    onPresetChange(mode: PresetMode) {
+        this.currentMode.set(mode);
+        localStorage.setItem('tasquery_preset', mode);
+
+        if (this.isInputValid() && this.tasks().length > 0) {
+            this.generateTasks();
+        }
     }
 }

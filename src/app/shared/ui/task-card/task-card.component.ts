@@ -1,5 +1,6 @@
 import { Component, computed, DestroyRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
 import {
+    BookUserIcon,
     CheckIcon,
     CircleAlertIcon,
     CodeXmlIcon,
@@ -8,21 +9,22 @@ import {
     FileTextIcon,
     InfoIcon,
     KanbanIcon,
+    ListIcon,
+    LockIcon,
     LucideAngularModule,
     MessageSquareIcon,
     PencilIcon,
     ShareIcon,
     SparklesIcon,
     TagsIcon,
+    TestTubeIcon,
     Trash2Icon,
-    TriangleAlertIcon,
-    XIcon
+    TriangleAlertIcon
 } from 'lucide-angular';
 import { Task, TaskPriority } from '../../models/task.model';
-import { ExportType, ParseService, RefineAction } from '../../../core/services/parse.service';
-import { generateJSON, generateMarkdown } from '../../utils/export';
+import { ParseService, RefineAction } from '../../../core/services/parse.service';
+import { ExportPlatform, formatForPlatform, wrapInHtml } from '../../utils/export';
 import { FormsModule } from '@angular/forms';
-import { ExportDialogComponent } from '../export-dialog/export-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { NgClass } from '@angular/common';
 import { GENERAL_CONFIG } from '../../../config/general';
@@ -34,7 +36,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     imports: [
         LucideAngularModule,
         FormsModule,
-        ExportDialogComponent,
         ConfirmDialogComponent,
         NgClass
     ],
@@ -53,11 +54,10 @@ export class TaskCardComponent implements OnInit {
     editableTask = signal<Task | undefined>(undefined);
     editableLabels = signal<string>('');
 
-    exportFormat = signal<ExportType>('json');
-    convertedTask = signal<string>('');
     isRefining = signal<boolean>(false);
+    lastActionSuccess = signal<boolean>(false);
+    selectedCopyFormat = signal<ExportPlatform>('jira');
 
-    @ViewChild('exportModal') exportDialog!: ExportDialogComponent;
     @ViewChild('deleteModal') deleteDialog!: ConfirmDialogComponent;
 
     protected readonly limits = {
@@ -72,13 +72,34 @@ export class TaskCardComponent implements OnInit {
     editablePriorityConfig = computed(() =>
         this.editableTask() ? this.getPriorityMeta(this.editableTask()!.priority) : this.getPriorityMeta(TaskPriority.LOW)
     );
+    copyButtonConfig = computed(() => {
+        const format = this.selectedCopyFormat();
+        switch (format) {
+            case 'markdown':
+                return { label: 'Copy Markdown', icon: this.icons.copy };
+            case 'slack':
+                return { label: 'Copy for Slack', icon: this.icons.slack };
+            case 'plain':
+                return { label: 'Copy Plain Text', icon: this.icons.plainText };
+            case 'jira':
+            default:
+                return { label: 'Copy for Jira', icon: this.icons.jira };
+        }
+    });
+    formattedContent = computed(() => {
+        const content = this.task().content;
+        if (!content) {
+            return '';
+        }
+
+        return wrapInHtml(content, 'markdown');
+    })
 
     protected readonly icons = {
         json: FileBraces,
         markdown: CodeXmlIcon,
         check: CheckIcon,
         edit: PencilIcon,
-        cancel: XIcon,
         trash: Trash2Icon,
         copy: CopyIcon,
         tags: TagsIcon,
@@ -90,6 +111,11 @@ export class TaskCardComponent implements OnInit {
         jira: KanbanIcon,
         slack: MessageSquareIcon,
         magic: SparklesIcon,
+        sparkles: SparklesIcon,
+        lock: LockIcon,
+        testTube: TestTubeIcon,
+        list: ListIcon,
+        userStory: BookUserIcon,
     };
 
     ngOnInit(): void {
@@ -149,94 +175,86 @@ export class TaskCardComponent implements OnInit {
     }
 
     get textareaRows(): number {
-        if (!this.editableTask()?.content) {
-            return 6;
-        }
-
-        const text = this.editableTask()!.content;
-        const lineBreaks = text.split('\n').length;
-        const approxWraps = Math.ceil(text.length / 70);
-
-        const rows = Math.max(lineBreaks, approxWraps) + 1;
-        return Math.min(Math.max(rows, 6), 25);
+        const text = this.editableTask()?.content || '';
+        const lines = text.split('\n').length;
+        return Math.min(Math.max(lines + 1, 6), 20);
     }
 
     handleDelete() {
         this.deleteDialog.show();
     }
 
-    async copyPlainText() {
+    async handleCopy(platform?: ExportPlatform) {
         (document.activeElement as HTMLElement)?.blur();
-        const text = `Title: ${this.task().title}\nPriority: ${this.task().priority}\nLabels: ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
-        await this.executeCopy(text, 'Plain Text');
-    }
 
-    async copyJiraFormat() {
-        (document.activeElement as HTMLElement)?.blur();
-        const text = `h3. ${this.task().title}\n*Priority:* ${this.task().priority}\n*Labels:* ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
-        await this.executeCopy(text, 'Jira Format');
-    }
-
-    async copySlackFormat() {
-        (document.activeElement as HTMLElement)?.blur();
-        const text = `*${this.task().title}*\n*Priority:* ${this.task().priority} | *Labels:* ${this.task().labels?.join(', ') || 'none'}\n\n${this.task().content}`;
-        await this.executeCopy(text, 'Slack Format');
-    }
-
-    private async executeCopy(text: string, formatName: string): Promise<void> {
-        try {
-            await navigator.clipboard.writeText(text);
-            this.toastService.success(`Copied to clipboard (${formatName})!`);
-        } catch (error) {
-            console.error('Failed to copy to clipboard', error);
-            this.toastService.error('Failed to copy to clipboard');
+        if (platform) {
+            this.selectedCopyFormat.set(platform);
         }
+
+        const targetPlatform = this.selectedCopyFormat();
+        const markdownText = formatForPlatform(this.task(), targetPlatform);
+
+        if (targetPlatform === 'plain') {
+            await navigator.clipboard.writeText(markdownText);
+        } else {
+            try {
+                const htmlContent = wrapInHtml(markdownText, targetPlatform);
+
+                const data = [
+                    new ClipboardItem({
+                        'text/plain': new Blob([markdownText], { type: 'text/plain' }),
+                        'text/html': new Blob([htmlContent], { type: 'text/html' })
+                    })
+                ];
+
+                console.log(htmlContent);
+
+                await navigator.clipboard.write(data);
+            } catch (err) {
+                console.error('Rich copy failed, falling back to text', err);
+                await navigator.clipboard.writeText(markdownText);
+            }
+        }
+
+        this.toastService.success(`Copied for ${targetPlatform.toUpperCase()}`);
+    }
+
+    handleDownload(type: 'markdown' | 'json') {
+        let content: string;
+        let filename: string;
+        let mime: string;
+        const taskData = this.task();
+        const safeTitle = taskData.title.replace(/\s+/g, '-').toLowerCase();
+
+        if (type === 'json') {
+            // Using existing generateJSON utility or JSON.stringify
+            content = JSON.stringify(taskData, null, 2);
+            filename = `task-${safeTitle}.json`;
+            mime = 'application/json';
+        } else {
+            // Using existing formatForPlatform utility for clean markdown
+            content = formatForPlatform(taskData, 'markdown');
+            filename = `task-${safeTitle}.md`;
+            mime = 'text/markdown';
+        }
+
+        const blob = new Blob([content], { type: mime });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = filename;
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+        this.toastService.success(`File ${filename} downloaded`);
+
+        // Close dropdown
+        (document.activeElement as HTMLElement)?.blur();
     }
 
     onDeleteConfirmed() {
         this.deleteTask.emit(this.task());
-    }
-
-    openExportDialog(type: ExportType) {
-        const content = type === 'markdown'
-            ? generateMarkdown(this.task())
-            : generateJSON(this.task());
-
-        this.convertedTask.set(content);
-        this.exportFormat.set(type);
-
-        this.exportDialog!.show();
-    }
-
-    exportToFormat() {
-        let mime;
-        let extension;
-
-        switch (this.exportFormat()) {
-            case 'markdown':
-                mime = 'text/markdown';
-                extension = 'md';
-                break;
-            case 'csv':
-                mime = 'text/csv';
-                extension = 'csv';
-                break;
-            case 'json':
-            default:
-                mime = 'application/json';
-                extension = 'json';
-                break;
-        }
-
-        const blob = new Blob([this.convertedTask()], { type: mime });
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${this.task().title.replace(/\s+/g, '-').toLowerCase()}.${extension}`;
-        a.click();
-
-        window.URL.revokeObjectURL(url);
     }
 
     applyAiAction(action: RefineAction) {
@@ -253,6 +271,10 @@ export class TaskCardComponent implements OnInit {
                     this.saveTask.emit(task);
                     this.isRefining.set(false);
                     this.toastService.success('Task refined by AI ✨');
+                    this.lastActionSuccess.set(true);
+                    setTimeout(() => {
+                        this.lastActionSuccess.set(false);
+                    }, 1000);
                 },
                 error: (err) => {
                     console.error('Failed to refine', err);

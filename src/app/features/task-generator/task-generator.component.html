@@ -1,238 +1,88 @@
 <app-task-collection-drawer (load)="loadCollection($event)">
     <app-navigation [showMenu]="false"></app-navigation>
 
-    <div class="max-w-5xl mx-auto p-6 space-y-8 min-h-[calc(100vh-200px)] relative z-10">
+    <div class="tg-main-wrapper">
+        <app-generator-header (openPro)="openProModal()"></app-generator-header>
 
-        <div class="text-center space-y-2 relative">
-            <div class="flex justify-center mt-2 sm:mt-0 sm:absolute sm:top-0 sm:right-0">
-                <button class="btn btn-sm tc-btn-magic shadow-lg rounded-full px-4 hover:scale-105 transition-transform"
-                        (click)="openProModal()">
-                    <lucide-icon [img]="icons.crown" size="16"></lucide-icon>
-                    Tasquery Pro <span class="badge badge-xs opacity-90 border-none bg-white/30 text-white ml-1">Coming soon</span>
-                </button>
-            </div>
-
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                Tasquery
-            </h1>
-            <p class="text-base-content/60">Turn chaos into structured tasks in seconds.</p>
-        </div>
-
-        <div class="card bg-base-100 shadow-xl border border-base-200 overflow-hidden">
-
-            <div class="settings-toolbar bg-base-200/50">
-
-                <div class="mode-switcher">
-                    <button class="btn btn-sm btn-ghost mode-btn"
-                            [class.bg-base-100]="config().mode === GenerationMode.STANDARD"
-                            [class.shadow-sm]="config().mode === GenerationMode.STANDARD"
-                            (click)="toggleMode(GenerationMode.STANDARD)">
-                        <lucide-icon [img]="icons.standard" size="16"></lucide-icon>
-                        <span class="mode-btn-label sm-visible">Standard</span>
-                    </button>
-
-                    <button class="btn btn-sm btn-ghost mode-btn"
-                            [class.bg-error]="config().mode === GenerationMode.JIRA_BUG"
-                            [class.text-white]="config().mode === GenerationMode.JIRA_BUG"
-                            [class.shadow-sm]="config().mode === GenerationMode.JIRA_BUG"
-                            (click)="toggleMode(GenerationMode.JIRA_BUG)">
-                        <lucide-icon [img]="icons.bug" size="16"></lucide-icon>
-                        <span class="mode-btn-label sm-visible">Bug</span>
-                    </button>
-
-                    <button class="btn btn-sm btn-ghost mode-btn"
-                            [class.bg-info]="config().mode === GenerationMode.ACTION_ITEMS"
-                            [class.text-white]="config().mode === GenerationMode.ACTION_ITEMS"
-                            [class.shadow-sm]="config().mode === GenerationMode.ACTION_ITEMS"
-                            (click)="toggleMode(GenerationMode.ACTION_ITEMS)">
-                        <lucide-icon [img]="icons.actionItems" size="16"></lucide-icon>
-                        <span class="mode-btn-label xl-visible">Action Items</span>
-                    </button>
-
-                    <button class="btn btn-sm btn-ghost mode-btn"
-                            [class.bg-secondary]="config().mode === GenerationMode.USER_STORY"
-                            [class.text-white]="config().mode === GenerationMode.USER_STORY"
-                            [class.shadow-sm]="config().mode === GenerationMode.USER_STORY"
-                            (click)="toggleMode(GenerationMode.USER_STORY)">
-                        <lucide-icon [img]="icons.userStory" size="16"></lucide-icon>
-                        <span class="mode-btn-label xl-visible">User Story</span>
-                    </button>
-                </div>
-
-                <div class="divider divider-horizontal mx-0"></div>
-
-                <label class="ac-toggle-container">
-                    <span class="label-text text-xs font-semibold uppercase tracking-wide">Acceptance Criteria</span>
-                    <input type="checkbox" class="toggle toggle-sm toggle-success"
-                           [checked]="config().includeAcceptanceCriteria"
-                           (change)="toggleAcceptanceCriteria()"/>
-                </label>
-            </div>
-
-            <div class="p-0 relative">
-                <textarea
-                    class="input-area text-base-content"
-                    maxlength="{{ maxBodyLength }}"
-                    placeholder="Paste your meeting notes, slack thread, or just brainstorm here..."
-                    [ngModel]="inputText()"
-                    (ngModelChange)="inputText.set($event)"
-                ></textarea>
-
-                <div class="absolute bottom-2 right-4 text-xs text-base-content/40 font-mono">
-                    {{ inputText().length }} / {{ maxBodyLength }}
-                </div>
-            </div>
-
-            <div class="action-footer bg-base-100 border-t border-base-200">
-                <div class="dropdown dropdown-top dropdown-hover sample-dropdown pt-2">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-xs text-base-content/60">
-                        Try a sample...
-                    </div>
-                    <ul tabindex="0" class="dropdown-content menu shadow bg-base-100 rounded-box w-52 border border-base-200">
-                        @for (s of sampleInputLabels; track s.key) {
-                            <li><a (click)="loadSample(s.key)">{{ s.label }}</a></li>
-                        }
-                    </ul>
-                </div>
-
-                <button class="btn btn-primary px-8 transition-all hover:scale-105"
-                        [disabled]="!isInputValid() || loading()"
-                        (click)="generateTasks()">
-                    @if (loading()) {
-                        <span class="loading loading-spinner loading-sm"></span>
-                        Thinking...
-                    } @else {
-                        <lucide-icon [img]="icons.send" size="18"></lucide-icon>
-                        Generate {{ generateButtonText }}
-                    }
-                </button>
-            </div>
-        </div>
+        <app-generator-input-card
+            [inputText]="inputText()"
+            [loading]="loading()"
+            [isInputValid]="isInputValid()"
+            [currentMode]="currentMode()"
+            [maxBodyLength]="maxBodyLength"
+            [sampleInputLabels]="sampleInputLabels"
+            (inputChange)="inputText.set($event)"
+            (presetChange)="onPresetChange($event)"
+            (loadSample)="loadSample($event)"
+            (generate)="generateTasks()">
+        </app-generator-input-card>
 
         @if (error()) {
-            <div class="alert alert-error animate__animated animate__fadeIn">
+            <div class="alert alert-error mt-6 shadow-lg animate__animated animate__headShake">
                 <lucide-icon [img]="icons.alert"></lucide-icon>
                 <span>{{ error() }}</span>
             </div>
         }
 
         @if (tasks() && tasks().length > 0) {
-            <div class="space-y-4 animate__animated animate__fadeInUp">
+            <div class="tg-results-container animate__animated animate__fadeInUp">
+                <app-generator-results-toolbar
+                    [activeCollection]="activeCollection()"
+                    (rename)="renameCollection()"
+                    (save)="openSaveCollectionModal($event)"
+                ></app-generator-results-toolbar>
 
-                <div class="flex flex-wrap justify-between items-center gap-4 p-4 bg-base-100 rounded-xl shadow-sm border border-base-200">
-
-                    <div class="flex flex-col gap-1">
-                        @if (activeCollection()) {
-                            <div class="flex items-center gap-1 text-xs text-success font-bold tracking-wider uppercase opacity-80">
-                                <lucide-icon [img]="icons.cloudCheck" size="14"></lucide-icon>
-                                Saved to local storage
-                            </div>
-
-                            <div class="flex items-center gap-2 group">
-                                <h2 class="text-xl font-bold truncate max-w-xs sm:max-w-md cursor-pointer hover:underline decoration-base-300 underline-offset-4 decoration-2 transition-all"
-                                    (click)="renameCollection()"
-                                    title="Click to rename">
-                                    {{ activeCollection()!.title }}
-                                </h2>
-                                <button class="btn btn-ghost btn-xs btn-circle opacity-0 group-hover:opacity-100 transition-opacity"
-                                        (click)="renameCollection()">
-                                    <lucide-icon [img]="icons.edit" size="14"></lucide-icon>
-                                </button>
-                            </div>
-                        } @else {
-                            <div class="text-xs text-warning font-bold tracking-wider uppercase opacity-80">
-                                Unsaved Draft
-                            </div>
-                            <h2 class="text-xl font-bold text-base-content/60">New Unsaved Collection</h2>
-                        }
-                    </div>
-
-                    <div class="flex gap-2">
-                        @if (activeCollection()) {
-                            <button class="btn btn-outline btn-sm gap-2" (click)="openSaveCollectionModal(true)">
-                                <lucide-icon [img]="icons.copy" size="16"></lucide-icon>
-                                Duplicate Collection
-                            </button>
-                        } @else {
-                            <button class="btn btn-primary btn-sm gap-2 shadow-sm" (click)="openSaveCollectionModal()">
-                                <lucide-icon [img]="icons.save" size="16"></lucide-icon>
-                                Save Collection
-                            </button>
-                        }
-                    </div>
+                <div class="space-y-4">
+                    @for (task of tasks(); track task.id) {
+                        <app-task-card
+                            [task]="task"
+                            (saveTask)="onSaveTask($event)"
+                            (deleteTask)="onDeleteTask($event)"
+                        ></app-task-card>
+                    }
                 </div>
-
-                @for (task of tasks(); track task.id) {
-                    <app-task-card
-                        [task]="task"
-                        (saveTask)="onSaveTask($event)"
-                        (deleteTask)="onDeleteTask($event)"
-                    ></app-task-card>
-                }
             </div>
         } @else {
-            <div class="tg-empty-state animate__animated animate__fadeIn">
-                <div class="tg-empty-content">
-                    <div class="tg-empty-icon">
-                        <lucide-icon [img]="icons.magic" size="64"></lucide-icon>
-                    </div>
-
-                    <h3 class="text-2xl font-bold mt-4">It's a bit empty here!</h3>
-                    <p class="text-base-content/60 mt-2 max-w-md text-center">
-                        Paste your meeting notes, slack threads, or ideas above and let AI structure them. Or try it out with a pre-made example to see the magic.
-                    </p>
-
-                    <div class="tg-pulse-wrapper">
-                        <svg class="tg-curved-arrow hidden sm:block text-base-content/30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M14 9l-6 -6l-6 6" />
-                            <path d="M8 3v7a6 6 0 0 0 6 6h6" />
-                        </svg>
-
-                        <button class="btn btn-primary rounded-full px-8 tg-btn-pulse"
-                                (click)="loadSample(sampleInputLabels[0].key)">
-                            <lucide-icon [img]="icons.magic" size="18"></lucide-icon>
-                            Try with a sample note
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <app-generator-empty-state
+                (action)="loadSample(sampleInputLabels[0].key)"
+            ></app-generator-empty-state>
         }
+
+        @if (activeCollection()) {
+            <app-rename-collection-dialog
+                #renameCollectionModal
+                [collection]="activeCollection()!"
+                (saved)="onRenameCollection($event)">
+            </app-rename-collection-dialog>
+        }
+
+        <app-save-task-collection-dialog
+            #saveCollectionModal
+            (saved)="saveCollection($event)">
+        </app-save-task-collection-dialog>
+
+        <app-pro-dialog #proModal (openWaitlist)="openWaitlistModal()"></app-pro-dialog>
+        <app-waitlist-modal #waitlistModal></app-waitlist-modal>
+
+        <footer class="footer footer-center p-10 mt-10 text-base-content/30">
+            <aside class="flex flex-col gap-3 items-center">
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <p class="font-semibold text-xs">Tasquery © {{ year }}</p>
+                    <span class="hidden sm:inline opacity-30">|</span>
+                    <a href="mailto:tasquery@gmail.com" class="link link-hover flex items-center gap-1.5 hover:text-primary transition-colors text-xs">
+                        <lucide-icon [img]="icons.feedback" size="12"></lucide-icon>
+                        Report a Bug / Feedback
+                    </a>
+                </div>
+                <app-terms-of-use></app-terms-of-use>
+            </aside>
+        </footer>
     </div>
 
-    @if (activeCollection()) {
-        <app-rename-collection-dialog
-            #renameCollectionModal
-            [collection]="activeCollection()!"
-            (saved)="onRenameCollection($event)">
-        </app-rename-collection-dialog>
-    }
-
-    <app-save-task-collection-dialog
-        #saveCollectionModal
-        (saved)="saveCollection($event)">
-    </app-save-task-collection-dialog>
-
-    <app-pro-dialog #proModal (openWaitlist)="openWaitlistModal()"></app-pro-dialog>
-    <app-waitlist-modal #waitlistModal></app-waitlist-modal>
-
-    <footer class="footer footer-center p-10 text-base-content/50">
-        <aside class="flex flex-col gap-3 items-center">
-            <div class="flex flex-wrap items-center justify-center gap-4">
-                <p class="font-semibold">Tasquery © {{ year() }}</p>
-                <span class="hidden sm:inline opacity-30">|</span>
-                <a href="mailto:tasquery@gmail.com" class="link link-hover flex items-center gap-1.5 text-base-content/70 hover:text-primary transition-colors">
-                    <lucide-icon [img]="icons.feedback" size="14"></lucide-icon>
-                    Report a Bug / Feedback
-                </a>
-            </div>
-            <app-terms-of-use></app-terms-of-use>
-        </aside>
-    </footer>
-
-    <div class="fixed bottom-0 left-0 -z-10 w-64 opacity-50 hidden xl:block">
+    <div class="fixed bottom-0 left-0 -z-10 w-64 opacity-50 hidden xl:block pointer-events-none">
         <img [ngSrc]="'/taking-notes-2.svg'" width="400" height="600" alt="bg" class="w-full h-auto"/>
     </div>
-    <div class="fixed bottom-0 right-0 -z-10 w-64 opacity-50 hidden xl:block">
+    <div class="fixed bottom-0 right-0 -z-10 w-64 opacity-50 hidden xl:block pointer-events-none">
         <img [ngSrc]="'/content-structure-2.svg'" width="360" height="600" alt="bg" class="w-full h-auto" priority/>
     </div>
 </app-task-collection-drawer>
