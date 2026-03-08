@@ -1,0 +1,76 @@
+.tg-generator-card {
+    background: var(--color-base-100);
+    border: 1px solid var(--color-base-200);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tg-generator-card:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 30px 40px -10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.tg-presets-container {
+    padding: 1rem 1rem .5rem;
+    border-bottom: 1px solid var(--color-base-200);
+    background-color: color-mix(in srgb, var(--color-base-200) 20%, transparent);
+}
+
+.tg-input-wrapper {
+    position: relative;
+}
+
+.tg-textarea {
+    width: 100%;
+    height: 200px;
+    padding: 1.3rem;
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.tg-char-counter {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 1.25rem;
+    font-size: 0.7rem;
+    font-family: monospace;
+
+    padding: 2px 6px;
+    z-index: 10;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--color-base-100) 80%, transparent);
+    backdrop-filter: blur(4px);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.tg-action-footer {
+    background: color-mix(in srgb, var(--color-base-200) 30%, transparent);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--color-base-200);
+}
+
+.tg-btn-generate {
+    border-radius: 1rem;
+    padding: 0 1.5rem;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px 0 rgba(var(--color-primary-rgb, 139, 92, 246), 0.15),
+    0 8px 20px -4px rgba(var(--color-primary-rgb, 139, 92, 246), 0.2);
+}
+
+.tg-btn-generate:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(var(--color-primary-rgb, 139, 92, 246), 0.25);
+    filter: brightness(1.05);
+}

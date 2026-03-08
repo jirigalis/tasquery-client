@@ -1,0 +1,47 @@
+<div class="tg-generator-card">
+    <div class="tg-presets-container">
+        <app-task-presets
+            [selectedMode]="currentMode()"
+            (presetChanged)="presetChange.emit($event)">
+        </app-task-presets>
+    </div>
+
+    <div class="tg-input-wrapper">
+    <textarea
+        class="tg-textarea"
+        [attr.maxlength]="maxBodyLength()"
+        placeholder="Paste your meeting notes, slack thread, or just brainstorm here..."
+        [ngModel]="inputText()"
+        (ngModelChange)="onInputChange($event)"
+    ></textarea>
+
+        <div class="tg-char-counter">
+            {{ inputText().length }} / {{ maxBodyLength() }}
+        </div>
+    </div>
+
+    <footer class="tg-action-footer">
+        <div class="dropdown dropdown-top dropdown-hover">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-sm text-base-content/40 hover:text-primary transition-colors">
+                Try a sample...
+            </div>
+            <ul tabindex="0" class="dropdown-content menu shadow-2xl bg-base-100 rounded-box w-52 border border-base-200 z-[100]">
+                @for (s of sampleInputLabels(); track s.key) {
+                    <li><a (click)="loadSample.emit(s.key)" class="py-2">{{ s.label }}</a></li>
+                }
+            </ul>
+        </div>
+
+        <button class="btn btn-primary tg-btn-generate"
+                [disabled]="!isInputValid() || loading()"
+                (click)="generate.emit()">
+            @if (loading()) {
+                <span class="loading loading-spinner loading-sm"></span>
+                Thinking...
+            } @else {
+                <lucide-icon [img]="icons.send" size="18"></lucide-icon>
+                <span>Generate Drafts</span>
+            }
+        </button>
+    </footer>
+</div>
