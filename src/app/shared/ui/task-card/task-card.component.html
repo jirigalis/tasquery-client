@@ -46,11 +46,13 @@
         }
     </header>
 
-    <div class="tc-content-wrapper" [class.animate-success]="!isRefining() && lastActionSuccess">
+    <div class="tc-content-wrapper" [class.is-refining]="isRefining()" [class.animate-success]="!isRefining() && lastActionSuccess">
         @if (isRefining()) {
             <div class="refine-overlay">
-                <span class="loading loading-ring loading-lg text-primary"></span>
-                <span class="refine-status-text">AI is polishing your task...</span>
+                <div class="refine-loader">
+                    <span class="loading loading-ring loading-lg text-primary"></span>
+                    <lucide-icon [img]="icons.magic" class="absolute text-primary animate-pulse" size="24"></lucide-icon>
+                </div>
             </div>
         }
 
@@ -161,6 +163,29 @@
                         </ul>
                     </div>
                 </div>
+
+                <!-- Undo Action (Visible after AI refine) -->
+                @if (undoTaskState()) {
+                    <button
+                        class="btn btn-ghost btn-sm gap-2 text-warning animate-in fade-in slide-in-from-left-2"
+                        (click)="undoAiAction()"
+                        [disabled]="isRefining()"
+                    >
+                        <lucide-icon [img]="icons.undo" size="14"></lucide-icon>
+                        <span class="text-[10px] font-bold uppercase">Undo</span>
+                    </button>
+                }
+
+                @if (redoTaskState()) {
+                    <button
+                        class="btn btn-ghost btn-sm gap-2 text-info animate-in fade-in slide-in-from-left-2"
+                        (click)="redoAiAction()"
+                        [disabled]="isRefining()"
+                    >
+                        <lucide-icon [img]="icons.redo" size="14"></lucide-icon>
+                        <span class="text-[10px] font-bold uppercase">Redo</span>
+                    </button>
+                }
             }
         </div>
 
@@ -178,47 +203,57 @@
                     </button>
 
                     <div class="dropdown dropdown-top dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-sm tc-btn-magic btn-square shadow-sm">
+                        <div tabindex="0" role="button" class="btn btn-sm tc-btn-magic btn-square shadow-sm tooltip tooltip-top" data-tip="AI Magic">
                             @if (isRefining()) {
                                 <span class="loading loading-spinner loading-xs text-white"></span>
                             } @else {
                                 <lucide-icon [img]="icons.magic" size="16" class="text-white"></lucide-icon>
                             }
                         </div>
-                        <ul tabindex="0" class="dropdown-content z-[50] menu p-2 shadow-2xl bg-base-100 rounded-box w-64 border border-base-300 mb-2">
-                            <li class="menu-title text-[10px] uppercase tracking-wider opacity-50 px-2 py-1">Transformations</li>
-                            <li>
-                                <a (click)="applyAiAction(RefineAction.CHECKLIST)" class="flex gap-2 items-center py-2">
-                                    <lucide-icon [img]="icons.list" size="14"></lucide-icon>
-                                    <span>Break into Checklist</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="applyAiAction(RefineAction.NON_TECH)" class="flex gap-2 items-center py-2">
-                                    <lucide-icon [img]="icons.userStory" size="14"></lucide-icon>
-                                    <span>Business Translation</span>
-                                </a>
-                            </li>
-                            <div class="divider my-1 opacity-10"></div>
-                            <li class="menu-title text-[10px] uppercase tracking-wider opacity-50 px-2 py-1">Deep Analysis</li>
-                            <li>
-                                <a (click)="applyAiAction(RefineAction.EDGE_CASES)" class="flex gap-2 items-center py-2">
-                                    <lucide-icon [img]="icons.sparkles" size="14" class="text-primary"></lucide-icon>
-                                    <span>Anticipate Edge Cases</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="applyAiAction(RefineAction.SECURITY)" class="flex gap-2 items-center py-2">
-                                    <lucide-icon [img]="icons.lock" size="14" class="text-secondary"></lucide-icon>
-                                    <span>Security Audit</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="applyAiAction(RefineAction.TESTS)" class="flex gap-2 items-center py-2">
-                                    <lucide-icon [img]="icons.testTube" size="14"></lucide-icon>
-                                    <span>Design Unit Tests</span>
-                                </a>
-                            </li>
+
+                        <ul tabindex="0" class="dropdown-content tc-action-dropdown-content menu shadow-2xl border">
+
+                            @for (group of magicActionGroups; track group.title; let first = $first) {
+                                @if (!first) {
+                                    <div class="divider my-1 opacity-10"></div>
+                                }
+
+                                <li class="menu-title">
+                                    <span>{{ group.title }}</span>
+                                    @if (!waitlistService.isUnlimitedUnlocked() && first) {
+                                        <div class="tooltip tooltip-left before:text-xs normal-case" data-tip="Free refines remaining for this session">
+                                            <span class="badge badge-xs"
+                                                  [class.badge-primary]="waitlistService.remainingUses() > 0"
+                                                  [class.badge-error]="waitlistService.remainingUses() === 0">
+                                                {{ waitlistService.remainingUses() }} left
+                                            </span>
+                                        </div>
+                                    }
+                                </li>
+
+                                @for (action of group.actions; track action.id) {
+                                    <li>
+                                        <a (click)="applyAiAction(action.id)" class="tc-action-menu-item">
+                                            <div class="tc-action-header">
+                                                <div class="tc-action-header-content">
+                                                    <lucide-icon [img]="action.icon" size="14" [class]="action.iconClass"></lucide-icon>
+                                                    <span>{{ action.label }}</span>
+                                                </div>
+
+                                                <div class="tooltip tooltip-left tc-info-trigger before:text-xs" [attr.data-tip]="action.description">
+                                                    <lucide-icon [img]="icons.info" size="14" class="tc-action-info-icon"></lucide-icon>
+                                                </div>
+                                            </div>
+
+                                            <!-- Mobile description -->
+                                            <div class="tc-action-desc-mobile text-xs">
+                                                {{ action.description }}
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+
                         </ul>
                     </div>
 
@@ -234,3 +269,4 @@
 
 <app-confirm-dialog #deleteModal [title]="'Delete Task'" [type]="'error'" [message]="'Are you sure? This task will be lost forever like a tear in rain.'"
                     (confirm)="onDeleteConfirmed()"></app-confirm-dialog>
+<app-waitlist-modal #waitlistModal></app-waitlist-modal>

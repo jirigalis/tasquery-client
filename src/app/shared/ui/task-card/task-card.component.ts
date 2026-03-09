@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input, OnInit, output, signal, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, OnInit, output, signal, viewChild, ViewChild } from '@angular/core';
 import {
     BookUserIcon,
     CheckIcon,
@@ -14,15 +14,18 @@ import {
     LucideAngularModule,
     MessageSquareIcon,
     PencilIcon,
+    RedoIcon,
     ShareIcon,
     SparklesIcon,
     TagsIcon,
     TestTubeIcon,
     Trash2Icon,
-    TriangleAlertIcon
+    TriangleAlertIcon,
+    UndoIcon,
+    ZapIcon
 } from 'lucide-angular';
 import { Task, TaskPriority } from '../../models/task.model';
-import { ParseService, RefineAction } from '../../../core/services/parse.service';
+import { ParseService } from '../../../core/services/parse.service';
 import { ExportPlatform, formatForPlatform, wrapInHtml } from '../../utils/export';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -30,6 +33,9 @@ import { NgClass } from '@angular/common';
 import { GENERAL_CONFIG } from '../../../config/general';
 import { ToastService } from '../../../core/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefineAction } from '../../models/refine.model';
+import { WaitlistModalComponent } from '../waitlist-modal/waitlist-modal.component';
+import { WaitlistService } from '../../../core/services/waitlist.service';
 
 @Component({
   selector: 'app-task-card',
@@ -37,7 +43,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         LucideAngularModule,
         FormsModule,
         ConfirmDialogComponent,
-        NgClass
+        NgClass,
+        WaitlistModalComponent
     ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.css'
@@ -45,6 +52,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class TaskCardComponent implements OnInit {
     private toastService = inject(ToastService);
     private parseService: ParseService = inject(ParseService);
+    protected waitlistService = inject(WaitlistService);
     task = input.required<Task>();
     saveTask = output<Task>();
     deleteTask = output<Task>();
@@ -57,8 +65,11 @@ export class TaskCardComponent implements OnInit {
     isRefining = signal<boolean>(false);
     lastActionSuccess = signal<boolean>(false);
     selectedCopyFormat = signal<ExportPlatform>('jira');
+    undoTaskState = signal<Task | null>(null);
+    redoTaskState = signal<Task | null>(null);
 
     @ViewChild('deleteModal') deleteDialog!: ConfirmDialogComponent;
+    waitlistModal = viewChild.required<WaitlistModalComponent>(WaitlistModalComponent);
 
     protected readonly limits = {
         title: GENERAL_CONFIG.MAX_TITLE_LENGTH,
@@ -116,7 +127,66 @@ export class TaskCardComponent implements OnInit {
         testTube: TestTubeIcon,
         list: ListIcon,
         userStory: BookUserIcon,
+        undo: UndoIcon,
+        redo: RedoIcon,
+        zap: ZapIcon,
+        info: InfoIcon,
     };
+
+    protected readonly magicActionGroups = [
+        {
+            title: 'Refine Content',
+            actions: [
+                {
+                    id: RefineAction.PUNCHY,
+                    label: 'Make it Punchy',
+                    icon: this.icons.zap,
+                    iconClass: 'text-warning',
+                    description: 'Reduces word count and uses minimalist Linear-style language.'
+                },
+                {
+                    id: RefineAction.CHECKLIST,
+                    label: 'Break into Checklist',
+                    icon: this.icons.list,
+                    iconClass: '',
+                    description: 'Transforms the description into a clear, actionable checklist.'
+                },
+                {
+                    id: RefineAction.NON_TECH,
+                    label: 'Business Translation',
+                    icon: this.icons.userStory,
+                    iconClass: '',
+                    description: 'Simplifies technical jargon for Product Managers and stakeholders.'
+                }
+            ]
+        },
+        {
+            title: 'Deep Analysis',
+            actions: [
+                {
+                    id: RefineAction.EDGE_CASES,
+                    label: 'Anticipate Edge Cases',
+                    icon: this.icons.sparkles,
+                    iconClass: 'text-primary',
+                    description: 'Adds 3-4 non-obvious technical edge cases to Acceptance Criteria.'
+                },
+                {
+                    id: RefineAction.SECURITY,
+                    label: 'Security Audit',
+                    icon: this.icons.lock,
+                    iconClass: 'text-secondary',
+                    description: 'Audits the task for potential security vulnerabilities and implications.'
+                },
+                {
+                    id: RefineAction.TESTS,
+                    label: 'QA / Unit Tests',
+                    icon: this.icons.testTube,
+                    iconClass: '',
+                    description: 'Generates a \'How to test\' section with specific verification steps.'
+                }
+            ]
+        }
+    ];
 
     ngOnInit(): void {
         this.resetEditState();
@@ -260,16 +330,34 @@ export class TaskCardComponent implements OnInit {
     applyAiAction(action: RefineAction) {
         (document.activeElement as HTMLElement)?.blur();
 
+        if (!this.waitlistService.canUseMagicAction()) {
+            this.waitlistModal().show();
+            return;
+        }
+
         if (this.isRefining()) {
             return;
         }
 
+        this.undoTaskState.set({ ...this.task() });
+        this.redoTaskState.set(null);
+
         this.isRefining.set(true);
         this.parseService.refineTask(this.task(), action).pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
-                next: (task: Task) => {
-                    this.saveTask.emit(task);
+                next: (refinedTask: Task) => {
+                    const finalTask: Task = {
+                        ...this.task(),
+                        ...refinedTask,
+                        id: this.task().id
+                    };
+
+                    this.saveTask.emit(finalTask);
                     this.isRefining.set(false);
+
+                    // Increment usage on success
+                    this.waitlistService.incrementUsage();
+
                     this.toastService.success('Task refined by AI ✨');
                     this.lastActionSuccess.set(true);
                     setTimeout(() => {
@@ -280,7 +368,26 @@ export class TaskCardComponent implements OnInit {
                     console.error('Failed to refine', err);
                     this.toastService.error('Failed to refine task.');
                     this.isRefining.set(false);
+                    this.undoTaskState.set(null);
                 }
             });
+    }
+
+    undoAiAction() {
+        const previous = this.undoTaskState();
+        if (previous) {
+            this.redoTaskState.set({ ...this.task() });
+            this.saveTask.emit(previous);
+            this.undoTaskState.set(null);
+        }
+    }
+
+    redoAiAction() {
+        const next = this.redoTaskState();
+        if (next) {
+            this.undoTaskState.set({ ...this.task() });
+            this.saveTask.emit(next);
+            this.redoTaskState.set(null);
+        }
     }
 }
