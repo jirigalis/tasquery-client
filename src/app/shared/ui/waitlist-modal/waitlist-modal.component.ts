@@ -1,5 +1,5 @@
 import { Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
-import { CheckIcon, CrownIcon, LucideAngularModule, XIcon } from 'lucide-angular';
+import { CheckIcon, CrownIcon, LucideAngularModule, SparklesIcon, XIcon } from 'lucide-angular';
 import { WaitlistService } from '../../../core/services/waitlist.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../../core/services/toast.service';
@@ -28,6 +28,7 @@ export class WaitlistModalComponent {
         crown: CrownIcon,
         close: XIcon,
         check: CheckIcon,
+        sparkles: SparklesIcon,
     }
 
     proFeatures = [
@@ -80,6 +81,7 @@ export class WaitlistModalComponent {
             next: () => {
                 this.isSubmitting.set(false);
                 this.toastService.success('You are on the list! 🎉');
+                this.waitlistService.unlockUnlimitedAccess();
                 this.close();
             },
             error: (err) => {
