@@ -5,4 +5,6 @@ import { TaskGeneratorComponent } from './features/task-generator/task-generator
 export const routes: Routes = [
     { path: '', component: LandingPageComponent },
     { path: 'app', component: TaskGeneratorComponent },
+    
+    { path: '**', redirectTo: '' }
 ];

@@ -14,6 +14,11 @@ Sentry.init({
     ],
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
+    ignoreErrors: [
+        /NG04002/,
+        'Cannot match any routes',
+        'HttpErrorResponse: 404',
+    ],
 });
 
 bootstrapApplication(AppComponent, appConfig)
