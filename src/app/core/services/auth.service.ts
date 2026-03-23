@@ -40,10 +40,12 @@ export class AuthService {
         return defer(() => {
             this.authStateSubject.next(undefined);
 
+            console.log('origin', window.location.href);
+
             return from(this.supabase.auth.signInWithOAuth({
                 provider: provider,
                 options: {
-                    redirectTo: window.location.origin
+                    redirectTo: window.location.href
                 }
             }));
             }
@@ -51,6 +53,7 @@ export class AuthService {
     }
 
     signInWithGoogle = () => this.signInWithProvider('google');
+
     // not supported yet
     // signInWithGitHub = () => this.signInWithProvider('github');
 
