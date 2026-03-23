@@ -1,0 +1,119 @@
+<div class="tc-copy-group">
+
+    <!-- Main Button -->
+    <button class="tc-copy-main" (click)="handleCopy(selectedCopyFormat())">
+        <lucide-icon [img]="mainButtonConfig().icon" size="14"></lucide-icon>
+        <span class="tc-copy-label">{{ mainButtonConfig().label }}</span>
+    </button>
+
+    <!-- Dropdown -->
+    <div class="dropdown dropdown-top dropdown-center tc-dropdown-wrapper">
+        <div tabindex="0" role="button" class="tc-copy-arrow">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <ul tabindex="0" class="dropdown-content menu shadow-2xl bg-base-100 rounded-box tc-dropdown-menu">
+            <li class="menu-title tc-menu-title">Copy to Clipboard</li>
+
+            <!-- TIER 2: JIRA -->
+            @if (authService.currentUser()) {
+                <li>
+                    <a (click)="handleCopy('jira')" class="tc-menu-item">
+                        <lucide-icon [img]="icons.jira" size="14"></lucide-icon>
+                        <span>Jira Format</span>
+                    </a>
+                </li>
+            } @else {
+                <li class="tooltip tooltip-top" data-tip="Sign in to unlock Jira Format">
+                    <a (click)="triggerLogin()" class="tc-menu-item tc-menu-item-locked">
+                        <lucide-icon [img]="icons.lock" size="14" class="tc-icon-locked"></lucide-icon>
+                        <span>Jira Format</span>
+                    </a>
+                </li>
+            }
+
+            <!-- TIER 2: MARKDOWN -->
+            @if (authService.currentUser()) {
+                <li>
+                    <a (click)="handleCopy('markdown')" class="tc-menu-item">
+                        <lucide-icon [img]="icons.copy" size="14"></lucide-icon>
+                        <span>Raw Markdown (GitHub)</span>
+                    </a>
+                </li>
+            } @else {
+                <li class="tooltip tooltip-top" data-tip="Sign in to unlock Raw Markdown">
+                    <a (click)="triggerLogin()" class="tc-menu-item tc-menu-item-locked">
+                        <lucide-icon [img]="icons.lock" size="14" class="tc-icon-locked"></lucide-icon>
+                        <span>Raw Markdown (GitHub)</span>
+                    </a>
+                </li>
+            }
+
+            <!-- TIER 2: SLACK -->
+            @if (authService.currentUser()) {
+                <li>
+                    <a (click)="handleCopy('slack')" class="tc-menu-item">
+                        <lucide-icon [img]="icons.slack" size="14"></lucide-icon>
+                        <span>Slack Format</span>
+                    </a>
+                </li>
+            } @else {
+                <li class="tooltip tooltip-top" data-tip="Sign in to unlock Slack Format">
+                    <a (click)="triggerLogin()" class="tc-menu-item tc-menu-item-locked">
+                        <lucide-icon [img]="icons.lock" size="14" class="tc-icon-locked"></lucide-icon>
+                        <span>Slack Format</span>
+                    </a>
+                </li>
+            }
+
+            <div class="divider tc-divider"></div>
+            <li class="menu-title tc-menu-title">Download as File</li>
+
+            <!-- TIER 2: DOWNLOAD MD -->
+            @if (authService.currentUser()) {
+                <li>
+                    <a (click)="handleDownload('markdown')" class="tc-menu-item">
+                        <lucide-icon [img]="icons.markdown" size="14"></lucide-icon>
+                        <span>Download .md</span>
+                    </a>
+                </li>
+            } @else {
+                <li class="tooltip tooltip-top" data-tip="Sign in to unlock Download .md">
+                    <a (click)="triggerLogin()" class="tc-menu-item tc-menu-item-locked">
+                        <lucide-icon [img]="icons.lock" size="14" class="tc-icon-locked"></lucide-icon>
+                        <span>Download .md</span>
+                    </a>
+                </li>
+            }
+
+            <!-- TIER 2: DOWNLOAD JSON -->
+            @if (authService.currentUser()) {
+                <li>
+                    <a (click)="handleDownload('json')" class="tc-menu-item">
+                        <lucide-icon [img]="icons.json" size="14"></lucide-icon>
+                        <span>Download .json</span>
+                    </a>
+                </li>
+            } @else {
+                <li class="tooltip tooltip-top" data-tip="Sign in to unlock Download .json">
+                    <a (click)="triggerLogin()" class="tc-menu-item tc-menu-item-locked">
+                        <lucide-icon [img]="icons.lock" size="14" class="tc-icon-locked"></lucide-icon>
+                        <span>Download .json</span>
+                    </a>
+                </li>
+            }
+
+            <div class="divider tc-divider"></div>
+
+            <!-- TIER 1: PLAIN TEXT (Always Unlocked) -->
+            <li>
+                <a (click)="handleCopy('plain')" class="tc-menu-item tc-menu-item-plain">
+                    <lucide-icon [img]="icons.plainText" size="14"></lucide-icon>
+                    <span class="tc-label-strong">Plain Text Only</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

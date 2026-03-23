@@ -5,6 +5,7 @@ export interface TaskPreset {
     label: string;
     icon: any; // Lucide icon reference
     description: string;
+    isPremium?: boolean;
 }
 
 export interface ParseRequestPayload {
