@@ -44,7 +44,7 @@ export class GeneratorInputCardComponent {
     }
 
     onRequireLogin(): void {
-        this.analyticsService.trackLogin('Generator Input Card');
+        this.analyticsService.trackLockedFeatureClick('task-preset', this.currentMode());
         this.loginModal().open();
     }
 }

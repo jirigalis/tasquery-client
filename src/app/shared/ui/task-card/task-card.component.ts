@@ -223,7 +223,7 @@ export class TaskCardComponent implements OnInit {
     }
 
     onRequireLogin(): void {
-        this.analyticsService.trackLogin('Task Controls');
+        this.analyticsService.trackLockedFeatureClick('task-controls', 'task-controls-action');
         this.loginModal().open();
     }
 }

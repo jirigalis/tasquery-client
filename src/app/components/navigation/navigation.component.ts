@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LoginComponent } from '../auth/login/login.component';
 import { ToastService } from '../../core/services/toast.service';
+import { AnalyticsService } from '../../core/services/analytics.service';
 
 @Component({
   selector: 'app-navigation',
@@ -18,6 +19,7 @@ import { ToastService } from '../../core/services/toast.service';
 export class NavigationComponent {
     authService = inject(AuthService);
     toastService = inject(ToastService);
+    private readonly analyticsService = inject(AnalyticsService);
     private destroyRef = inject(DestroyRef);
     private router = inject(Router);
 
@@ -45,6 +47,7 @@ export class NavigationComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: () => {
+                    this.analyticsService.clearUser();
                     this.toastService.success('Logged out successfully');
                 },
                 error: (err) => {

@@ -43,7 +43,34 @@ export class AnalyticsService {
         }
     }
 
-    trackLogin(featureName: string): void {
-        this.trackEvent('login', { feature: featureName });
+    trackLockedFeatureClick(source: string, action: string): void {
+        this.trackEvent('login_prompt_shown', {
+            source_component: source,
+            feature_action: action
+        });
+    }
+
+    identifyUser(userId: string): void {
+        if (!this.gaMeasurementId) return;
+
+        try {
+            gtag('config', this.gaMeasurementId, {
+                'user_id': userId
+            });
+        } catch (error) {
+            console.error('[Analytics] Error identifying user', error);
+        }
+    }
+
+    clearUser(): void {
+        if (!this.gaMeasurementId) return;
+
+        try {
+            gtag('config', this.gaMeasurementId, {
+                'user_id': undefined
+            });
+        } catch (error) {
+            console.error('[Analytics] Error clearing user', error);
+        }
     }
 }
