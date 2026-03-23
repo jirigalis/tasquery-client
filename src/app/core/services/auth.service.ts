@@ -3,11 +3,13 @@ import { createClient, OAuthResponse, SupabaseClient, User } from '@supabase/sup
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, defer, from, Observable, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AnalyticsService } from './analytics.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+    private readonly analyticsService = inject(AnalyticsService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly supabase: SupabaseClient = createClient(
         environment.supabaseUrl,
@@ -28,6 +30,10 @@ export class AuthService {
         const { data: { subscription } } = this.supabase.auth.onAuthStateChange(
             (_event, session) => {
                 this.authStateSubject.next(session?.user ?? null);
+
+                if (session?.user) {
+                    this.analyticsService.identifyUser(session.user.id);
+                }
             }
         );
 
