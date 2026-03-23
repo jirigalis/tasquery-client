@@ -2,7 +2,9 @@
     <div class="tg-presets-container">
         <app-task-presets
             [selectedMode]="currentMode()"
-            (presetChanged)="presetChange.emit($event)">
+            (presetChanged)="presetChange.emit($event)"
+            (requireLogin)="loginModal().open()"
+        >
         </app-task-presets>
     </div>
 
@@ -45,3 +47,5 @@
         </button>
     </footer>
 </div>
+
+<app-login></app-login>

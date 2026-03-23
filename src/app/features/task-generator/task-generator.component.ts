@@ -8,7 +8,6 @@ import { NgOptimizedImage } from '@angular/common';
 import { TaskCardComponent } from '../../shared/ui/task-card/task-card.component';
 import { TermsOfUseComponent } from '../../components/terms-of-use/terms-of-use.component';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
-import { GENERAL_CONFIG } from '../../config/general';
 import { SAMPLE_INPUT_LABELS, SAMPLE_INPUTS, SampleInputType } from '../../shared/data/sample-inputs';
 import { nanoid } from 'nanoid';
 import { TaskCollectionsService } from '../../core/services/task-collections.service';
@@ -24,6 +23,8 @@ import { GeneratorHeaderComponent } from './components/generator-header/generato
 import { GeneratorInputCardComponent } from './components/generator-input-card/generator-input-card.component';
 import { GeneratorResultsToolbarComponent } from './components/generator-results-toolbar/generator-results-toolbar.component';
 import { GeneratorEmptyStateComponent } from './components/generator-empty-state/generator-empty-state.component';
+import { AuthService } from '../../core/services/auth.service';
+import { GENERAL_CONFIG } from '../../config/general';
 
 @Component({
   selector: 'app-task-generator',
@@ -58,6 +59,7 @@ export class TaskGeneratorComponent implements OnInit {
     private readonly destroyRef = inject(DestroyRef);
     private toastService = inject(ToastService);
     protected taskCollectionService = inject(TaskCollectionsService);
+    readonly authService = inject(AuthService);
 
     @ViewChild('saveCollectionModal') saveCollectionModal!: SaveTaskCollectionDialogComponent;
     @ViewChild('renameCollectionModal') renameCollectionModal!: RenameCollectionDialogComponent;
@@ -73,14 +75,20 @@ export class TaskGeneratorComponent implements OnInit {
     saveAsNew = signal<boolean>(false);
 
     activeCollection = this.taskCollectionService.activeCollection;
-    isInputValid = computed(() => this.inputText() !== null && this.inputText().trim().length > 0);
     requestPayload = computed<ParseRequestPayload>(() => ({
         inputText: this.inputText(),
         preset: this.currentMode()
     }));
+    maxInputLength = computed(() => {
+        return this.authService.currentUser() ? GENERAL_CONFIG.TIER2_MAX_INPUT_LENGTH : GENERAL_CONFIG.TIER1_MAX_INPUT_LENGTH;
+    });
+    isInputValid = computed(() =>
+        this.inputText() !== null &&
+        this.inputText().trim().length > 0 &&
+        this.inputText().length <= this.maxInputLength()
+    );
 
     readonly year = new Date().getFullYear();
-    protected readonly maxBodyLength = GENERAL_CONFIG.MAX_REQUEST_BODY_LENGTH;
     public sampleInputLabels = SAMPLE_INPUT_LABELS;
 
     public ngOnInit() {

@@ -1,33 +1,81 @@
-<div class="navbar">
-    <div class="max-w-6xl mx-auto w-full flex">
+<div class="navbar tq-navbar">
+    <div class="tq-nav-container">
+
+        <!-- Start: Logo -->
         <div class="navbar-start">
-            <div tabindex="0" role="button" class="btn btn-ghost" (click)="navigateHome()">
-                <img src="/tasquery-logo.png" alt="Tasquery" class="h-8 w-8 mr-2">
-                <a class="text-xl">Tasquery</a>
+            <div tabindex="0" role="button" class="btn btn-ghost tq-logo-btn" (click)="navigateHome()">
+                <img src="/tasquery-logo.png" alt="Tasquery" class="tq-logo-img">
+                <a class="tq-logo-text">Tasquery</a>
             </div>
         </div>
-        <div class="navbar-center hidden md:flex">
-            <ul class="menu menu-horizontal px-1">
+
+        <!-- Center: Desktop Menu -->
+        <div class="navbar-center tq-desktop-menu-wrapper">
+            <ul class="menu menu-horizontal">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#waitlist">Join Waitlist</a></li>
-                <li>
-                    <app-contact-modal></app-contact-modal>
-                </li>
             </ul>
         </div>
-        <div class="navbar-end">
+
+        <!-- End: Auth & Mobile Menu -->
+        <div class="navbar-end tq-nav-end-wrapper">
+
+            <!-- Auth Section -->
+            <div class="tq-auth-wrapper">
+                @if (authService.isAuthLoading()) {
+                    <span class="loading loading-spinner loading-sm text-primary"></span>
+                } @else if (authService.currentUser()) {
+
+                    <!-- User Profile Dropdown -->
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                            <div class="tq-avatar-wrapper">
+                                @if (authService.currentUser()?.user_metadata?.['avatar_url'] || authService.currentUser()?.user_metadata?.['picture']) {
+                                    <img [src]="authService.currentUser()?.user_metadata?.['avatar_url'] || authService.currentUser()?.user_metadata?.['picture']" alt="User Avatar" />
+                                } @else {
+                                    <div class="tq-avatar-placeholder bg-base-200">
+                                        <lucide-icon [img]="icons.user" size="20"></lucide-icon>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box shadow tq-dropdown-menu">
+                            <li class="menu-title tq-user-email opacity-60">
+                                {{ authService.currentUser()?.email }}
+                            </li>
+                            <div class="divider tq-divider"></div>
+                            <li>
+                                <a (click)="signOut()" class="text-error tq-logout-link">
+                                    <lucide-icon [img]="icons.logout" size="16"></lucide-icon>
+                                    Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                } @else {
+                    <!-- Login Button -->
+                    <button class="btn btn-outline btn-sm tq-login-btn" (click)="openLoginModal()">
+                        <lucide-icon [img]="icons.login" size="16"></lucide-icon>
+                        <span class="tq-login-text">Sign In</span>
+                    </button>
+                }
+            </div>
+
+            <!-- Mobile Menu Dropdown -->
             <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost md:hidden">
-                    <lucide-icon [img]="menuIcon"></lucide-icon>
+                <div tabindex="0" role="button" class="btn btn-ghost tq-mobile-menu-btn">
+                    <lucide-icon [img]="icons.menu"></lucide-icon>
                 </div>
-                <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-100 mt-3 w-52 p-2 shadow">
-                    <li><a href="#features" class="text-xl my-2">Features</a></li>
-                    <li><a href="#waitlist" class="text-xl my-2">Join Waitlist</a></li>
-                    <li><a href="#footer" class="text-xl my-2">Contact</a></li>
+                <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box shadow tq-dropdown-menu">
+                    <li><a href="#features" class="tq-mobile-link">Features</a></li>
+                    <li><a href="#waitlist" class="tq-mobile-link">Join Waitlist</a></li>
+                    <li><a href="#footer" class="tq-mobile-link">Contact</a></li>
                 </ul>
             </div>
+
         </div>
     </div>
 </div>
+
+<app-login></app-login>

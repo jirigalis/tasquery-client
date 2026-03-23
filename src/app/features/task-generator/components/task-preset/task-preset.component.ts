@@ -1,7 +1,8 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Code2, FileText, Layers, LucideAngularModule, Zap } from 'lucide-angular';
+import { CodeXmlIcon, FileText, Layers, LockIcon, LucideAngularModule, Zap } from 'lucide-angular';
 import { PresetMode, TaskPreset } from '../../../../shared/models/task-preset.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
     selector: 'app-task-presets',
@@ -10,16 +11,24 @@ import { PresetMode, TaskPreset } from '../../../../shared/models/task-preset.mo
     styleUrl: './task-preset.component.css'
 })
 export class TaskPresetsComponent {
+    readonly authService = inject(AuthService);
+
     selectedMode = input.required<PresetMode>();
+
     presetChanged = output<PresetMode>();
+    requireLogin = output<void>();
 
     activePreset = signal<PresetMode>('standard');
+
+    readonly iconLock = LockIcon;
 
     readonly presets: TaskPreset[] = [
         { id: 'minimalist', label: 'Minimalist', icon: Zap, description: 'Just the facts. Best for quick bugs.' },
         { id: 'standard', label: 'Standard', icon: FileText, description: 'The perfect balance for daily stories.' },
-        { id: 'technical', label: 'Technical', icon: Code2, description: 'Implementation-heavy. For devs by devs.' },
-        { id: 'summary', label: 'Summary', icon: Layers, description: 'Focus on outcomes. For PMs & Stakeholders.' }
+
+        // TIER 1
+        { id: 'technical', label: 'Technical', icon: CodeXmlIcon, description: 'Implementation-heavy. For devs by devs.', isPremium: true },
+        { id: 'summary', label: 'Summary', icon: Layers, description: 'Focus on outcomes. For PMs & Stakeholders.', isPremium: true },
     ];
 
     constructor() {
@@ -28,13 +37,18 @@ export class TaskPresetsComponent {
         });
     }
 
-    selectPreset(mode: PresetMode) {
-        if (this.activePreset() === mode) {
+    selectPreset(preset: TaskPreset) {
+        if (preset.isPremium && !this.authService.currentUser()) {
+            this.requireLogin.emit();
             return;
         }
 
-        this.activePreset.set(mode);
-        this.presetChanged.emit(mode);
+        if (this.activePreset() === preset.id) {
+            return;
+        }
+
+        this.activePreset.set(preset.id);
+        this.presetChanged.emit(preset.id);
     }
 
     getActivePresetDescription(): string {
