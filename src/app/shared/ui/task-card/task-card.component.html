@@ -107,7 +107,7 @@
         [isRefining]="isRefining()"
         [hasUndo]="undoTaskState() !== null"
         [hasRedo]="redoTaskState() !== null"
-        (requireLogin)="loginModal().open()"
+        (requireLogin)="onRequireLogin()"
         (cancelEdit)="cancelEdit()"
         (save)="saveChanges()"
         (toggleEdit)="toggleEdit()"

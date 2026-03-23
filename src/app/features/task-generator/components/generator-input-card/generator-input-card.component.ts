@@ -1,10 +1,11 @@
-import { Component, input, output, viewChild } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { PresetMode } from '../../../../shared/models/task-preset.model';
 import { SampleInputType } from '../../../../shared/data/sample-inputs';
 import { LucideAngularModule, SendHorizontalIcon } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
 import { TaskPresetsComponent } from '../task-preset/task-preset.component';
 import { LoginComponent } from '../../../../components/auth/login/login.component';
+import { AnalyticsService } from '../../../../core/services/analytics.service';
 
 @Component({
   selector: 'app-generator-input-card',
@@ -18,6 +19,8 @@ import { LoginComponent } from '../../../../components/auth/login/login.componen
   styleUrl: './generator-input-card.component.css',
 })
 export class GeneratorInputCardComponent {
+    private readonly analyticsService = inject(AnalyticsService);
+
     inputText = input.required<string>();
     loading = input.required<boolean>();
     isInputValid = input.required<boolean>();
@@ -38,5 +41,10 @@ export class GeneratorInputCardComponent {
 
     onInputChange(value: string): void {
         this.inputChange.emit(value);
+    }
+
+    onRequireLogin(): void {
+        this.analyticsService.trackLogin('Generator Input Card');
+        this.loginModal().open();
     }
 }
