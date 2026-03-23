@@ -1,0 +1,141 @@
+/* --- TASQUERY NAVIGATION STYLES --- */
+
+.tq-navbar {
+    border-bottom: 1px solid var(--color-base-200);
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+    .tq-navbar {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Container limits max width and centers the navbar content */
+.tq-nav-container {
+    max-width: 72rem; /* Equivalent to max-w-6xl */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    display: flex;
+}
+
+/* --- LOGO SECTION --- */
+.tq-logo-img {
+    height: 2rem;
+    width: 2rem;
+    margin-right: 0.5rem;
+}
+
+.tq-logo-text {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+}
+
+/* --- DESKTOP MENU --- */
+.tq-desktop-menu-wrapper {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .tq-desktop-menu-wrapper {
+        display: flex;
+    }
+}
+
+/* --- END SECTION (Auth & Mobile Toggle) --- */
+.tq-nav-end-wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tq-auth-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- AVATAR & DROPDOWN --- */
+.tq-avatar-wrapper {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-base-300);
+    overflow: hidden;
+}
+
+.tq-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: color-mix(in srgb, var(--color-base-content) 50%, transparent);
+}
+
+.tq-dropdown-menu {
+    z-index: 100;
+    margin-top: 0.75rem;
+    width: 13rem;
+    padding: 0.5rem;
+    border: 1px solid var(--color-base-200);
+}
+
+.tq-user-email {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tq-divider {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.tq-logout-link:hover {
+    background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+}
+
+/* --- LOGIN BUTTON --- */
+@media (min-width: 640px) {
+    .tq-login-btn {
+        height: 3rem; /* Equivalent to btn-md */
+        min-height: 3rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+.tq-login-text {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .tq-login-text {
+        display: inline;
+        margin-left: 0.25rem;
+    }
+}
+
+/* --- MOBILE MENU TOGGLE --- */
+.tq-mobile-menu-btn {
+    display: inline-flex;
+}
+
+@media (min-width: 768px) {
+    .tq-mobile-menu-btn {
+        display: none;
+    }
+}
+
+.tq-mobile-link {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}

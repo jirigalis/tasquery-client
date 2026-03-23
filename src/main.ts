@@ -18,6 +18,8 @@ Sentry.init({
         /NG04002/,
         'Cannot match any routes',
         'HttpErrorResponse: 404',
+        'NotAllowedError: The play method is not allowed',
+        'The play method is not allowed by the user agent'
     ],
 });
 

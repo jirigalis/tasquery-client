@@ -1,0 +1,31 @@
+.tq-modal-box {
+    border: 1px solid var(--color-base-300);
+    padding: 2rem;
+}
+
+.tq-modal-title {
+    margin-bottom: 0.5rem;
+}
+
+.tq-auth-providers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.tq-provider-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    font-size: 1rem;
+    height: 3.5rem;
+    min-height: 3.5rem;
+}
+
+.tq-provider-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}

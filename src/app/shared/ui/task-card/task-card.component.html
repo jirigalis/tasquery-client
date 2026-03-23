@@ -30,7 +30,7 @@
                         </svg>
                     </div>
 
-                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box tc-dropdown-menu">
+                    <ul tabindex="0" class="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box tc-dropdown-menu">
                         @for (p of availablePriorities; track p) {
                             @let meta = getPriorityMeta(p);
                             <li>
@@ -88,11 +88,11 @@
                         <div class="tc-textarea-wrapper">
                             <textarea class="textarea textarea-bordered tc-textarea"
                                       [(ngModel)]="editableTask()!.content"
-                                      [attr.maxlength]="limits.content"
+                                      [attr.maxlength]="maxInputLength()"
                                       [rows]="textareaRows"
                                       placeholder="Task description..."></textarea>
                             <div class="tc-char-counter">
-                                {{ editableTask()!.content.length }} / {{ limits.content }}
+                                {{ editableTask()!.content.length }} / {{ maxInputLength() }}
                             </div>
                         </div>
                     }
@@ -100,173 +100,25 @@
             </div>
         </div>
     </div>
-    <footer class="tc-footer">
-        <div class="tc-footer-actions">
-            @if (!editMode()) {
-                <!-- Unified Copy & Download Group -->
-                <div class="tc-copy-group">
-                    <button class="tc-copy-main" (click)="handleCopy()">
-                        <lucide-icon [img]="copyButtonConfig().icon" size="14"></lucide-icon>
-                        <span class="tc-copy-label">{{ copyButtonConfig().label }}</span>
-                    </button>
 
-                    <div class="dropdown dropdown-top dropdown-end sm:dropdown-center">
-                        <div tabindex="0" role="button" class="tc-copy-arrow">
-                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-
-                        <ul tabindex="0" class="dropdown-content z-[50] menu p-2 shadow-2xl bg-base-100 rounded-box w-64 border border-base-300 mb-2">
-                            <li class="menu-title text-[10px] opacity-50 uppercase tracking-widest px-2 py-1">Copy to Clipboard</li>
-                            <li>
-                                <a (click)="handleCopy('jira')" class="flex gap-3 py-2">
-                                    <lucide-icon [img]="icons.jira" size="14"></lucide-icon>
-                                    <span>Jira Format</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="handleCopy('markdown')" class="flex gap-3 py-2">
-                                    <lucide-icon [img]="icons.copy" size="14"></lucide-icon>
-                                    <span>Raw Markdown (GitHub)</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="handleCopy('slack')" class="flex gap-3 py-2">
-                                    <lucide-icon [img]="icons.slack" size="14"></lucide-icon>
-                                    <span>Slack Format</span>
-                                </a>
-                            </li>
-
-                            <div class="divider my-1 opacity-10"></div>
-                            <li class="menu-title text-[10px] opacity-50 uppercase tracking-widest px-2 py-1">Download as File</li>
-                            <li>
-                                <a (click)="handleDownload('markdown')" class="flex gap-3 py-2">
-                                    <lucide-icon [img]="icons.markdown" size="14"></lucide-icon>
-                                    <span>Download .md</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a (click)="handleDownload('json')" class="flex gap-3 py-2">
-                                    <lucide-icon [img]="icons.json" size="14"></lucide-icon>
-                                    <span>Download .json</span>
-                                </a>
-                            </li>
-
-                            <div class="divider my-1 opacity-10"></div>
-                            <li>
-                                <a (click)="handleCopy('plain')" class="flex gap-3 py-2 opacity-70">
-                                    <lucide-icon [img]="icons.plainText" size="14"></lucide-icon>
-                                    <span>Plain Text Only</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Undo Action (Visible after AI refine) -->
-                @if (undoTaskState()) {
-                    <button
-                        class="btn btn-ghost btn-sm gap-2 text-warning animate-in fade-in slide-in-from-left-2"
-                        (click)="undoAiAction()"
-                        [disabled]="isRefining()"
-                    >
-                        <lucide-icon [img]="icons.undo" size="14"></lucide-icon>
-                        <span class="text-[10px] font-bold uppercase">Undo</span>
-                    </button>
-                }
-
-                @if (redoTaskState()) {
-                    <button
-                        class="btn btn-ghost btn-sm gap-2 text-info animate-in fade-in slide-in-from-left-2"
-                        (click)="redoAiAction()"
-                        [disabled]="isRefining()"
-                    >
-                        <lucide-icon [img]="icons.redo" size="14"></lucide-icon>
-                        <span class="text-[10px] font-bold uppercase">Redo</span>
-                    </button>
-                }
-            }
-        </div>
-
-        <div class="tc-footer-actions">
-            @if (editMode()) {
-                <button class="btn btn-ghost btn-sm text-error" (click)="cancelEdit()">Cancel</button>
-                <button class="btn btn-primary btn-sm shadow-md" (click)="saveChanges()">
-                    <lucide-icon [img]="icons.check" size="16"></lucide-icon>
-                    Save
-                </button>
-            } @else {
-                <div class="tc-secondary-actions">
-                    <button class="btn btn-ghost btn-sm btn-square text-error" (click)="handleDelete()">
-                        <lucide-icon [img]="icons.trash" size="18"></lucide-icon>
-                    </button>
-
-                    <div class="dropdown dropdown-top dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-sm tc-btn-magic btn-square shadow-sm tooltip tooltip-top" data-tip="AI Magic">
-                            @if (isRefining()) {
-                                <span class="loading loading-spinner loading-xs text-white"></span>
-                            } @else {
-                                <lucide-icon [img]="icons.magic" size="16" class="text-white"></lucide-icon>
-                            }
-                        </div>
-
-                        <ul tabindex="0" class="dropdown-content tc-action-dropdown-content menu shadow-2xl border">
-
-                            @for (group of magicActionGroups; track group.title; let first = $first) {
-                                @if (!first) {
-                                    <div class="divider my-1 opacity-10"></div>
-                                }
-
-                                <li class="menu-title">
-                                    <span>{{ group.title }}</span>
-                                    @if (!waitlistService.isUnlimitedUnlocked() && first) {
-                                        <div class="tooltip tooltip-left before:text-xs normal-case" data-tip="Free refines remaining for this session">
-                                            <span class="badge badge-xs"
-                                                  [class.badge-primary]="waitlistService.remainingUses() > 0"
-                                                  [class.badge-error]="waitlistService.remainingUses() === 0">
-                                                {{ waitlistService.remainingUses() }} left
-                                            </span>
-                                        </div>
-                                    }
-                                </li>
-
-                                @for (action of group.actions; track action.id) {
-                                    <li>
-                                        <a (click)="applyAiAction(action.id)" class="tc-action-menu-item">
-                                            <div class="tc-action-header">
-                                                <div class="tc-action-header-content">
-                                                    <lucide-icon [img]="action.icon" size="14" [class]="action.iconClass"></lucide-icon>
-                                                    <span>{{ action.label }}</span>
-                                                </div>
-
-                                                <div class="tooltip tooltip-left tc-info-trigger before:text-xs" [attr.data-tip]="action.description">
-                                                    <lucide-icon [img]="icons.info" size="14" class="tc-action-info-icon"></lucide-icon>
-                                                </div>
-                                            </div>
-
-                                            <!-- Mobile description -->
-                                            <div class="tc-action-desc-mobile text-xs">
-                                                {{ action.description }}
-                                            </div>
-                                        </a>
-                                    </li>
-                                }
-                            }
-
-                        </ul>
-                    </div>
-
-                    <button class="btn btn-outline btn-sm" (click)="toggleEdit()">
-                        <lucide-icon [img]="icons.edit" size="14"></lucide-icon>
-                        <span class="hidden sm:inline">Edit</span>
-                    </button>
-                </div>
-            }
-        </div>
-    </footer>
+    <app-task-controls
+        [task]="task()"
+        [editMode]="editMode()"
+        [isRefining]="isRefining()"
+        [hasUndo]="undoTaskState() !== null"
+        [hasRedo]="redoTaskState() !== null"
+        (requireLogin)="loginModal().open()"
+        (cancelEdit)="cancelEdit()"
+        (save)="saveChanges()"
+        (toggleEdit)="toggleEdit()"
+        (deleteRequested)="handleDelete()"
+        (applyAiAction)="applyAiAction($event)"
+        (undo)="undoAiAction()"
+        (redo)="redoAiAction()"
+    />
 </article>
 
 <app-confirm-dialog #deleteModal [title]="'Delete Task'" [type]="'error'" [message]="'Are you sure? This task will be lost forever like a tear in rain.'"
                     (confirm)="onDeleteConfirmed()"></app-confirm-dialog>
 <app-waitlist-modal #waitlistModal></app-waitlist-modal>
+<app-login></app-login>

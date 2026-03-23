@@ -3,15 +3,28 @@
 
     <div class="presets-group">
         @for (preset of presets; track preset.id) {
-            <button
-                type="button"
-                class="preset-btn"
-                [class.active]="activePreset() === preset.id"
-                (click)="selectPreset(preset.id)"
-                [title]="preset.description">
-                <lucide-icon [img]="preset.icon" [size]="16" class="preset-icon"></lucide-icon>
-                <span class="preset-text">{{ preset.label }}</span>
-            </button>
+            <div
+                class="preset-wrapper"
+                [class.tooltip]="preset.isPremium && !authService.currentUser()"
+                [class.tooltip-top]="preset.isPremium && !authService.currentUser()"
+                [attr.data-tip]="preset.isPremium && !authService.currentUser() ? 'Sign in to unlock this mode' : null"
+            >
+                <button
+                    type="button"
+                    class="preset-btn"
+                    [class.active]="activePreset() === preset.id"
+                    [class.preset-locked]="preset.isPremium && !authService.currentUser()"
+                    (click)="selectPreset(preset)"
+                    [title]="preset.isPremium && !authService.currentUser() ? '' : preset.description"
+                >
+                    <lucide-icon [img]="preset.icon" [size]="16" class="preset-icon"></lucide-icon>
+                    <span class="preset-text">{{ preset.label }}</span>
+
+                    @if (preset.isPremium && !authService.currentUser()) {
+                        <lucide-icon [img]="iconLock" [size]="12" class="preset-lock-icon"></lucide-icon>
+                    }
+                </button>
+            </div>
         }
     </div>
 

@@ -9,7 +9,7 @@
             [loading]="loading()"
             [isInputValid]="isInputValid()"
             [currentMode]="currentMode()"
-            [maxBodyLength]="maxBodyLength"
+            [maxBodyLength]="maxInputLength()"
             [sampleInputLabels]="sampleInputLabels"
             (inputChange)="inputText.set($event)"
             (presetChange)="onPresetChange($event)"

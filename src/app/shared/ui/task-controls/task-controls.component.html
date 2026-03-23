@@ -1,0 +1,56 @@
+<footer class="tc-footer">
+    <div class="tc-footer-actions">
+        @if (!editMode()) {
+            <app-task-copy [task]="task()" (requireLogin)="requireLogin.emit()"></app-task-copy>
+
+            @if (hasUndo()) {
+                <button
+                    class="btn btn-ghost btn-sm gap-2 text-warning animate-in fade-in slide-in-from-left-2"
+                    (click)="undo.emit()"
+                    [disabled]="isRefining()"
+                >
+                    <lucide-icon [img]="icons.undo" size="14"></lucide-icon>
+                    <span class="text-[10px] font-bold uppercase">Undo</span>
+                </button>
+            }
+
+            @if (hasRedo()) {
+                <button
+                    class="btn btn-ghost btn-sm gap-2 text-info animate-in fade-in slide-in-from-left-2"
+                    (click)="redo.emit()"
+                    [disabled]="isRefining()"
+                >
+                    <lucide-icon [img]="icons.redo" size="14"></lucide-icon>
+                    <span class="text-[10px] font-bold uppercase">Redo</span>
+                </button>
+            }
+        }
+    </div>
+
+    <div class="tc-footer-actions">
+        @if (editMode()) {
+            <button class="btn btn-ghost btn-sm text-error" (click)="cancelEdit.emit()">Cancel</button>
+            <button class="btn btn-primary btn-sm shadow-md" (click)="save.emit()">
+                <lucide-icon [img]="icons.check" size="16"></lucide-icon>
+                Save
+            </button>
+        } @else {
+            <div class="tc-secondary-actions">
+                <button class="btn btn-ghost btn-sm btn-square text-error" (click)="deleteRequested.emit()">
+                    <lucide-icon [img]="icons.trash" size="18"></lucide-icon>
+                </button>
+
+                <app-task-refine-actions
+                    [isRefining]="isRefining()"
+                    (applyAiAction)="applyAiAction.emit($event)"
+                    (requireLogin)="requireLogin.emit()"
+                />
+
+                <button class="btn btn-outline btn-sm" (click)="toggleEdit.emit()">
+                    <lucide-icon [img]="icons.edit" size="14"></lucide-icon>
+                    <span class="hidden sm:inline">Edit</span>
+                </button>
+            </div>
+        }
+    </div>
+</footer>
