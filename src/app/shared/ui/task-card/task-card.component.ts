@@ -15,6 +15,7 @@ import { WaitlistService } from '../../../core/services/waitlist.service';
 import { LoginComponent } from '../../../components/auth/login/login.component';
 import { TaskControlsComponent } from '../task-controls/task-controls.component';
 import { AuthService } from '../../../core/services/auth.service';
+import { AnalyticsService } from '../../../core/services/analytics.service';
 
 @Component({
   selector: 'app-task-card',
@@ -36,6 +37,7 @@ export class TaskCardComponent implements OnInit {
     private parseService: ParseService = inject(ParseService);
     private waitlistService = inject(WaitlistService);
     private readonly authService = inject(AuthService);
+    private readonly analyticsService = inject(AnalyticsService);
 
     task = input.required<Task>();
 
@@ -218,5 +220,10 @@ export class TaskCardComponent implements OnInit {
             this.saveTask.emit(next);
             this.redoTaskState.set(null);
         }
+    }
+
+    onRequireLogin(): void {
+        this.analyticsService.trackLogin('Task Controls');
+        this.loginModal().open();
     }
 }

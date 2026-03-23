@@ -3,7 +3,7 @@
         <app-task-presets
             [selectedMode]="currentMode()"
             (presetChanged)="presetChange.emit($event)"
-            (requireLogin)="loginModal().open()"
+            (requireLogin)="onRequireLogin()"
         >
         </app-task-presets>
     </div>

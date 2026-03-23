@@ -4,4 +4,5 @@ export const environment = {
     sentryDsn: 'https://486f177173befa224673c5c850935672@o4510950960857088.ingest.de.sentry.io/4510950971080784',
     supabaseUrl: 'https://tbzmfkkpasnnsdmgmoch.supabase.co',
     supabaseKey: 'sb_publishable_o09jcyZKV8hsaPOMz_NmGQ_dR5U10ND',
+    gaMeasurementId: 'G-KBT1FMLLZ7',
 };
