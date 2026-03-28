@@ -1,0 +1,15 @@
+<!-- Footer -->
+<footer class="bg-neutral text-neutral-content py-10 px-6" id="footer">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8">
+        <div>
+            <h2 class="text-xl font-bold">Tasquery</h2>
+            <p class="text-sm">Built for those who hate the "Documentation Tax". Open for feedback.</p>
+        </div>
+        <div class="flex flex-col gap-2 text-sm">
+            <app-terms-of-use [type]="'link'"></app-terms-of-use>
+            <app-privacy-policy></app-privacy-policy>
+            <app-contact-modal></app-contact-modal>
+        </div>
+    </div>
+    <div class="mt-8 text-center text-xs opacity-60"> Tasquery © {{ year() }}. All rights reserved.</div>
+</footer>

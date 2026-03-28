@@ -1,0 +1,177 @@
+.tq-social-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- Banner pro Google AI --- */
+.tq-social-highlight {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 768px) {
+    .tq-social-highlight {
+        flex-direction: row;
+        align-items: stretch;
+    }
+}
+
+.tq-highlight-content {
+    flex: 1;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+}
+
+.tq-badge-google {
+    align-self: flex-start;
+    background: linear-gradient(90deg, #4285F4, #34A853, #FBBC05, #EA4335);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tq-highlight-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.tq-highlight-quote {
+    font-size: 1.125rem;
+    font-style: italic;
+    opacity: 0.8;
+    /* Pevná HEX barva pro Primary (fialová z tvého loga/SVG) */
+    border-left: 3px solid #61399c;
+    padding-left: 1rem;
+}
+
+.tq-highlight-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #f9fafb;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tq-highlight-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+}
+
+.tq-social-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .tq-social-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.tq-social-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tq-social-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+.tq-social-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.tq-social-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.tq-author-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.tq-author-avatar svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.tq-bg-reddit { background-color: #FF4500; }
+.tq-bg-ih { background-color: #0F172A; } /* Tmavě modrá pro IH */
+.tq-bg-black { background-color: #000000; }
+.tq-bg-primary { background-color: #61399c; } /* Pevná HEX barva pro Primary */
+
+.tq-author-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.tq-author-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.tq-author-handle {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+/* --- Dark mode (follows data-theme on html) --- */
+:host-context(html[data-theme="dark"]) .tq-social-highlight {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context(html[data-theme="dark"]) .tq-highlight-image {
+    background-color: #111827;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context(html[data-theme="dark"]) .tq-social-card {
+    background-color: #1f2937;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+:host-context(html[data-theme="dark"]) .tq-social-text,
+:host-context(html[data-theme="dark"]) .tq-highlight-quote,
+:host-context(html[data-theme="dark"]) .tq-highlight-title,
+:host-context(html[data-theme="dark"]) .tq-author-name {
+    color: #f3f4f6;
+}
