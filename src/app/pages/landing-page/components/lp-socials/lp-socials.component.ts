@@ -4,7 +4,7 @@ import { LucideAngularModule, MessageSquareIcon } from 'lucide-angular';
 @Component({
   selector: 'app-lp-socials',
     imports: [
-        LucideAngularModule
+        LucideAngularModule,
     ],
   templateUrl: './lp-socials.component.html',
   styleUrl: './lp-socials.component.css',
