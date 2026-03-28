@@ -1,4 +1,5 @@
 import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ThemeService } from './core/services/theme.service';
 import { provideRouter, Router } from '@angular/router';
 import { inject as vercelInject } from '@vercel/analytics';
 import * as Sentry from '@sentry/angular';
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
           deps: [Router]
       },
       provideAppInitializer(() => {
+          inject(ThemeService);
           vercelInject();
           inject(Sentry.TraceService);
       }),

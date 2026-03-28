@@ -1,0 +1,14 @@
+<!-- Waitlist CTA -->
+<section id="waitlist" class="py-20 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">Be the First to Try Tasquery</h2>
+    <p class="mb-6 max-w-xl mx-auto">Get early access to direct Jira integrations, unlimited context, cloud sync, and custom templates.</p>
+
+    <div class="flex justify-center">
+        <button class="btn btn-primary px-8 text-lg hover:scale-105 transition-transform shadow-lg"
+                (click)="showWaitlistModal()">
+            Join the Waitlist
+        </button>
+    </div>
+
+    <app-waitlist-modal #waitlistModal></app-waitlist-modal>
+</section>

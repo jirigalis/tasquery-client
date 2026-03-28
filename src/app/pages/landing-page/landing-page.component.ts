@@ -1,38 +1,32 @@
-import { Component, signal, viewChild } from '@angular/core';
-import { TermsOfUseComponent } from "../../components/terms-of-use/terms-of-use.component";
-import { PrivacyPolicyComponent } from '../../components/privacy-policy/privacy-policy.component';
-import { ContactModalComponent } from '../../shared/ui/contact-modal/contact-modal.component';
-import { FormsModule } from '@angular/forms';
-import { CircleCheckIcon, CircleXIcon, LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
+import { Component } from '@angular/core';
 import { NavigationComponent } from '../../components/navigation/navigation.component';
-import { WaitlistModalComponent } from '../../shared/ui/waitlist-modal/waitlist-modal.component';
+import { LpComparisonComponent } from './components/lp-comparison/lp-comparison.component';
+import { LpDesignedForSpeedComponent } from './components/lp-designed-for-speed/lp-designed-for-speed.component';
+import { LpFaqComponent } from './components/lp-faq/lp-faq.component';
+import { LpFeaturesComponent } from './components/lp-features/lp-features.component';
+import { LpFooterComponent } from './components/lp-footer/lp-footer.component';
+import { LpHeroComponent } from './components/lp-hero/lp-hero.component';
+import { LpLogoWallComponent } from './components/lp-logo-wall/lp-logo-wall.component';
+import { LpPainPointsComponent } from './components/lp-pain-points/lp-pain-points.component';
+import { LpSocialsComponent } from './components/lp-socials/lp-socials.component';
+import { LpWaitlistCtaComponent } from './components/lp-waitlist-cta/lp-waitlist-cta.component';
 
 @Component({
   selector: 'app-landing-page',
-    imports: [
-        TermsOfUseComponent,
-        PrivacyPolicyComponent,
-        ContactModalComponent,
-        FormsModule,
-        LucideAngularModule,
-        NavigationComponent,
-        WaitlistModalComponent
-    ],
+  imports: [
+    NavigationComponent,
+    LpComparisonComponent,
+    LpDesignedForSpeedComponent,
+    LpFaqComponent,
+    LpFeaturesComponent,
+    LpFooterComponent,
+    LpHeroComponent,
+    LpLogoWallComponent,
+    LpPainPointsComponent,
+    LpSocialsComponent,
+    LpWaitlistCtaComponent,
+  ],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css'
+  styleUrl: './landing-page.component.css',
 })
-export class LandingPageComponent {
-    protected readonly tubeIcon = TestTubeDiagonal;
-    waitlistModal = viewChild.required<WaitlistModalComponent>(WaitlistModalComponent);
-
-    year = signal(new Date().getFullYear());
-
-    protected readonly icons = {
-        circleCheck: CircleCheckIcon,
-        circleX: CircleXIcon,
-    }
-
-    showWaitlistModal() {
-        this.waitlistModal().show();
-    }
-}
+export class LandingPageComponent {}

@@ -1,0 +1,19 @@
+.tasquery-screenshot {
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    padding: 4px;
+}
+
+.tq-cta-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem; /* Jemné odsazení mezi tlačítkem a textem */
+}
+
+.tq-cta-helper {
+    font-size: 0.75rem; /* Menší písmo */
+    opacity: 0.7;       /* Lehce ztlumená barva, ať nekřičí */
+    font-weight: 500;
+    text-align: center;
+}

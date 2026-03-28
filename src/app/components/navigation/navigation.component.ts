@@ -1,11 +1,12 @@
 import { Component, DestroyRef, inject, input, viewChild } from '@angular/core';
-import { LogInIcon, LogOutIcon, LucideAngularModule, MenuIcon, UserIcon } from 'lucide-angular';
+import { LogInIcon, LogOutIcon, LucideAngularModule, MenuIcon, MoonIcon, SunIcon, UserIcon } from 'lucide-angular';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LoginComponent } from '../auth/login/login.component';
 import { ToastService } from '../../core/services/toast.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-navigation',
@@ -18,6 +19,7 @@ import { AnalyticsService } from '../../core/services/analytics.service';
 })
 export class NavigationComponent {
     authService = inject(AuthService);
+    readonly themeService = inject(ThemeService);
     toastService = inject(ToastService);
     private readonly analyticsService = inject(AnalyticsService);
     private destroyRef = inject(DestroyRef);
@@ -29,9 +31,16 @@ export class NavigationComponent {
 
     public readonly icons = {
         menu: MenuIcon,
+        moon: MoonIcon,
         login: LogInIcon,
         logout: LogOutIcon,
+        sun: SunIcon,
         user: UserIcon,
+    }
+
+    onThemeToggleClick(event: MouseEvent): void {
+        event.preventDefault();
+        this.themeService.toggle();
     }
 
     navigateHome() {

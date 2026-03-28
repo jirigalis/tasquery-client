@@ -20,6 +20,20 @@
         <!-- End: Auth & Mobile Menu -->
         <div class="navbar-end tq-nav-end-wrapper">
 
+            <!-- Theme (desktop) -->
+            <div class="tq-theme-toggle-desktop items-center gap-2 pe-1">
+                <lucide-icon [img]="icons.sun" [size]="18" class="text-base-content/60"></lucide-icon>
+                <input
+                    type="checkbox"
+                    class="toggle toggle-sm toggle-primary"
+                    [checked]="themeService.effectiveTheme() === 'dark'"
+                    (click)="onThemeToggleClick($event)"
+                    aria-label="Toggle dark mode"
+                />
+                <lucide-icon [img]="icons.moon" [size]="18" class="text-base-content/60"></lucide-icon>
+            </div>
+
+
             <!-- Auth Section -->
             <div class="tq-auth-wrapper">
                 @if (authService.isAuthLoading()) {
@@ -71,6 +85,23 @@
                     <li><a href="#features" class="tq-mobile-link">Features</a></li>
                     <li><a href="#waitlist" class="tq-mobile-link">Join Waitlist</a></li>
                     <li><a href="#footer" class="tq-mobile-link">Contact</a></li>
+                    <div class="divider tq-mobile-theme-divider my-1"></div>
+                    <li class="tq-mobile-theme-item" (click)="$event.stopPropagation()">
+                        <div class="flex w-full flex-row items-center justify-between gap-3 py-1">
+                            <span class="text-sm font-medium">Appearance</span>
+                            <div class="flex items-center gap-2">
+                                <lucide-icon [img]="icons.sun" [size]="16" class="text-base-content/60"></lucide-icon>
+                                <input
+                                    type="checkbox"
+                                    class="toggle toggle-sm toggle-primary"
+                                    [checked]="themeService.effectiveTheme() === 'dark'"
+                                    (click)="onThemeToggleClick($event)"
+                                    aria-label="Toggle dark mode"
+                                />
+                                <lucide-icon [img]="icons.moon" [size]="16" class="text-base-content/60"></lucide-icon>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
 

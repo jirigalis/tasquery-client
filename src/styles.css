@@ -23,15 +23,22 @@
     --color-background-secondary: #fdf8e2;
 }
 
+@plugin "daisyui/theme" {
+    name: 'dark';
+    color-scheme: dark;
+    --color-primary: #9b7fd4;
+    --color-primary-dark: #61399c;
+    --color-primary-content: #fff;
+    --color-secondary: #2dd4bf;
+    --color-background: #14141c;
+    --color-background-secondary: #1c1c28;
+}
 
-:root {
+
+html {
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
-    background-color: #f5f5fa;
-
-    @media (prefers-color-scheme: dark) {
-        background-color: #1a1a24;
-    }
+    background-color: var(--color-base-100);
 }
 
 .modal {

@@ -134,6 +134,31 @@
     }
 }
 
+/* --- THEME TOGGLE --- */
+.tq-theme-toggle-desktop {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .tq-theme-toggle-desktop {
+        display: flex;
+    }
+}
+
+.tq-mobile-theme-divider {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.tq-mobile-theme-item {
+    cursor: default;
+    list-style: none;
+}
+
+.tq-mobile-theme-item:hover {
+    background-color: transparent;
+}
+
 .tq-mobile-link {
     font-size: 1.25rem;
     margin-top: 0.5rem;

@@ -57,6 +57,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var k = 'tasquery-theme';
+                var s = localStorage.getItem(k);
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var t = s === 'light' || s === 'dark' ? s : (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) { /* ignore */ }
+        })();
+    </script>
 </head>
 <body>
 <app-root></app-root>
