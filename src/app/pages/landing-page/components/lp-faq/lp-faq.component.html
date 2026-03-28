@@ -2,23 +2,14 @@
 <section class="py-24 px-6 max-w-4xl mx-auto" id="faq">
     <h2 class="text-3xl font-bold text-center mb-8">FAQ</h2>
     <div class="join join-vertical w-full">
-        <div class="collapse collapse-arrow join-item border border-base-300">
-            <input type="checkbox"/>
-            <div class="collapse-title text-lg font-medium">Do you store my company's data?</div>
-            <div class="collapse-content"><p>No. Tasquery is stateless by default. Unless you create an account and explicitly opt-in to save your history,
-                <strong>we do not store</strong> your text or generated tickets on our servers.</p></div>
-        </div>
-        <div class="collapse collapse-arrow join-item border border-base-300">
-            <input type="checkbox"/>
-            <div class="collapse-title text-lg font-medium">Do I need to create an account?</div>
-            <div class="collapse-content"><p>No! You can use the core bridge <strong>completely for free without logging in</strong>.
-                We only require a free account for power users who need longer character limits (up to 2000 chars) and advanced Jira/Slack formatting.</p></div>
-        </div>
-        <div class="collapse collapse-arrow join-item border border-base-300">
-            <input type="checkbox"/>
-            <div class="collapse-title text-lg font-medium">Does it work with Linear or Trello?</div>
-            <div class="collapse-content"><p>Yes. The generated output is heavily structured Markdown, which pastes perfectly into Jira, Linear, GitHub Issues,
-                and most modern project management tools.</p></div>
-        </div>
+        @for (item of items; track item.question) {
+            <div class="collapse collapse-arrow join-item border border-base-300">
+                <input type="checkbox"/>
+                <div class="collapse-title text-lg font-medium">{{ item.question }}</div>
+                <div class="collapse-content">
+                    <p [innerHTML]="item.answerHtml"></p>
+                </div>
+            </div>
+        }
     </div>
 </section>
