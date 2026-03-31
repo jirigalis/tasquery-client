@@ -41,10 +41,6 @@ html {
     background-color: var(--color-base-100);
 }
 
-.modal {
-    color: initial !important;
-}
-
 .btn {
     border-radius: 0.75rem;
 }
