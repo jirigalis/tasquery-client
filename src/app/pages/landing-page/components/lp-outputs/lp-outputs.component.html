@@ -1,0 +1,128 @@
+<section class="tq-output-showcase py-24 px-6 bg-base-200" id="output-modes">
+    <div class="max-w-6xl mx-auto">
+
+        <div class="text-center mb-16 tq-showcase-heading">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">One Messy Note. 4 Perfect Outputs.</h2>
+            <p class="text-lg opacity-80 max-w-2xl mx-auto">
+                Because developers need different context than product managers. Tasquery adapts the ticket to your audience.
+            </p>
+        </div>
+
+        <div class="tq-tabs-grid">
+            @for (tab of tabs; track tab.id) {
+                <button
+                    class="tq-tab-btn"
+                    [class.active]="activeTab() === tab.id"
+                    (click)="activeTab.set(tab.id)">
+                    <div class="tq-tab-header">
+                        <span class="tq-tab-title">{{ tab.title }}</span>
+                        @if (tab.id === 'technical') {
+                            <span class="badge badge-primary badge-xs tq-tab-badge">Pro Devs</span>
+                        }
+                    </div>
+                    <p class="tq-tab-desc">{{ tab.description }}</p>
+                </button>
+            }
+        </div>
+
+        <div class="tq-app-window">
+            <div class="tq-window-topbar">
+                <div class="tq-dots">
+                    <span class="tq-dot tq-dot-red"></span>
+                    <span class="tq-dot tq-dot-yellow"></span>
+                    <span class="tq-dot tq-dot-green"></span>
+                </div>
+                <div class="tq-window-title">Tasquery Smart Draft</div>
+            </div>
+
+            <div class="tq-window-content">
+
+                <div class="tq-panel tq-panel-input">
+                    <div class="tq-panel-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Raw Input (Slack/Notes)
+                    </div>
+                    <div class="tq-messy-text">
+                        Partner integration blocked, waiting for legal to check GDPR. Also dark mode is broken on mobile.
+                    </div>
+                </div>
+
+                <div class="tq-panel tq-panel-output">
+                    <div class="tq-panel-label tq-flex-between">
+                        <span class="flex items-center gap-2">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path
+                                d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            Structured Output
+                        </span>
+                        <span class="badge badge-sm badge-ghost">{{ getActiveTabName() }} Mode</span>
+                    </div>
+
+                    <div class="tq-output-rendered">
+
+                        @if (activeTab() === 'minimalist') {
+                            <ul class="tq-checklist">
+                                <li><input type="checkbox" checked disabled> Fix dark mode on mobile devices</li>
+                                <li><input type="checkbox" disabled> Chase legal for GDPR review on Partner Integration</li>
+                                <li><input type="checkbox" disabled> Unblock & deploy Partner Integration upon approval</li>
+                            </ul>
+                        }
+
+                        @if (activeTab() === 'standard') {
+                            <h4>User Story</h4>
+                            <p>As a user, I want the mobile dark mode fixed so I can read comfortably. As a PM, I need the partner integration unblocked pending
+                                legal approval.</p>
+                            <h4>Acceptance Criteria</h4>
+                            <ul class="tq-list-decimal">
+                                <li>Mobile dark mode renders correctly across all viewports.</li>
+                                <li>Legal department provides written GDPR approval.</li>
+                                <li>Partner integration is deployed to production.</li>
+                            </ul>
+                        }
+
+                        @if (activeTab() === 'technical') {
+                            <h4>Implementation Notes</h4>
+                            <p>Dark mode issue is likely missing media query in <code>_theme.scss</code> or a stale ThemeContext on mobile breakpoints. Partner
+                                integration requires a feature flag toggle until legal clears the webhook payload.</p>
+
+                            <h4>Edge Cases</h4>
+                            <p class="tq-text-warning">⚠️ What if legal rejects the current payload? We need a fallback UI state for the partner dashboard.</p>
+
+                            <div class="tq-code-wrapper">
+                                <span class="tq-badge-example">Example approach</span>
+                                <pre><code><span class="tq-keyword">&#64;media</span> (max-width: <span class="tq-number">768px</span>) &#123;
+                                    [<span class="tq-attr">data-theme</span>=<span class="tq-string">"dark"</span>] &#123;
+    <span class="tq-property">--bg-primary</span>: <span class="tq-value">#111827</span>;
+    <span class="tq-property">--text-main</span>: <span class="tq-value">#f3f4f6</span>;
+  &#125;
+&#125;</code></pre>
+                            </div>
+                        }
+
+                        @if (activeTab() === 'summary') {
+                            <h4>Status Update</h4>
+                            <div class="tq-status-badges">
+                                <span class="badge badge-error badge-sm">Blocked</span> <span class="text-sm font-medium">Partner Integration</span>
+                                <span class="badge badge-warning badge-sm ml-3">Bug</span> <span class="text-sm font-medium">Mobile UI</span>
+                            </div>
+
+                            <h4>Business Impact</h4>
+                            <p>Delayed partner launch directly impacts Q3 onboarding metrics. Broken mobile UI currently affects ~30% of our daily active
+                                users.</p>
+
+                            <h4>Next Steps</h4>
+                            <ul class="tq-list-decimal">
+                                <li><strong>&#64;Legal:</strong> Review and sign off on GDPR compliance docs.</li>
+                                <li><strong>&#64;Frontend:</strong> Patch mobile theme critical issues.</li>
+                            </ul>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
