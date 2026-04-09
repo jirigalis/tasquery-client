@@ -18,13 +18,13 @@ export class ParseService {
     }
 
     refineTask(task: Task, action: RefineAction): Observable<Task> {
-        const { title, content, priority, labels } = task;
+        const { title, content, priority, tags } = task;
         const payload = {
             task: {
                 title,
                 content,
                 priority,
-                labels,
+                tags,
             },
             action,
         };

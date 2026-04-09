@@ -1,0 +1,186 @@
+/* =========================================
+   Founder Section / Human Proof
+   ========================================= */
+
+.tq-founder-wrapper {
+    padding: 6rem 1.5rem;
+    background-color: #f9fafb; /* Velmi jemné pozadí, ať karta vynikne */
+}
+
+/* Samotná karta vizitky */
+.tq-founder-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .tq-founder-card {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+        gap: 3rem;
+        padding: 3.5rem;
+    }
+}
+
+/* Fotografie / Avatar */
+.tq-founder-avatar-col {
+    flex-shrink: 0;
+}
+
+.tq-founder-avatar {
+    width: 8rem; /* 128px */
+    height: 8rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f3f4f6;
+}
+
+@media (min-width: 768px) {
+    .tq-founder-avatar {
+        width: 10rem; /* 160px na desktopu */
+        height: 10rem;
+    }
+}
+
+.tq-founder-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Obsahová část */
+.tq-founder-content-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tq-founder-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #61399c; /* Tvoje primární barva */
+}
+
+.tq-founder-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.tq-founder-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #4b5563;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tq-founder-signature {
+    margin-top: 0.5rem;
+}
+
+.tq-founder-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.tq-founder-role {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Tlačítko sociálních sítí (Ghost/Outline styl) */
+.tq-founder-social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    color: #111827;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    align-self: center;
+    margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+    .tq-founder-social-btn {
+        align-self: flex-start;
+    }
+}
+
+.tq-founder-social-btn:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+.tq-x-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+
+/* =========================================
+   Dark Mode Fallback
+   ========================================= */
+:host-context(html[data-theme="dark"]) {
+    .tq-founder-wrapper {
+        background-color: #111827; /* Zapadne do tmavého módu webu */
+    }
+
+    .tq-founder-card {
+        background-color: #1f2937;
+        border-color: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .tq-founder-avatar {
+        border-color: #1f2937; /* Ladí s pozadím karty */
+    }
+
+    .tq-founder-tag {
+        color: #a78bfa; /* Světlejší fialová pro lepší kontrast */
+    }
+
+    .tq-founder-title, .tq-founder-name {
+        color: #f9fafb;
+    }
+
+    .tq-founder-body, .tq-founder-role {
+        color: #d1d5db;
+    }
+
+    .tq-founder-social-btn {
+        color: #f9fafb;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .tq-founder-social-btn:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+}

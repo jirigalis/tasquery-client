@@ -1,0 +1,9 @@
+@if (daisyBadge(); as d) {
+    <span [class]="'badge badge-sm ' + d.daisyClass">#{{ text() }}</span>
+} @else if (solidBadge(); as s) {
+    <span
+        class="badge badge-sm border-0"
+        [style.background-color]="s.backgroundColor"
+        [style.color]="s.color"
+    >#{{ text() }}</span>
+}

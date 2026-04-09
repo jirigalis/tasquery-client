@@ -2,7 +2,7 @@ export type Task = {
     id: string | number;
     title: string;
     content: string;
-    labels?: string[];
+    tags?: string[];
     priority: TaskPriority;
 }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
+import { LockIcon, LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
 
 @Component({
   selector: 'app-lp-hero',
@@ -9,4 +9,5 @@ import { LucideAngularModule, TestTubeDiagonal } from 'lucide-angular';
 })
 export class LpHeroComponent {
   protected readonly tubeIcon = TestTubeDiagonal;
+  protected readonly lockIcon = LockIcon;
 }
