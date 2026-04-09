@@ -60,10 +60,10 @@
             <div class="tc-body">
                 <section class="tc-tags-section">
                     @if (!editMode()) {
-                        @if (task().labels && task().labels!.length > 0) {
+                        @if (task().tags && task().tags!.length > 0) {
                             <div class="tc-tags-list">
-                                @for (label of task().labels; track label) {
-                                    <span class="badge badge-outline tc-tag">#{{ label }}</span>
+                                @for (tag of task().tags; track tag) {
+                                    <tq-tag class="tc-tag" [text]="tag" />
                                 }
                             </div>
                         } @else {
@@ -74,8 +74,8 @@
                     } @else {
                         <input type="text"
                                class="input input-bordered input-xs w-full"
-                               [(ngModel)]="editableLabels"
-                               [attr.maxlength]="limits.labels"
+                               [(ngModel)]="editableTags"
+                               [attr.maxlength]="limits.tags"
                                placeholder="Tags (comma separated)">
                     }
                 </section>

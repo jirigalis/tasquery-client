@@ -10,6 +10,7 @@ import { LpWaitlistCtaComponent } from './components/lp-waitlist-cta/lp-waitlist
 import { LpUseCasesComponent } from './components/lp-use-cases/lp-use-cases.component';
 import { LpDesignedForSpeedComponent } from './components/lp-designed-for-speed/lp-designed-for-speed.component';
 import { LpOutputsComponent } from './components/lp-outputs/lp-outputs.component';
+import { FounderComponent } from './components/founder/founder.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -25,6 +26,7 @@ import { LpOutputsComponent } from './components/lp-outputs/lp-outputs.component
         LpUseCasesComponent,
         LpDesignedForSpeedComponent,
         LpOutputsComponent,
+        FounderComponent,
     ],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css',

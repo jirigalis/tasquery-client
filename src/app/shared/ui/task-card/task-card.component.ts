@@ -14,6 +14,7 @@ import { WaitlistModalComponent } from '../waitlist-modal/waitlist-modal.compone
 import { WaitlistService } from '../../../core/services/waitlist.service';
 import { LoginComponent } from '../../../components/auth/login/login.component';
 import { TaskControlsComponent } from '../task-controls/task-controls.component';
+import { TqTagComponent } from '../tq-tag/tq-tag.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { AnalyticsService } from '../../../core/services/analytics.service';
 
@@ -26,7 +27,8 @@ import { AnalyticsService } from '../../../core/services/analytics.service';
         NgClass,
         WaitlistModalComponent,
         TaskControlsComponent,
-        LoginComponent
+        LoginComponent,
+        TqTagComponent
     ],
   templateUrl: './task-card.component.html',
   styleUrl: './task-card.component.css'
@@ -46,7 +48,7 @@ export class TaskCardComponent implements OnInit {
 
     editMode = signal<boolean>(false);
     editableTask = signal<Task | undefined>(undefined);
-    editableLabels = signal<string>('');
+    editableTags = signal<string>('');
 
     isRefining = signal<boolean>(false);
     lastActionSuccess = signal<boolean>(false);
@@ -60,7 +62,7 @@ export class TaskCardComponent implements OnInit {
     protected readonly limits = {
         title: GENERAL_CONFIG.MAX_TITLE_LENGTH,
         content: GENERAL_CONFIG.MAX_TASK_CONTENT_LENGTH,
-        labels: GENERAL_CONFIG.MAX_LABELS_LENGTH,
+        tags: GENERAL_CONFIG.MAX_TAGS_LENGTH,
     };
     priorityConfig = computed(() => this.getPriorityMeta(this.task().priority));
     availablePriorities = GENERAL_CONFIG.TASK_PRIORITIES;
@@ -112,7 +114,7 @@ export class TaskCardComponent implements OnInit {
 
     private resetEditState(): void {
         this.editableTask.set(this.task());
-        this.editableLabels.set(this.task().labels ? this.task().labels!.join(', ') : '');
+        this.editableTags.set(this.task().tags ? this.task().tags!.join(', ') : '');
     }
 
     toggleEdit(): void {
@@ -132,7 +134,7 @@ export class TaskCardComponent implements OnInit {
         const updatedTask: Task = {
             ...this.editableTask()!,
             content: this.editableTask()!.content,
-            labels: this.editableLabels().split(',').map(l => l.trim()).filter(Boolean),
+            tags: this.editableTags().split(',').map(l => l.trim()).filter(Boolean),
         }
 
         this.saveTask.emit(updatedTask);

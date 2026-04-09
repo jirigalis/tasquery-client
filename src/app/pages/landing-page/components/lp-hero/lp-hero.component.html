@@ -1,11 +1,20 @@
 <!-- Hero Section -->
 <section class="tq-hero-wrapper max-h-450">
+    <div class="flex justify-center mb-6">
+        <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-base-200 border border-base-300 text-base-content/80 shadow-sm">
+            <span aria-hidden="true">
+                <lucide-icon [img]="lockIcon" size="16"></lucide-icon>
+            </span>
+            <span><strong>100% Stateless.</strong> We never store your company data.</span>
+        </div>
+    </div>
     <h1 class="text-4xl md:text-6xl font-bold leading-tight">
         Turn Messy Notes Into <br/> <span class="text-primary">Dev-Ready Jira Tickets.</span> Instantly.
     </h1>
-    <h2 class="mt-6 max-w-xl text-lg">
-        Tasquery is a stateless AI bridge for developers and PMs.
-        Paste chaotic Slack threads, rough brain dumps, or meeting transcripts, and instantly get a <strong>structured tickets</strong> with <strong>Acceptance Criteria</strong>.
+    <h2 class="mt-8 max-w-xl text-lg">
+        Paste chaotic Slack threads, rough brain dumps, or meeting transcripts. Instantly get <strong>structured tickets</strong> with <strong>Acceptance
+        Criteria</strong>.
         No prompt engineering required.
     </h2>
     <div class="mt-8 flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
@@ -16,24 +25,32 @@
             </a>
             <span class="tq-cta-helper">No login required</span>
         </div>
-        <a href="#waitlist" class="btn btn-outline btn-lg w-full sm:w-auto">
-            Join Waitlist
-        </a>
     </div>
-    <div class="mt-20 w-full max-w-3xl">
+    <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-8 text-sm text-base-content/70">
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Saves hours of dev time</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Improves task clarity</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Standardizes formatting</span>
+        <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Zero admin friction</span>
+    </div>
+    <div class="mt-16 w-full max-w-3xl">
         <!--<img
             src="/tasquery-preview-2.png"
             alt="Tasquery Screenshot"
             class="rounded-lg shadow-lg tasquery-screenshot"
         />-->
         <video
-            src="/tasquery-showcase-2.mp4"
             autoplay
-            muted
+            [muted]="true"
+            [defaultMuted]="true"
             loop
             playsinline
             poster="/tasquery-preview-3.png"
             class="rounded-2xl shadow-2xl tasquery-screenshot">
+            <source src="/tasquery-showcase-2.mp4" type="video/mp4"/>
         </video>
     </div>
 </section>

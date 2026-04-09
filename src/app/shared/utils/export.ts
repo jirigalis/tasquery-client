@@ -8,7 +8,7 @@ export type ExportPlatform = 'jira' | 'slack' | 'markdown' | 'plain';
 export function formatForPlatform(task: Task, platform: ExportPlatform): string {
     const body = task.content;
     const title = task.title.toUpperCase();
-    const metadata = `Priorita: ${task.priority}${task.labels?.length ? ' | Tagy: #' + task.labels.join(' #') : ''}`;
+    const metadata = `Priority: ${task.priority}${task.tags?.length ? ' | Tags: #' + task.tags.join(' #') : ''}`;
 
     switch (platform) {
         case 'slack':
