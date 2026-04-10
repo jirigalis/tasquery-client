@@ -34,10 +34,17 @@
                             <div class="active-indicator"></div>
 
                             <div class="collection-item-text py-1">
-                                <div class="collection-item-title truncate text-sm font-semibold mb-0.5">
+                                <div class="collection-item-title truncate text-sm font-semibold leading-snug">
                                     {{ collection.title }}
                                 </div>
-                                <div class="flex items-center gap-1 text-[10px] uppercase tracking-wider opacity-50 font-medium">
+                                <div class="collection-item-meta">
+                                    <span class="collection-item-task-count">
+                                        <span class="tabular-nums">{{ collection.tasks.length }}</span>
+                                        {{ collection.tasks.length === 1 ? 'task' : 'tasks' }}
+                                    </span>
+                                    <span [class]="presetBadgeClasses(collection)">{{ presetLabel(collection) }}</span>
+                                </div>
+                                <div class="collection-item-date">
                                     {{ collection.createdAt | date:'medium' }}
                                 </div>
                             </div>

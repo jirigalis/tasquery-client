@@ -34,11 +34,15 @@
     align-items: center;
     cursor: pointer;
     position: relative;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    transition:
+        background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.8rem;
     overflow: hidden;
-    border: 1px solid transparent;
+    border: 1px solid color-mix(in srgb, var(--color-base-content), transparent 92%);
+    background-color: color-mix(in srgb, var(--color-base-100), transparent 0%);
 
     .collection-item-text {
         flex-grow: 1;
@@ -54,10 +58,31 @@
         transition: color 0.2s;
     }
 
-    .collection-item-created {
+    .collection-item-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.35rem 0.5rem;
+        margin-top: 0.35rem;
+    }
+
+    .collection-item-task-count {
         font-size: 0.7rem;
-        line-height: 1.25rem;
-        opacity: 0.7;
+        line-height: 1.35;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: color-mix(in srgb, var(--color-base-content), transparent 42%);
+    }
+
+    .collection-item-date {
+        margin-top: 0.35rem;
+        font-size: 0.65rem;
+        line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 600;
+        color: color-mix(in srgb, var(--color-base-content), transparent 55%);
     }
 
     .btn {
@@ -78,6 +103,14 @@
     color: var(--color-primary);
 }
 
+.collection-item.active .collection-item-task-count {
+    color: color-mix(in srgb, var(--color-primary), transparent 35%);
+}
+
+.collection-item.active .collection-item-date {
+    color: color-mix(in srgb, var(--color-primary), transparent 45%);
+}
+
 .collection-item:not(:last-child) {
     margin-bottom: .5rem;
 }
@@ -90,8 +123,14 @@
 }
 
 .collection-item:hover {
-    transform: translateY(-5px);
     background-color: var(--color-base-200);
+    border-color: color-mix(in srgb, var(--color-base-content), transparent 85%);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--color-base-content), transparent 92%);
+}
+
+.collection-item.active:hover {
+    background-color: color-mix(in srgb, var(--color-primary), transparent 88%);
+    border-color: var(--color-primary);
 }
 
 .active-indicator {

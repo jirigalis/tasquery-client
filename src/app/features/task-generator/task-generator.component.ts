@@ -162,6 +162,7 @@ export class TaskGeneratorComponent implements OnInit {
             title,
             createdAt: new Date().toISOString(),
             tasks: this.tasks(),
+            createdWithPreset: this.currentMode(),
         }
 
         this.taskCollectionService.add(collection);
