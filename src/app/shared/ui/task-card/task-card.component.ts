@@ -10,6 +10,7 @@ import { GENERAL_CONFIG } from '../../../config/general';
 import { ToastService } from '../../../core/services/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefineAction } from '../../models/refine.model';
+import { PresetMode } from '../../models/task-preset.model';
 import { WaitlistModalComponent } from '../waitlist-modal/waitlist-modal.component';
 import { WaitlistService } from '../../../core/services/waitlist.service';
 import { LoginComponent } from '../../../components/auth/login/login.component';
@@ -42,6 +43,7 @@ export class TaskCardComponent implements OnInit {
     private readonly analyticsService = inject(AnalyticsService);
 
     task = input.required<Task>();
+    presetMode = input.required<PresetMode>();
 
     saveTask = output<Task>();
     deleteTask = output<Task>();
@@ -176,7 +178,8 @@ export class TaskCardComponent implements OnInit {
         this.redoTaskState.set(null);
 
         this.isRefining.set(true);
-        this.parseService.refineTask(this.task(), action).pipe(takeUntilDestroyed(this.destroyRef))
+        this.parseService.refineTask(this.task(), action, this.presetMode())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (refinedTask: Task) => {
                     const finalTask: Task = {
@@ -199,7 +202,40 @@ export class TaskCardComponent implements OnInit {
                 },
                 error: (err) => {
                     console.error('Failed to refine', err);
-                    this.toastService.error('Failed to refine task.');
+                    const backendMessage = err.error?.message;
+
+                    switch (err.status) {
+                        case 403:
+                            // Premium action for anonymous user
+                            this.toastService.error('This action requires an account. Please sign in.');
+                            this.onRequireLogin();
+                            break;
+
+                        case 413:
+                            // Payload too large
+                            this.toastService.error('Task is too long to refine. Please shorten the content.');
+                            break;
+
+                        case 429:
+                            // Rate limiting hit (from your aiRefineLimiter / aiRefineDailyLimiter)
+                            this.toastService.error(backendMessage || 'You have reached your limit for AI actions. Try again later.');
+                            break;
+
+                        case 400:
+                            // Bad Request (e.g., invalid preset, missing action)
+                            this.toastService.error(backendMessage || 'Invalid request parameters.');
+                            break;
+
+                        case 0:
+                            // Network error (CORS, offline, backend down)
+                            this.toastService.error('Network error. Please check your connection.');
+                            break;
+
+                        default:
+                            // 500 Server Error or anything else
+                            this.toastService.error('Failed to refine task. Please try again.');
+                            break;
+                    }
                     this.isRefining.set(false);
                     this.undoTaskState.set(null);
                 }

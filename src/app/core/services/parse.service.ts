@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { Task } from '../../shared/models/task.model';
-import { ParseRequestPayload } from '../../shared/models/task-preset.model';
+import { ParseRequestPayload, PresetMode } from '../../shared/models/task-preset.model';
 import { RefineAction } from '../../shared/models/refine.model';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class ParseService {
         return this.http.post<Task[]>(this.apiUrl + '/parse', payload);
     }
 
-    refineTask(task: Task, action: RefineAction): Observable<Task> {
+    refineTask(task: Task, action: RefineAction, preset: PresetMode): Observable<Task> {
         const { title, content, priority, tags } = task;
         const payload = {
             task: {
@@ -27,6 +27,7 @@ export class ParseService {
                 tags,
             },
             action,
+            preset,
         };
 
         return this.http.post<Task>(this.apiUrl + '/parse/refine', payload);
