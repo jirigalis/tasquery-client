@@ -1,4 +1,5 @@
 import { Task } from './task.model';
+import { PresetMode } from './task-preset.model';
 
 export enum RefineAction {
     EDGE_CASES = 'edge_cases', // Adds technical edge cases to AC
@@ -10,6 +11,7 @@ export enum RefineAction {
 }
 
 export interface RefineRequest {
-    task: Task,
-    action: RefineAction,
+    task: Task;
+    action: RefineAction;
+    preset: PresetMode;
 }
