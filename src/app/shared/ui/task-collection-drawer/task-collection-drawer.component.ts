@@ -3,6 +3,7 @@ import { ListIcon, LucideAngularModule, TrashIcon } from 'lucide-angular';
 import { DatePipe } from '@angular/common';
 import { TaskCollectionsService } from '../../../core/services/task-collections.service';
 import { TaskCollection } from '../../models/task-collection.model';
+import { PRESET_MODE_LABELS, PresetMode } from '../../models/task-preset.model';
 import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
@@ -29,6 +30,27 @@ export class TaskCollectionDrawerComponent  {
 
     protected readonly listIcon = ListIcon;
     protected readonly trashIcon = TrashIcon;
+
+    presetLabel(collection: TaskCollection): string {
+        const preset = collection.createdWithPreset;
+        return preset ? PRESET_MODE_LABELS[preset] : 'Unknown';
+    }
+
+    /** Full DaisyUI `badge` class string for the collection preset. */
+    presetBadgeClasses(collection: TaskCollection): string {
+        const base = 'badge badge-sm shrink-0 font-medium normal-case';
+        const preset = collection.createdWithPreset;
+        if (!preset) {
+            return `${base} badge-ghost opacity-70`;
+        }
+        const variant: Record<PresetMode, string> = {
+            minimalist: 'badge-ghost',
+            standard: 'badge-primary badge-outline',
+            technical: 'badge-secondary',
+            summary: 'badge-accent badge-outline',
+        };
+        return `${base} ${variant[preset] ?? 'badge-ghost'}`;
+    }
 
     loadCollection(collection: TaskCollection) {
         this.load.emit(collection);
